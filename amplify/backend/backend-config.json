@@ -1,0 +1,9 @@
+{
+	"auth": {
+		"plantlantaapp365f848f": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	}
+}

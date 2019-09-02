@@ -1,49 +1,114 @@
-import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import React from 'react';
+import { View, TouchableOpacity } from 'react-native';
 import {
   createAppContainer,
   createSwitchNavigator,
   createStackNavigator,
   createDrawerNavigator,
-  createBottomTabNavigator
-} from "react-navigation";
-import { Icon } from "native-base";
-import AuthLoadingScreen from "./src/screens/AuthLoadingScreen";
-import WelcomeScreen from "./src/screens/WelcomeScreen";
-import SignUpScreen from "./src/screens/SignUpScreen";
-import SignInScreen from "./src/screens/SignInScreen";
-import ForgetPasswordScreen from "./src/screens/ForgetPasswordScreen";
-import HomeScreen from "./src/screens/HomeScreen";
-import SettingsScreen from "./src/screens/SettingsScreen";
-import ProfileScreen from "./src/screens/ProfileScreen";
+  createMaterialTopTabNavigator,
+} from 'react-navigation';
 
-// App tabs located at the bottom of the screen
-const AppTabNavigator = createBottomTabNavigator({
+import { Ionicons } from '@expo/vector-icons';
+import Amplify from '@aws-amplify/core';
+import config from './src/aws-exports';
+import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
+import SignUpScreen from './src/screens/SignUpScreen';
+import SignInScreen from './src/screens/SignInScreen';
+import ForgetPasswordScreen from './src/screens/ForgetPasswordScreen';
+import HomeScreen from './src/screens/HomeScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
+
+Amplify.configure(config);
+
+const configurations = {
   Home: {
-    screen: HomeScreen
+    screen: HomeScreen,
+    navigationOptions: {
+      tabBarLabel: 'Home',
+      tabBarIcon: ({ tintColor }) => {
+        <Ionicons style={{ fontSize: 26, color: tintColor }} name="ios-home" />;
+      },
+    },
   },
   Profile: {
-    screen: ProfileScreen
+    screen: ProfileScreen,
+    navigationOptions: {
+      tabBarLabel: 'Profile',
+      tabBarIcon: ({ tintColor }) => {
+        <Ionicons
+          style={{ fontSize: 26, color: tintColor }}
+          name="ios-person"
+        />;
+      },
+    },
   },
   Settings: {
-    screen: SettingsScreen
-  }
-});
+    screen: SettingsScreen,
+    navigationOptions: {
+      tabBarLabel: 'Settings',
+      tabBarIcon: ({ tintColor }) => {
+        <Ionicons
+          style={{ fontSize: 26, color: tintColor }}
+          name="ios-settings"
+        />;
+      },
+    },
+  },
+};
+
+const options = {
+  tabBarPosition: 'bottom',
+  swipeEnabled: true,
+  animationEnabled: true,
+  navigationOptions: {
+    tabBarVisible: true,
+  },
+  tabBarOptions: {
+    showLabel: true,
+    activeTintColor: '#fff',
+    inactiveTintColor: '#fff9',
+    style: {
+      backgroundColor: '#1faa00',
+    },
+    labelStyle: {
+      fontSize: 12,
+      fontWeight: 'bold',
+      marginBottom: 12,
+      marginTop: 12,
+    },
+    indicatorStyle: {
+      height: 0,
+    },
+    showIcon: true,
+  },
+};
+
+// App tabs located at the bottom of the screen
+const AppTabNavigator = createMaterialTopTabNavigator(configurations, options);
+
+AppTabNavigator.navigationOptions = ({ navigation }) => {
+  let { routeName } = navigation.state.routes[navigation.state.index];
+  let headerTitle = routeName;
+  return {
+    headerTitle,
+  };
+};
 
 const AppStackNavigator = createStackNavigator({
-  AppTabNavigator: {
+  Header: {
     screen: AppTabNavigator,
     // Set the header icon
     navigationOptions: ({ navigation }) => ({
       headerLeft: (
         <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
           <View style={{ paddingHorizontal: 10 }}>
-            <Icon name="md-menu" size={24} />
+            <Ionicons name="md-menu" size={24} />
           </View>
         </TouchableOpacity>
-      )
-    })
-  }
+      ),
+    }),
+  },
 });
 
 // App stack for the drawer
@@ -51,52 +116,36 @@ const AppDrawerNavigator = createDrawerNavigator({
   Tabs: AppStackNavigator,
   Home: HomeScreen,
   Profile: ProfileScreen,
-  Settings: SettingsScreen
+  Settings: SettingsScreen,
 });
 
 // Auth stack
 const AuthStackNavigator = createStackNavigator({
-  Welcome: {
-    screen: WelcomeScreen,
+  SignIn: {
+    screen: SignInScreen,
     navigationOptions: () => ({
-      title: `Welcome to this App`, // for the header screen
-      headerBackTitle: "Back"
-    })
+      title: `Log in to your account`,
+      headerBackTitle: 'Back',
+    }),
   },
   SignUp: {
     screen: SignUpScreen,
     navigationOptions: () => ({
-      title: `Create a new account`
-    })
-  },
-  SignIn: {
-    screen: SignInScreen,
-    navigationOptions: () => ({
-      title: `Log in to your account`
-    })
+      title: `Create a new account`,
+    }),
   },
   ForgetPassword: {
     screen: ForgetPasswordScreen,
     navigationOptions: () => ({
-      title: `Create a new password`
-    })
-  }
+      title: `Create a new password`,
+    }),
+  },
 });
 
 export default createAppContainer(
   createSwitchNavigator({
-    // screen: name
-    AuthLoading: AuthLoadingScreen,
+    Authloading: AuthLoadingScreen,
     Auth: AuthStackNavigator,
-    App: AppDrawerNavigator
+    App: AppDrawerNavigator,
   })
 );
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
-  }
-});

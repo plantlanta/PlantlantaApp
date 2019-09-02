@@ -1,0 +1,19 @@
+{
+    "test": {
+        "awscloudformation": {
+            "AuthRoleName": "plantlantaapp-test-20190901174056-authRole",
+            "UnauthRoleArn": "arn:aws:iam::856591736009:role/plantlantaapp-test-20190901174056-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::856591736009:role/plantlantaapp-test-20190901174056-authRole",
+            "Region": "us-east-2",
+            "DeploymentBucketName": "plantlantaapp-test-20190901174056-deployment",
+            "UnauthRoleName": "plantlantaapp-test-20190901174056-unauthRole",
+            "StackName": "plantlantaapp-test-20190901174056",
+            "StackId": "arn:aws:cloudformation:us-east-2:856591736009:stack/plantlantaapp-test-20190901174056/2e82dba0-cd01-11e9-9822-0a2103992610"
+        },
+        "categories": {
+            "auth": {
+                "plantlantaapp365f848f": {}
+            }
+        }
+    }
+}

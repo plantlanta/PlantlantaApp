@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import * as WebBrowser from 'expo-web-browser';
 import React, { Component } from 'react';
 import CheckBox from 'react-native-check-box'
@@ -82,11 +83,194 @@ function handleHelpPress() {
     'https://docs.expo.io/versions/latest/workflow/up-and-running/#cant-see-your-changes'
   );
 }
+=======
+import React, { useState, useRef } from 'react';
+import {
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  StatusBar,
+  KeyboardAvoidingView,
+  Keyboard,
+  Alert,
+} from 'react-native';
+import { Container, Item, Input } from 'native-base';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from 'react-navigation-hooks';
+import Auth from '@aws-amplify/auth';
+
+export default SignUpScreen = props => {
+  const { navigate } = useNavigation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [authCode, setAuthcode] = useState('');
+  const secondInput = useRef();
+  const thirdInput = useRef();
+
+  signUp = async () => {
+    await Auth.signUp({
+      username: email,
+      password: password,
+      attributes: { name },
+    })
+      .then(() => {
+        console.log('sign up successful!');
+        Alert.alert('Enter the confirmation code you recieved');
+      })
+      .catch(err => {
+        if (!err.message) {
+          console.log('Error when signing up: ', err);
+          Alert.alert('Error when signing up: ', err);
+        } else {
+          console.log('Error when signing up: ', err.message);
+          Alert.alert('Error when signing up: ', err.message);
+        }
+      });
+  };
+
+  confirmSignUp = async () => {
+    await Auth.confirmSignUp(email, authCode)
+      .then(() => {
+        navigate('SignIn');
+        console.log('Confirm sign up successful');
+      })
+      .catch(err => {
+        if (!err.message) {
+          console.log('Error when entering confirmation code: ', err);
+          Alert.alert('Error when entering confirmation code: ', err);
+        } else {
+          console.log('Error when entering confirmation code: ', err.message);
+          Alert.alert('Error when entering confirmation code: ', err.message);
+        }
+      });
+  };
+
+  resendSignUp = async () => {
+    await Auth.resendSignUp(email)
+      .then(() => console.log('Confirmation code resent successfully'))
+      .catch(err => {
+        if (!err.message) {
+          console.log('Error requesting new confirmation code: ', err);
+          Alert.alert('Error requesting new confirmation code: ', err);
+        } else {
+          console.log('Error requesting new confirmation code: ', err.message);
+          Alert.alert('Error requesting new confirmation code: ', err.message);
+        }
+      });
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar />
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <TouchableWithoutFeedback
+          style={styles.container}
+          onPress={Keyboard.dismiss}
+        >
+          <Container style={styles.infoContainer}>
+            <View style={styles.container}>
+              {/* email section  */}
+              <Item style={styles.itemStyle}>
+                <Ionicons name="ios-mail" style={styles.iconStyle} />
+                <Input
+                  style={styles.input}
+                  placeholder="Email"
+                  placeholderTextColor="#adb4bc"
+                  keyboardType={'email-address'}
+                  returnKeyType="next"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  onSubmitEditing={() => {
+                    secondInput.current._root.focus();
+                  }}
+                  onChangeText={value => setEmail(value)}
+                />
+              </Item>
+              {/*  password section  */}
+              <Item style={styles.itemStyle}>
+                <Ionicons name="ios-lock" style={styles.iconStyle} />
+                <Input
+                  style={styles.input}
+                  placeholder="Password"
+                  placeholderTextColor="#adb4bc"
+                  returnKeyType="next"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  secureTextEntry={true}
+                  ref={secondInput}
+                  onSubmitEditing={() => {
+                    thirdInput.current._root.focus();
+                  }}
+                  onChangeText={value => setPassword(value)}
+                />
+              </Item>
+              {/* name section */}
+              <Item style={styles.itemStyle}>
+                <Ionicons name="ios-person" style={styles.iconStyle} />
+                <Input
+                  style={styles.input}
+                  placeholder="Name"
+                  placeholderTextColor="#adb4bc"
+                  keyboardType={'email-address'}
+                  returnKeyType="done"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  secureTextEntry={false}
+                  ref={thirdInput}
+                  onChangeText={value => setName(value)}
+                />
+              </Item>
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() => signUp()}
+              >
+                <Text style={styles.buttonText}>Sign Up</Text>
+              </TouchableOpacity>
+              {/* code confirmation section  */}
+              <Item style={styles.itemStyle}>
+                <Ionicons name="md-apps" style={styles.iconStyle} />
+                <Input
+                  style={styles.input}
+                  placeholder="Confirmation code"
+                  placeholderTextColor="#adb4bc"
+                  keyboardType={'numeric'}
+                  returnKeyType="done"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  secureTextEntry={false}
+                  onChangeText={value => setAuthcode(value)}
+                />
+              </Item>
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={confirmSignUp}
+              >
+                <Text style={styles.buttonText}>Confirm Sign Up</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={resendSignUp}
+              >
+                <Text style={styles.buttonText}>Resend code</Text>
+              </TouchableOpacity>
+            </View>
+          </Container>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+};
+>>>>>>> Stashed changes
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+<<<<<<< Updated upstream
   },
   developmentModeText: {
     marginBottom: 20,
@@ -167,5 +351,41 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E960F',
     paddingVertical: 10,
     paddingHorizontal: 20,
+=======
+    justifyContent: 'center',
+    flexDirection: 'column',
+  },
+  input: {
+    flex: 1,
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  infoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 30,
+    backgroundColor: '#fff',
+  },
+  itemStyle: {
+    marginBottom: 10,
+  },
+  iconStyle: {
+    color: '#1faa00',
+    fontSize: 28,
+    marginRight: 15,
+  },
+  buttonStyle: {
+    alignItems: 'center',
+    backgroundColor: '#64dd17',
+    padding: 14,
+    marginBottom: 10,
+    borderRadius: 3,
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000',
+>>>>>>> Stashed changes
   },
 });
