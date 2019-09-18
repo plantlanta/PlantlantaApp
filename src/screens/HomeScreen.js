@@ -1,10 +1,30 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Button } from 'react-native';
+import * as mutations from '../graphql/mutations';
+import { API, graphqlOperation } from 'aws-amplify';
 
-export default HomeScreen = () => {
+const event1 = {
+  eventId: 'qwehqwficqwi',
+  eventName: 'Event1',
+  eventDescription: 'sample event',
+};
+
+createEvent = async () => {
+  const event = await API.graphql(
+    graphqlOperation(mutations.createEvent, { input: event1 })
+  );
+  console.log(event);
+};
+
+export default HomeScreen = eventId => {
   return (
     <View style={styles.container}>
-      <Text style={styles.textStyle}>Home</Text>
+      <Button
+        title="Click ME to create"
+        onPress={() => {
+          createEvent();
+        }}
+      />
     </View>
   );
 };
