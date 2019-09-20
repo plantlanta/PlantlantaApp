@@ -1,0 +1,16 @@
+type Event @model {
+  id: ID!
+  name: String
+  description: String
+  address: String
+  organization: String
+  coordinator: String
+  coordinatorPhone: AWSPhone
+  coordinatorEmail: AWSEmail
+  rewardPointValue: Int
+  minVolunteers: Int
+  maxVolunteers: Int
+  volunteers: [String]
+  startDate: AWSDateTime
+  endDate: AWSDateTime
+}
