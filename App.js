@@ -18,6 +18,7 @@ import ForgetPasswordScreen from './src/screens/ForgetPasswordScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import EventListScreen from './src/screens/EventListScreen';
 
 Amplify.configure(config);
 
@@ -28,6 +29,15 @@ const configurations = {
       tabBarLabel: 'Home',
       tabBarIcon: ({ tintColor }) => {
         <Ionicons style={{ fontSize: 26, color: tintColor }} name="ios-home" />;
+      },
+    },
+  },
+  EventList: {
+    screen: EventListScreen,
+    navigationOptions: {
+      tabBarlabel: 'Events',
+      tabBarIcon: ({ tintColor }) => {
+        <Ionicons style={{ fontSize: 26, color: tintColor }} name="ios-menu" />;
       },
     },
   },
@@ -103,7 +113,7 @@ const AppStackNavigator = createStackNavigator({
       headerLeft: (
         <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
           <View style={{ paddingHorizontal: 10 }}>
-            <Ionicons name="md-menu" size={24} />
+            <Ionicons name="md-menu" size={26} />
           </View>
         </TouchableOpacity>
       ),
@@ -115,6 +125,7 @@ const AppStackNavigator = createStackNavigator({
 const AppDrawerNavigator = createDrawerNavigator({
   Tabs: AppStackNavigator,
   Home: HomeScreen,
+  Events: EventListScreen,
   Profile: ProfileScreen,
   Settings: SettingsScreen,
 });
