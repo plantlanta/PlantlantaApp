@@ -100,7 +100,6 @@ export default SignUpScreen = props => {
                   onSubmitEditing={() => {
                     secondInput.current._root.focus();
                   }}
-                  onChangeText={}
                 />
               </Item>
               {/*  Event Description section  */}
@@ -118,7 +117,6 @@ export default SignUpScreen = props => {
                   onSubmitEditing={() => {
                     thirdInput.current._root.focus();
                   }}
-                  onChangeText={}
                 />
               </Item>
               {/* Event Address section */}
@@ -133,7 +131,6 @@ export default SignUpScreen = props => {
                   autoCorrect={false}
                   secureTextEntry={false}
                   ref={thirdInput}
-                  onChangeText={}
                 />
               </Item>
               {/* Event Organization section  */}
@@ -149,7 +146,6 @@ export default SignUpScreen = props => {
                   onSubmitEditing={() => {
                     secondInput.current._root.focus();
                   }}
-                  onChangeText={}
                 />
               </Item>
               {/* Coordinator section  */}
@@ -165,7 +161,6 @@ export default SignUpScreen = props => {
                   onSubmitEditing={() => {
                     secondInput.current._root.focus();
                   }}
-                  onChangeText={}
                 />
               </Item>
               {/* Coordinator Phone section  */}
@@ -181,7 +176,6 @@ export default SignUpScreen = props => {
                   onSubmitEditing={() => {
                     secondInput.current._root.focus();
                   }}
-                  onChangeText={}
                 />
               </Item>
               {/* Coordinator Email section  */}
@@ -197,7 +191,6 @@ export default SignUpScreen = props => {
                   onSubmitEditing={() => {
                     secondInput.current._root.focus();
                   }}
-                  onChangeText={}
                 />
               </Item>
               {/* Reward Point Value section  */}
@@ -213,7 +206,6 @@ export default SignUpScreen = props => {
                   onSubmitEditing={() => {
                     secondInput.current._root.focus();
                   }}
-                  onChangeText={}
                 />
               </Item>
               {/* Min Volunteers section  */}
@@ -229,7 +221,6 @@ export default SignUpScreen = props => {
                   onSubmitEditing={() => {
                     secondInput.current._root.focus();
                   }}
-                  onChangeText={}
                 />
               </Item>
               {/* Max Volunteers section  */}
@@ -245,10 +236,9 @@ export default SignUpScreen = props => {
                   onSubmitEditing={() => {
                     secondInput.current._root.focus();
                   }}
-                  onChangeText={}
                 />
               </Item>
-              {/* Start Date section  */}
+              {/* Start Date section Use Date-Picker */}
               <Item style={styles.itemStyle}>
                 <Input
                   style={styles.input}
@@ -261,7 +251,6 @@ export default SignUpScreen = props => {
                   onSubmitEditing={() => {
                     secondInput.current._root.focus();
                   }}
-                  onChangeText={}
                 />
               </Item>
               {/* End Date section  */}
@@ -277,7 +266,6 @@ export default SignUpScreen = props => {
                   onSubmitEditing={() => {
                     secondInput.current._root.focus();
                   }}
-                  onChangeText={}
                 />
               </Item>
             </View>
