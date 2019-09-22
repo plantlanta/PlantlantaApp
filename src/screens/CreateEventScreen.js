@@ -10,20 +10,58 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   Alert,
+  Button,
+  ScrollView,
 } from 'react-native';
 import { Container, Item, Input } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'react-navigation-hooks';
 import Auth from '@aws-amplify/auth';
+import * as mutations from '../graphql/mutations';
+import { API, graphqlOperation } from 'aws-amplify';
+
+const today = new Date();
+today.setDate(today.getDate() + 57);
+const newDay = new Date();
+newDay.setDate(newDay.getDate() + 59);
+const event_details = {
+  name: '',
+  description: '',
+  address: '',
+  organization: '',
+  coordinator: '',
+  coordinatorPhone: '',
+  coordinatorEmail: '',
+  rewardPointValue: 0,
+  minVolunteers: 0,
+  maxVolunteers: 0,
+  volunteers: [],
+  startDate: today,
+  endDate: newDay,
+};
 
 export default SignUpScreen = props => {
   const { navigate } = useNavigation();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [authCode, setAuthcode] = useState('');
+  const [address, setAddress] = useState('');
+  const [description, setDescription] = useState('');
+  const [coordinator, setCoordinator] = useState('');
+  const [coordinatorPhone, setCoordinatorPhone] = useState('');
+  const [coordinatorEmail, setCoordinatorEmail] = useState('');
+  const [minVolunteers, setMinVolunteers] = useState('');
+  const [maxVolunteers, setMaxVolunteers] = useState('');
+  const [rewardPointValue, setRewardPointValue] = useState('');
+  const [volunteers, setVolunteers] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [org, setOrg] = useState('');
   const secondInput = useRef();
   const thirdInput = useRef();
+
+
+
+
+
 
   signUp = async () => {
     await Auth.signUp({
@@ -79,202 +117,249 @@ export default SignUpScreen = props => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar />
-      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-        <TouchableWithoutFeedback
-          style={styles.container}
-          onPress={Keyboard.dismiss}
-        >
-          <Container style={styles.infoContainer}>
-            <View style={styles.container}>
-              {/* Event Name section  */}
-              <Item style={styles.itemStyle}>
-                <Input
-                  style={styles.input}
-                  placeholder="Event Name"
-                  placeholderTextColor="#adb4bc"
-                  keyboardType={'default'}
-                  returnKeyType="next"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  onSubmitEditing={() => {
-                    secondInput.current._root.focus();
-                  }}
-                />
-              </Item>
-              {/*  Event Description section  */}
-              <Item style={styles.itemStyle}>
-                <Input
-                  style={styles.input}
-                  placeholder="Event Description"
-                  placeholderTextColor="#adb4bc"
-                  keyboardType={'default'}
-                  returnKeyType="next"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  secureTextEntry={true}
-                  ref={secondInput}
-                  onSubmitEditing={() => {
-                    thirdInput.current._root.focus();
-                  }}
-                />
-              </Item>
-              {/* Event Address section */}
-              <Item style={styles.itemStyle}>
-                <Input
-                  style={styles.input}
-                  placeholder="Event Address"
-                  placeholderTextColor="#adb4bc"
-                  keyboardType={'default'}
-                  returnKeyType="done"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  secureTextEntry={false}
-                  ref={thirdInput}
-                />
-              </Item>
-              {/* Event Organization section  */}
-              <Item style={styles.itemStyle}>
-                <Input
-                  style={styles.input}
-                  placeholder="Organization"
-                  placeholderTextColor="#adb4bc"
-                  keyboardType={'default'}
-                  returnKeyType="next"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  onSubmitEditing={() => {
-                    secondInput.current._root.focus();
-                  }}
-                />
-              </Item>
-              {/* Coordinator section  */}
-              <Item style={styles.itemStyle}>
-                <Input
-                  style={styles.input}
-                  placeholder="Coordinator"
-                  placeholderTextColor="#adb4bc"
-                  keyboardType={'default'}
-                  returnKeyType="next"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  onSubmitEditing={() => {
-                    secondInput.current._root.focus();
-                  }}
-                />
-              </Item>
-              {/* Coordinator Phone section  */}
-              <Item style={styles.itemStyle}>
-                <Input
-                  style={styles.input}
-                  placeholder="Coordinator Phone Number"
-                  placeholderTextColor="#adb4bc"
-                  keyboardType={'phone-pad'}
-                  returnKeyType="next"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  onSubmitEditing={() => {
-                    secondInput.current._root.focus();
-                  }}
-                />
-              </Item>
-              {/* Coordinator Email section  */}
-              <Item style={styles.itemStyle}>
-                <Input
-                  style={styles.input}
-                  placeholder="Coordinator Email"
-                  placeholderTextColor="#adb4bc"
-                  keyboardType={'email-address'}
-                  returnKeyType="next"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  onSubmitEditing={() => {
-                    secondInput.current._root.focus();
-                  }}
-                />
-              </Item>
-              {/* Reward Point Value section  */}
-              <Item style={styles.itemStyle}>
-                <Input
-                  style={styles.input}
-                  placeholder="Reward Point Value"
-                  placeholderTextColor="#adb4bc"
-                  keyboardType={'number-pad'}
-                  returnKeyType="next"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  onSubmitEditing={() => {
-                    secondInput.current._root.focus();
-                  }}
-                />
-              </Item>
-              {/* Min Volunteers section  */}
-              <Item style={styles.itemStyle}>
-                <Input
-                  style={styles.input}
-                  placeholder="Minimum Volunteers"
-                  placeholderTextColor="#adb4bc"
-                  keyboardType={'number-pad'}
-                  returnKeyType="next"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  onSubmitEditing={() => {
-                    secondInput.current._root.focus();
-                  }}
-                />
-              </Item>
-              {/* Max Volunteers section  */}
-              <Item style={styles.itemStyle}>
-                <Input
-                  style={styles.input}
-                  placeholder="Maximum Volunteers"
-                  placeholderTextColor="#adb4bc"
-                  keyboardType={'number-pad'}
-                  returnKeyType="next"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  onSubmitEditing={() => {
-                    secondInput.current._root.focus();
-                  }}
-                />
-              </Item>
-              {/* Start Date section Use Date-Picker */}
-              <Item style={styles.itemStyle}>
-                <Input
-                  style={styles.input}
-                  placeholder="Start Date"
-                  placeholderTextColor="#adb4bc"
-                  keyboardType={'numeric'}
-                  returnKeyType="next"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  onSubmitEditing={() => {
-                    secondInput.current._root.focus();
-                  }}
-                />
-              </Item>
-              {/* End Date section  */}
-              <Item style={styles.itemStyle}>
-                <Input
-                  style={styles.input}
-                  placeholder="End Date"
-                  placeholderTextColor="#adb4bc"
-                  keyboardType={'numeric'}
-                  returnKeyType="next"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  onSubmitEditing={() => {
-                    secondInput.current._root.focus();
-                  }}
-                />
-              </Item>
-            </View>
-          </Container>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+      <ScrollView>
+        <StatusBar />
+        <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+          <TouchableWithoutFeedback
+            style={styles.container}
+            onPress={Keyboard.dismiss}
+          >
+            <Container style={styles.infoContainer}>
+              <View style={styles.container}>
+                {/* Event Name section    */}
+                <Item style={styles.itemStyle}>
+                  <Input
+                    style={styles.input}
+                    placeholder="Event Name"
+                    placeholderTextColor="#adb4bc"
+                    keyboardType={'default'}
+                    returnKeyType="next"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onSubmitEditing={() => {
+                      secondInput.current._root.focus();
+                    }}
+                    onChangeText={text => setName(text)}
+                  />
+                </Item>
+                {/*  Event Description section  */}
+                <Item style={styles.itemStyle}>
+                  <Input
+                    style={styles.input}
+                    placeholder="Event Description"
+                    placeholderTextColor="#adb4bc"
+                    keyboardType={'default'}
+                    returnKeyType="next"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    ref={secondInput}
+                    onSubmitEditing={() => {
+                      thirdInput.current._root.focus();
+                    }}
+                    onChangeText={text => setDescription(text)}
+                  />
+                </Item>
+                {/* Event Address section */}
+                <Item style={styles.itemStyle}>
+                  <Input
+                    style={styles.input}
+                    placeholder="Event Address"
+                    placeholderTextColor="#adb4bc"
+                    keyboardType={'default'}
+                    returnKeyType="done"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    secureTextEntry={false}
+                    ref={thirdInput}
+                    onChangeText={text => setAddress(text)}
+                  />
+                </Item>
+                {/* Event Organization section  */}
+                <Item style={styles.itemStyle}>
+                  <Input
+                    style={styles.input}
+                    placeholder="Organization"
+                    placeholderTextColor="#adb4bc"
+                    keyboardType={'default'}
+                    returnKeyType="next"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onSubmitEditing={() => {
+                      secondInput.current._root.focus();
+                    }}
+                    onChangeText={text => setOrg(text)}
+                  />
+                </Item>
+                {/* Coordinator section  */}
+                <Item style={styles.itemStyle}>
+                  <Input
+                    style={styles.input}
+                    placeholder="Coordinator"
+                    placeholderTextColor="#adb4bc"
+                    keyboardType={'default'}
+                    returnKeyType="next"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onSubmitEditing={() => {
+                      secondInput.current._root.focus();
+                    }}
+                    onChangeText={text => setCoordinator(text)}
+                  />
+                </Item>
+                {/* Coordinator Phone section  */}
+                <Item style={styles.itemStyle}>
+                  <Input
+                    style={styles.input}
+                    placeholder="Coordinator Phone Number"
+                    placeholderTextColor="#adb4bc"
+                    keyboardType={'phone-pad'}
+                    returnKeyType="next"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onSubmitEditing={() => {
+                      secondInput.current._root.focus();
+                    }}
+                    onChangeText={text => setCoordinatorPhone(text)}
+                  />
+                </Item>
+                {/* Coordinator Email section  */}
+                <Item style={styles.itemStyle}>
+                  <Input
+                    style={styles.input}
+                    placeholder="Coordinator Email"
+                    placeholderTextColor="#adb4bc"
+                    keyboardType={'email-address'}
+                    returnKeyType="next"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onSubmitEditing={() => {
+                      secondInput.current._root.focus();
+                    }}
+                    onChangeText={text => setCoordinatorEmail(text)}
+                  />
+                </Item>
+                {/* Reward Point Value section  */}
+                <Item style={styles.itemStyle}>
+                  <Input
+                    style={styles.input}
+                    placeholder="Reward Point Value"
+                    placeholderTextColor="#adb4bc"
+                    keyboardType={'number-pad'}
+                    returnKeyType="next"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onSubmitEditing={() => {
+                      secondInput.current._root.focus();
+                    }}
+                    onChangeText={text => setRewardPointValue(text)}
+                  />
+                </Item>
+                {/* Min Volunteers section  */}
+                <Item style={styles.itemStyle}>
+                  <Input
+                    style={styles.input}
+                    placeholder="Minimum Volunteers"
+                    placeholderTextColor="#adb4bc"
+                    keyboardType={'number-pad'}
+                    returnKeyType="next"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onSubmitEditing={() => {
+                      secondInput.current._root.focus();
+                    }}
+                    onChangeText={text => setMinVolunteers(text)}
+                  />
+                </Item>
+                {/* Max Volunteers section  */}
+                <Item style={styles.itemStyle}>
+                  <Input
+                    style={styles.input}
+                    placeholder="Maximum Volunteers"
+                    placeholderTextColor="#adb4bc"
+                    keyboardType={'number-pad'}
+                    returnKeyType="next"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onSubmitEditing={() => {
+                      secondInput.current._root.focus();
+                    }}
+                    onChangeText={text => setMaxVolunteers(text)}
+                  />
+                </Item>
+                {/* Start Date section Use Date-Picker */}
+                <Item style={styles.itemStyle}>
+                  <Input
+                    style={styles.input}
+                    placeholder="Start Date"
+                    placeholderTextColor="#adb4bc"
+                    keyboardType={'numeric'}
+                    returnKeyType="next"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onSubmitEditing={() => {
+                      secondInput.current._root.focus();
+                    }}
+                    onChangeText={text => setStartDate(text)}
+                  />
+                </Item>
+                {/* End Date section  */}
+                <Item style={styles.itemStyle}>
+                  <Input
+                    style={styles.input}
+                    placeholder="End Date"
+                    placeholderTextColor="#adb4bc"
+                    keyboardType={'numeric'}
+                    returnKeyType="next"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onSubmitEditing={() => {
+                      secondInput.current._root.focus();
+                    }}
+                    onChangeText={text => setEndDate(text)}
+                  />
+                </Item>
+                <Item style={styles.itemStyle}>
+                  <Button
+                    title="Create Event"
+                    onPress={() => {
+                      event_details.name = name
+                      event_details.description = description
+                      event_details.address = address
+                      event_details.organization = org
+                      event_details.coordinator = coordinator
+                      event_details.coordinatorPhone = coordinatorPhone
+                      event_details.coordinatorEmail = coordinatorEmail
+                      event_details.rewardPointValue = rewardPointValue
+                      event_details.minVolunteers = minVolunteers
+                      event_details.maxVolunteers = maxVolunteers
+                      event_details.volunteers = volunteers
+                      event_details.startDate = startDate
+                      event_details.endDate = endDate
+                      //console.log(event_details)
+                      createEvent();
+                    }}
+                  />
+                </Item>
+              </View>
+            </Container>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      </ScrollView>
     </SafeAreaView>
   );
+
+
 };
+
+
+createEvent = async () => {
+  const event = await API.graphql(
+    graphqlOperation(mutations.createEvent, { input: event_details })
+  );
+  console.log(event);
+};
+
+
 
 const styles = StyleSheet.create({
   container: {
