@@ -13,7 +13,7 @@ import {
   Button,
   ScrollView,
 } from 'react-native';
-import { Container, Item, Input } from 'native-base';
+import { Container, Item, Input, DatePicker } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'react-navigation-hooks';
 import Auth from '@aws-amplify/auth';
@@ -25,22 +25,29 @@ today.setDate(today.getDate() + 57);
 const newDay = new Date();
 newDay.setDate(newDay.getDate() + 59);
 const event_details = {
-  name: '',
-  description: '',
-  address: '',
-  organization: '',
-  coordinator: '',
-  coordinatorPhone: '',
-  coordinatorEmail: '',
-  rewardPointValue: 0,
-  minVolunteers: 0,
-  maxVolunteers: 0,
+  name: 'test',
+  description: 'test',
+  address: '2659 test',
+  organization: 'ttest',
+  coordinator: 'tes',
+  coordinatorPhone: '7703301090',
+  coordinatorEmail: 'yourbuddayaj@gmail.com',
+  rewardPointValue: 3,
+  minVolunteers: 1,
+  maxVolunteers: 2,
   volunteers: [],
   startDate: today,
   endDate: newDay,
 };
 
-export default SignUpScreen = props => {
+createEvent = async () => {
+  const event = await API.graphql(
+    graphqlOperation(mutations.createEvent, { input: event_details })
+  );
+  console.log(event);
+};
+
+export default CreateEventScreen = props => {
   const { navigate } = useNavigation();
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
@@ -57,63 +64,6 @@ export default SignUpScreen = props => {
   const [org, setOrg] = useState('');
   const secondInput = useRef();
   const thirdInput = useRef();
-
-
-
-
-
-
-  signUp = async () => {
-    await Auth.signUp({
-      username: email,
-      password: password,
-      attributes: { name },
-    })
-      .then(() => {
-        console.log('sign up successful!');
-        Alert.alert('Enter the confirmation code you recieved');
-      })
-      .catch(err => {
-        if (!err.message) {
-          console.log('Error when signing up: ', err);
-          Alert.alert('Error when signing up: ', err);
-        } else {
-          console.log('Error when signing up: ', err.message);
-          Alert.alert('Error when signing up: ', err.message);
-        }
-      });
-  };
-
-  confirmSignUp = async () => {
-    await Auth.confirmSignUp(email, authCode)
-      .then(() => {
-        navigate('SignIn');
-        console.log('Confirm sign up successful');
-      })
-      .catch(err => {
-        if (!err.message) {
-          console.log('Error when entering confirmation code: ', err);
-          Alert.alert('Error when entering confirmation code: ', err);
-        } else {
-          console.log('Error when entering confirmation code: ', err.message);
-          Alert.alert('Error when entering confirmation code: ', err.message);
-        }
-      });
-  };
-
-  resendSignUp = async () => {
-    await Auth.resendSignUp(email)
-      .then(() => console.log('Confirmation code resent successfully'))
-      .catch(err => {
-        if (!err.message) {
-          console.log('Error requesting new confirmation code: ', err);
-          Alert.alert('Error requesting new confirmation code: ', err);
-        } else {
-          console.log('Error requesting new confirmation code: ', err.message);
-          Alert.alert('Error requesting new confirmation code: ', err.message);
-        }
-      });
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -287,59 +237,69 @@ export default SignUpScreen = props => {
                   />
                 </Item>
                 {/* Start Date section Use Date-Picker */}
-                <Item style={styles.itemStyle}>
-                  <Input
-                    style={styles.input}
-                    placeholder="Start Date"
-                    placeholderTextColor="#adb4bc"
-                    keyboardType={'numeric'}
-                    returnKeyType="next"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    onSubmitEditing={() => {
-                      secondInput.current._root.focus();
-                    }}
-                    onChangeText={text => setStartDate(text)}
+                <Item>
+                  <Text style={styles.textStyle}>{`Start Date: ${new Date(
+                    startDate
+                  ).toDateString()}`}</Text>
+                  <DatePicker
+                    defaultDate={new Date(2019, 4, 4)}
+                    minimumDate={new Date(2018, 1, 1)}
+                    maximumDate={new Date(2025, 12, 31)}
+                    locale={"en"}
+                    timeZoneOffsetInMinutes={undefined}
+                    modalTransparent={false}
+                    animationType={"fade"}
+                    androidMode={"default"}
+                    placeHolderText="Select date"
+                    textStyle={{ color: "green" }}
+                    placeHolderTextStyle={{ color: "#d3d3d3" }}
+                    onDateChange={date => setStartDate(date)}
+                    disabled={false}
                   />
                 </Item>
                 {/* End Date section  */}
-                <Item style={styles.itemStyle}>
-                  <Input
-                    style={styles.input}
-                    placeholder="End Date"
-                    placeholderTextColor="#adb4bc"
-                    keyboardType={'numeric'}
-                    returnKeyType="next"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    onSubmitEditing={() => {
-                      secondInput.current._root.focus();
-                    }}
-                    onChangeText={text => setEndDate(text)}
+                <Item>
+                  <Text style={styles.textStyle}>{`End Date: ${new Date(
+                    endDate
+                  ).toDateString()}`}</Text>
+                  <DatePicker
+                    defaultDate={new Date(2019, 4, 4)}
+                    minimumDate={new Date(2018, 1, 1)}
+                    maximumDate={new Date(2025, 12, 31)}
+                    locale={"en"}
+                    timeZoneOffsetInMinutes={undefined}
+                    modalTransparent={false}
+                    animationType={"fade"}
+                    androidMode={"default"}
+                    placeHolderText="Select date"
+                    textStyle={{ color: "green" }}
+                    placeHolderTextStyle={{ color: "#d3d3d3" }}
+                    onDateChange={date => setEndDate(date)}
+                    disabled={false}
                   />
                 </Item>
-                <Item style={styles.itemStyle}>
-                  <Button
-                    title="Create Event"
-                    onPress={() => {
-                      event_details.name = name
-                      event_details.description = description
-                      event_details.address = address
-                      event_details.organization = org
-                      event_details.coordinator = coordinator
-                      event_details.coordinatorPhone = coordinatorPhone
-                      event_details.coordinatorEmail = coordinatorEmail
-                      event_details.rewardPointValue = rewardPointValue
-                      event_details.minVolunteers = minVolunteers
-                      event_details.maxVolunteers = maxVolunteers
-                      event_details.volunteers = volunteers
-                      event_details.startDate = startDate
-                      event_details.endDate = endDate
-                      //console.log(event_details)
-                      createEvent();
-                    }}
-                  />
-                </Item>
+                <TouchableOpacity
+                  style={styles.buttonStyle}
+                  onPress={() => {
+                    event_details.name = name
+                    event_details.description = description
+                    event_details.address = address
+                    event_details.organization = org
+                    event_details.coordinator = coordinator
+                    event_details.coordinatorPhone = coordinatorPhone
+                    event_details.coordinatorEmail = coordinatorEmail
+                    event_details.rewardPointValue = rewardPointValue
+                    event_details.minVolunteers = minVolunteers
+                    event_details.maxVolunteers = maxVolunteers
+                    //event_details.volunteers = volunteers
+                    event_details.startDate = startDate
+                    event_details.endDate = endDate
+                    //console.log(event_details)
+                    createEvent();
+                  }}
+                >
+                  <Text style={styles.buttonText}>Create Event</Text>
+                </TouchableOpacity>
               </View>
             </Container>
           </TouchableWithoutFeedback>
@@ -363,6 +323,7 @@ createEvent = async () => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 30,
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',
