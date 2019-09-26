@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import {
+  Alert,
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
@@ -9,32 +10,28 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Keyboard,
-  Alert,
-  Button,
   ScrollView,
 } from 'react-native';
 import { Container, Item, Input, DatePicker } from 'native-base';
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'react-navigation-hooks';
-import Auth from '@aws-amplify/auth';
 import * as mutations from '../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
 
 const today = new Date();
-today.setDate(today.getDate() + 57);
+today.setDate(today.getDate());
 const newDay = new Date();
 newDay.setDate(newDay.getDate() + 59);
 const event_details = {
-  name: 'test',
-  description: 'test',
-  address: '2659 test',
-  organization: 'ttest',
-  coordinator: 'tes',
-  coordinatorPhone: '7703301090',
-  coordinatorEmail: 'yourbuddayaj@gmail.com',
-  rewardPointValue: 3,
+  name: '',
+  description: '',
+  address: '',
+  organization: '',
+  coordinator: '',
+  coordinatorPhone: '',
+  coordinatorEmail: '',
+  rewardPointValue: 0,
   minVolunteers: 1,
-  maxVolunteers: 2,
+  maxVolunteers: 1,
   volunteers: [],
   startDate: today,
   endDate: newDay,
@@ -64,6 +61,20 @@ export default CreateEventScreen = props => {
   const [org, setOrg] = useState('');
   const secondInput = useRef();
   const thirdInput = useRef();
+  const fourthInput = useRef();
+  const fifthInput = useRef();
+  const sixthInput = useRef();
+  const seventhInput = useRef();
+  const eigthInput = useRef();
+  const ninthInput = useRef();
+  const tenthInput = useRef();
+  const eleventhInput = useRef();
+  const twelfthInput = useRef();
+
+  setBothDates = (date) => {
+    setStartDate(date);
+    setEndDate(date);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -121,6 +132,9 @@ export default CreateEventScreen = props => {
                     autoCorrect={false}
                     secureTextEntry={false}
                     ref={thirdInput}
+                    onSubmitEditing={() => {
+                      fourthInput.current._root.focus();
+                    }}
                     onChangeText={text => setAddress(text)}
                   />
                 </Item>
@@ -134,8 +148,9 @@ export default CreateEventScreen = props => {
                     returnKeyType="next"
                     autoCapitalize="none"
                     autoCorrect={false}
+                    ref={fourthInput}
                     onSubmitEditing={() => {
-                      secondInput.current._root.focus();
+                      fifthInput.current._root.focus();
                     }}
                     onChangeText={text => setOrg(text)}
                   />
@@ -150,8 +165,9 @@ export default CreateEventScreen = props => {
                     returnKeyType="next"
                     autoCapitalize="none"
                     autoCorrect={false}
+                    ref={fifthInput}
                     onSubmitEditing={() => {
-                      secondInput.current._root.focus();
+                      sixthInput.current._root.focus();
                     }}
                     onChangeText={text => setCoordinator(text)}
                   />
@@ -166,8 +182,9 @@ export default CreateEventScreen = props => {
                     returnKeyType="next"
                     autoCapitalize="none"
                     autoCorrect={false}
+                    ref={sixthInput}
                     onSubmitEditing={() => {
-                      secondInput.current._root.focus();
+                      seventhInput.current._root.focus();
                     }}
                     onChangeText={text => setCoordinatorPhone(text)}
                   />
@@ -182,8 +199,9 @@ export default CreateEventScreen = props => {
                     returnKeyType="next"
                     autoCapitalize="none"
                     autoCorrect={false}
+                    ref={seventhInput}
                     onSubmitEditing={() => {
-                      secondInput.current._root.focus();
+                      eigthInput.current._root.focus();
                     }}
                     onChangeText={text => setCoordinatorEmail(text)}
                   />
@@ -198,8 +216,9 @@ export default CreateEventScreen = props => {
                     returnKeyType="next"
                     autoCapitalize="none"
                     autoCorrect={false}
+                    ref={eigthInput}
                     onSubmitEditing={() => {
-                      secondInput.current._root.focus();
+                      ninthInput.current._root.focus();
                     }}
                     onChangeText={text => setRewardPointValue(text)}
                   />
@@ -214,8 +233,9 @@ export default CreateEventScreen = props => {
                     returnKeyType="next"
                     autoCapitalize="none"
                     autoCorrect={false}
+                    ref={ninthInput}
                     onSubmitEditing={() => {
-                      secondInput.current._root.focus();
+                      tenthInput.current._root.focus();
                     }}
                     onChangeText={text => setMinVolunteers(text)}
                   />
@@ -230,45 +250,46 @@ export default CreateEventScreen = props => {
                     returnKeyType="next"
                     autoCapitalize="none"
                     autoCorrect={false}
+                    ref={tenthInput}
                     onSubmitEditing={() => {
-                      secondInput.current._root.focus();
+                      eleventhInput.current._root.focus();
                     }}
                     onChangeText={text => setMaxVolunteers(text)}
                   />
                 </Item>
                 {/* Start Date section Use Date-Picker */}
                 <Item>
-                  <Text style={styles.textStyle}>{`Start Date: ${new Date(
-                    startDate
-                  ).toDateString()}`}</Text>
+                  <Text style={styles.textStyle}>{`Start Date: `}</Text>
                   <DatePicker
-                    defaultDate={new Date(2019, 4, 4)}
-                    minimumDate={new Date(2018, 1, 1)}
-                    maximumDate={new Date(2025, 12, 31)}
-                    locale={"en"}
+                    defaultDate={new Date()}
+                    minimumDate={new Date()}
+                    maximumDate={new Date(9999, 12, 31)}
+                    locale={"en-US"}
                     timeZoneOffsetInMinutes={undefined}
-                    modalTransparent={false}
+                    modalTransparent={true}
                     animationType={"fade"}
                     androidMode={"default"}
                     placeHolderText="Select date"
                     textStyle={{ color: "green" }}
                     placeHolderTextStyle={{ color: "#d3d3d3" }}
-                    onDateChange={date => setStartDate(date)}
+                    onDateChange={date => setBothDates(date)}
                     disabled={false}
+                    ref={eleventhInput}
+                    onSubmitEditing={() => {
+                      twelfthInput.current._root.focus();
+                    }}
                   />
                 </Item>
                 {/* End Date section  */}
                 <Item>
-                  <Text style={styles.textStyle}>{`End Date: ${new Date(
-                    endDate
-                  ).toDateString()}`}</Text>
+                  <Text style={styles.textStyle}>{`End Date: `}</Text>
                   <DatePicker
-                    defaultDate={new Date(2019, 4, 4)}
-                    minimumDate={new Date(2018, 1, 1)}
-                    maximumDate={new Date(2025, 12, 31)}
-                    locale={"en"}
+                    defaultDate={new Date()}
+                    minimumDate={startDate}
+                    maximumDate={new Date(9999, 12, 31)}
+                    locale={"en-US"}
                     timeZoneOffsetInMinutes={undefined}
-                    modalTransparent={false}
+                    modalTransparent={true}
                     animationType={"fade"}
                     androidMode={"default"}
                     placeHolderText="Select date"
@@ -276,11 +297,13 @@ export default CreateEventScreen = props => {
                     placeHolderTextStyle={{ color: "#d3d3d3" }}
                     onDateChange={date => setEndDate(date)}
                     disabled={false}
+                    ref={twelfthInput}
                   />
                 </Item>
                 <TouchableOpacity
                   style={styles.buttonStyle}
                   onPress={() => {
+                    var create = false;
                     event_details.name = name
                     event_details.description = description
                     event_details.address = address
@@ -295,7 +318,74 @@ export default CreateEventScreen = props => {
                     event_details.startDate = startDate
                     event_details.endDate = endDate
                     //console.log(event_details)
-                    createEvent();
+                    if (event_details.name == '') {
+                      Alert.alert(
+                        'Error',
+                        'The event must have a name.',
+                        [
+                          {text: 'OK', onPress: () => console.log('OK Pressed')},
+                        ],
+                        {cancelable: false},
+                      );
+                    } else if (event_details.address == '') {
+                      Alert.alert(
+                        'Error',
+                        'The event must have a address/location.',
+                        [
+                          {text: 'OK', onPress: () => console.log('OK Pressed')},
+                        ],
+                        {cancelable: false},
+                      );
+                    } else if (event_details.organization == '') {
+                      Alert.alert(
+                        'Error',
+                        'The event must have an organizer.',
+                        [
+                          {text: 'OK', onPress: () => console.log('OK Pressed')},
+                        ],
+                        {cancelable: false},
+                      );
+                    } else if (event_details.coordinatorPhone == '') {
+                      Alert.alert(
+                        'Error',
+                        'The event must have a valid phone number for contact.',
+                        [
+                          {text: 'OK', onPress: () => console.log('OK Pressed')},
+                        ],
+                        {cancelable: false},
+                      );
+                    } else if (event_details.coordinatorEmail == '') {
+                      Alert.alert(
+                        'Error',
+                        'The event must have a valid email address for contact.',
+                        [
+                          {text: 'OK', onPress: () => console.log('OK Pressed')},
+                        ],
+                        {cancelable: false},
+                      );
+                    } else if (event_details.rewardPointValue == 0) {
+                      Alert.alert(
+                        'Error',
+                        'The event must have a reward value of at least 1..',
+                        [
+                          {text: 'OK', onPress: () => console.log('OK Pressed')},
+                        ],
+                        {cancelable: false},
+                      );
+                    } else {
+                      create = true;
+                    }
+                    if (create) {
+                      createEvent();
+                      Alert.alert(
+                        'Success!',
+                        'Your event has been created!',
+                        [
+                          {text: 'OK', onPress: () => console.log('OK Pressed')},
+                        ],
+                        {cancelable: false},
+                      );
+                    }
                   }}
                 >
                   <Text style={styles.buttonText}>Create Event</Text>
@@ -307,19 +397,7 @@ export default CreateEventScreen = props => {
       </ScrollView>
     </SafeAreaView>
   );
-
-
 };
-
-
-createEvent = async () => {
-  const event = await API.graphql(
-    graphqlOperation(mutations.createEvent, { input: event_details })
-  );
-  console.log(event);
-};
-
-
 
 const styles = StyleSheet.create({
   container: {
