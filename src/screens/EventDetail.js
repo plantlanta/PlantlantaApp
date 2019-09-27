@@ -1,11 +1,13 @@
-import React, { useState,useEffect } from 'react';
-import {Container, Text, Card, Header, Body, Title, Content, CardItem, Button, Left, Right} from 'native-base';
+import React, { useState, useEffect } from 'react';
+import {Container, Card, Body, Content, CardItem, Button, Left, Right} from 'native-base';
+import { Text } from 'react-native'
 import * as queries from '../graphql/queries';
 import { API, graphqlOperation } from 'aws-amplify';
 
 
 Item = ({
     name,
+    organization,
     address,
     description,
     startDate,
@@ -16,16 +18,12 @@ Item = ({
 }) => {
     return (
         <Container>
-          <Header style ={{backgroundColor:'green'}}>
-            <Body style = {{alignItems:'center'}}>
-              <Title>Event Detail</Title>
-            </Body>
-          </Header>
         <Content>
 
           <Card transparent>
             <CardItem header style={{allignItems:'center', justifyContent:'center'}}>
-                <Text>{name}</Text>
+                <Text style = {{fontWeight: 'bold'}}>{name}</Text>
+                <Text>{organization}</Text>
             </CardItem>
           </Card>      
         
@@ -72,35 +70,41 @@ Item = ({
     );
 };
 
-export default EventDetail = id => {
-    const [detail, setDetail] = useState();
+export default EventDetail = () => {
+    let [detail, setDetail] = useState();
     const [refreshing, setRefreshing] = useState(false);
+
+    changeDetail = (variable) => setDetail(variable);
 
     useEffect(() => {
         loadDetail();
       }, []);
     
+
+
     loadDetail = async () => {
         if (!refreshing) {
             setRefreshing(true);
-            const event = await API.graphql(
-                graphqlOperation(queries.getEvent, {id: id})
-            );
-            setDetail(event.data.getEvent);
+            const event = await API.graphql(graphqlOperation(
+              queries.getEvent, {id: '52aa4cd6-8f2f-45bc-92e6-e7baf25508ad'}));
+            
+            changeDetail(event.data.getEvent);
+            console.log(detail);
             setRefreshing(false);
             }
     };
 
     return (
         <Item
-        name = {detail.name}
-        address = {detail.address}
-        description = {detail.description}
-        startDate = {detail.startDate}
-        endDate = {detail.endDate}
-        coorName = {detail.coordinator}
-        coorEmail = {detail.coordinatorEmail}
-        coorContact = {detail.coordinatorPhone}
+        // name = {}
+        // organization = {}
+        // address = {}
+        // description = {}
+        // startDate = {}
+        // endDate = {}
+        // coorName = {}
+        // coorEmail = {}
+        // coorContact = {}
         />
     );
 };
