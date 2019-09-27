@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Alert,
   TouchableOpacity,
@@ -7,58 +7,53 @@ import {
   View,
   Text,
   SafeAreaView,
-  StatusBar,
   KeyboardAvoidingView,
   Keyboard,
   ScrollView,
+  Platform,
 } from 'react-native';
-import { Container, Item, Input, DatePicker } from 'native-base';
-import { useNavigation } from 'react-navigation-hooks';
+import {
+  Container,
+  Item,
+  Input,
+  DatePicker,
+  Content,
+  Label,
+  Icon,
+} from 'native-base';
 import * as mutations from '../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
 
-const today = new Date();
-today.setDate(today.getDate());
-const newDay = new Date();
-newDay.setDate(newDay.getDate() + 59);
-const event_details = {
-  name: '',
-  description: '',
-  address: '',
-  organization: '',
-  coordinator: '',
-  coordinatorPhone: '',
-  coordinatorEmail: '',
-  rewardPointValue: 0,
-  minVolunteers: 1,
-  maxVolunteers: 1,
-  volunteers: [],
-  startDate: today,
-  endDate: newDay,
+const requiredFields = {
+  name: true,
+  address: true,
+  organization: true,
+  coordinatorPhone: true,
+  coordinatorEmail: true,
+  rewardPointValue: true,
 };
 
-createEvent = async () => {
-  const event = await API.graphql(
-    graphqlOperation(mutations.createEvent, { input: event_details })
-  );
-  console.log(event);
-};
-
-export default CreateEventScreen = props => {
-  const { navigate } = useNavigation();
+export default CreateEventScreen = () => {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [description, setDescription] = useState('');
+  const [organization, setOrganization] = useState('');
   const [coordinator, setCoordinator] = useState('');
   const [coordinatorPhone, setCoordinatorPhone] = useState('');
   const [coordinatorEmail, setCoordinatorEmail] = useState('');
   const [minVolunteers, setMinVolunteers] = useState('');
   const [maxVolunteers, setMaxVolunteers] = useState('');
   const [rewardPointValue, setRewardPointValue] = useState('');
-  const [volunteers, setVolunteers] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [org, setOrg] = useState('');
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [errors, setErrors] = useState(requiredFields);
+  const [touched, setTouched] = useState(() => {
+    const temp = { ...requiredFields };
+    Object.keys(temp).forEach(key => (temp[key] = false));
+    console.log(temp);
+    return temp;
+  });
+  const firstInput = useRef();
   const secondInput = useRef();
   const thirdInput = useRef();
   const fourthInput = useRef();
@@ -68,375 +63,481 @@ export default CreateEventScreen = props => {
   const eigthInput = useRef();
   const ninthInput = useRef();
   const tenthInput = useRef();
-  const eleventhInput = useRef();
-  const twelfthInput = useRef();
 
-  setBothDates = (date) => {
-    setStartDate(date);
-    setEndDate(date);
-  }
+  useEffect(() => {
+    setErrors({
+      name: name.length === 0,
+      address: address.length === 0,
+      organization: organization.length === 0,
+      coordinatorPhone: coordinatorPhone.length === 0,
+      coordinatorEmail: coordinatorEmail.length === 0,
+      rewardPointValue: rewardPointValue.length === 0,
+    });
+  }, [
+    name,
+    address,
+    organization,
+    coordinatorPhone,
+    coordinatorEmail,
+    rewardPointValue,
+  ]);
+
+  handleBlur = field => {
+    setTouched({
+      ...touched,
+      [field]: true,
+    });
+  };
+
+  shouldMarkError = field => {
+    return errors[field] && touched[field];
+  };
+
+  createEvent = () => {
+    input = {
+      name,
+      description,
+      address,
+      org,
+      coordinator,
+      coordinatorPhone,
+      coordinatorEmail,
+      rewardPointValue,
+      minVolunteers,
+      maxVolunteers,
+      startDate,
+      endDate,
+    };
+    API.graphql(graphqlOperation(mutations.createEvent, { input: input })).then(
+      event => {
+        console.log(event);
+      }
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <StatusBar />
-        <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-          <TouchableWithoutFeedback
-            style={styles.container}
-            onPress={Keyboard.dismiss}
-          >
-            <Container style={styles.infoContainer}>
-              <View style={styles.container}>
-                {/* Event Name section    */}
-                <Item style={styles.itemStyle}>
-                  <Input
-                    style={styles.input}
-                    placeholder="Event Name"
-                    placeholderTextColor="#adb4bc"
-                    keyboardType={'default'}
-                    returnKeyType="next"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    onSubmitEditing={() => {
-                      secondInput.current._root.focus();
+      {/* <StatusBar /> */}
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.ios ? 'padding' : null}
+        enabled
+      >
+        <TouchableWithoutFeedback
+          style={styles.container}
+          onPress={Keyboard.dismiss}
+        >
+          <Container style={styles.infoContainer}>
+            <Content>
+              <ScrollView style={styles.container}>
+                <View style={styles.inner}>
+                  <Item
+                    style={styles.itemStyle}
+                    error={shouldMarkError('name')}
+                    floatingLabel
+                  >
+                    <Label
+                      style={
+                        shouldMarkError('name')
+                          ? styles.labelStyleError
+                          : styles.labelStyle
+                      }
+                    >
+                      {shouldMarkError('name')
+                        ? 'Event Name is required'
+                        : 'Event Name'}
+                    </Label>
+                    {shouldMarkError('name') ? (
+                      <Icon name="close-circle" />
+                    ) : null}
+                    <Input
+                      style={styles.input}
+                      keyboardType={'default'}
+                      returnKeyType="next"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      ref={firstInput}
+                      value={name}
+                      onChangeText={text => setName(text)}
+                      onBlur={() => {
+                        handleBlur('name');
+                      }}
+                      onSubmitEditing={() => {
+                        secondInput.current._root.focus();
+                      }}
+                    />
+                  </Item>
+                  <Item style={styles.itemStyle} floatingLabel>
+                    <Label style={styles.labelStyle}>Event Description</Label>
+                    <Input
+                      style={styles.input}
+                      keyboardType={'default'}
+                      returnKeyType="next"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      ref={secondInput}
+                      value={description}
+                      onChangeText={text => setDescription(text)}
+                      onSubmitEditing={() => {
+                        thirdInput.current._root.focus();
+                      }}
+                    />
+                  </Item>
+                  <Item
+                    style={styles.itemStyle}
+                    floatingLabel
+                    error={shouldMarkError('address')}
+                  >
+                    <Label
+                      style={
+                        shouldMarkError('address')
+                          ? styles.labelStyleError
+                          : styles.labelStyle
+                      }
+                    >
+                      {shouldMarkError('address')
+                        ? 'Event Address is required'
+                        : 'Event Address'}
+                    </Label>
+                    {shouldMarkError('address') ? (
+                      <Icon name="close-circle" />
+                    ) : null}
+                    <Input
+                      style={styles.input}
+                      keyboardType={'default'}
+                      returnKeyType="done"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      secureTextEntry={false}
+                      ref={thirdInput}
+                      value={address}
+                      onChangeText={text => setAddress(text)}
+                      onBlur={() => {
+                        handleBlur('address');
+                      }}
+                      onSubmitEditing={() => {
+                        fourthInput.current._root.focus();
+                      }}
+                    />
+                  </Item>
+                  <Item
+                    style={styles.itemStyle}
+                    floatingLabel
+                    error={shouldMarkError('organization')}
+                  >
+                    <Label
+                      style={
+                        shouldMarkError('organization')
+                          ? styles.labelStyleError
+                          : styles.labelStyle
+                      }
+                    >
+                      {shouldMarkError('organization')
+                        ? 'Organization is required'
+                        : 'Organization'}
+                    </Label>
+                    {shouldMarkError('organization') ? (
+                      <Icon name="close-circle" />
+                    ) : null}
+                    <Input
+                      style={styles.input}
+                      keyboardType={'default'}
+                      returnKeyType="next"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      ref={fourthInput}
+                      value={organization}
+                      onChangeText={text => setOrganization(text)}
+                      onBlur={() => {
+                        handleBlur('organization');
+                      }}
+                      onSubmitEditing={() => {
+                        fifthInput.current._root.focus();
+                      }}
+                    />
+                  </Item>
+                  <Item style={styles.itemStyle} floatingLabel>
+                    <Label style={styles.labelStyle}>Coordinator</Label>
+                    <Input
+                      style={styles.input}
+                      keyboardType={'default'}
+                      returnKeyType="next"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      ref={fifthInput}
+                      value={coordinator}
+                      onChangeText={text => setCoordinator(text)}
+                      onSubmitEditing={() => {
+                        sixthInput.current._root.focus();
+                      }}
+                    />
+                  </Item>
+                  <Item
+                    style={styles.itemStyle}
+                    floatingLabel
+                    error={shouldMarkError('coordinatorPhone')}
+                  >
+                    <Label
+                      style={
+                        shouldMarkError('coordinatorPhone')
+                          ? styles.labelStyleError
+                          : styles.labelStyle
+                      }
+                    >
+                      {shouldMarkError('coordinatorPhone')
+                        ? 'Coordinator Phone Number Required'
+                        : 'Coordinator Phone Number'}
+                    </Label>
+                    {shouldMarkError('coordinatorPhone') ? (
+                      <Icon name="close-circle" />
+                    ) : null}
+                    <Input
+                      style={styles.input}
+                      keyboardType={'phone-pad'}
+                      returnKeyType="next"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      ref={sixthInput}
+                      value={coordinatorPhone}
+                      onChangeText={text => setCoordinatorPhone(text)}
+                      onBlur={() => {
+                        handleBlur('coordinatorPhone');
+                      }}
+                      onSubmitEditing={() => {
+                        seventhInput.current._root.focus();
+                      }}
+                    />
+                  </Item>
+                  <Item
+                    style={styles.itemStyle}
+                    floatingLabel
+                    error={shouldMarkError('coordinatorEmail')}
+                  >
+                    <Label
+                      style={
+                        shouldMarkError('coordinatorEmail')
+                          ? styles.labelStyleError
+                          : styles.labelStyle
+                      }
+                    >
+                      {shouldMarkError('coordinatorEmail')
+                        ? 'Coordinator Email Required'
+                        : 'Coordinator Email'}
+                    </Label>
+                    {shouldMarkError('coordinatorEmail') ? (
+                      <Icon name="close-circle" />
+                    ) : null}
+                    <Input
+                      style={styles.input}
+                      keyboardType={'email-address'}
+                      returnKeyType="next"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      ref={seventhInput}
+                      value={coordinatorEmail}
+                      onChangeText={text => setCoordinatorEmail(text)}
+                      onBlur={() => {
+                        handleBlur('coordinatorEmail');
+                      }}
+                      onSubmitEditing={() => {
+                        eigthInput.current._root.focus();
+                      }}
+                    />
+                  </Item>
+                  <Item
+                    style={styles.itemStyle}
+                    floatingLabel
+                    error={shouldMarkError('rewardPointValue')}
+                  >
+                    <Label
+                      style={
+                        shouldMarkError('rewardPointValue')
+                          ? styles.labelStyleError
+                          : styles.labelStyle
+                      }
+                    >
+                      {shouldMarkError('rewardPointValue')
+                        ? 'Reward Point Value required'
+                        : 'Reward Point Value'}
+                    </Label>
+                    {shouldMarkError('rewardPointValue') ? (
+                      <Icon name="close-circle" />
+                    ) : null}
+                    <Input
+                      style={styles.input}
+                      keyboardType={'number-pad'}
+                      returnKeyType="next"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      ref={eigthInput}
+                      value={rewardPointValue}
+                      onChangeText={text => setRewardPointValue(text)}
+                      onBlur={() => {
+                        handleBlur('rewardPointValue');
+                      }}
+                      onSubmitEditing={() => {
+                        ninthInput.current._root.focus();
+                      }}
+                    />
+                  </Item>
+                  <Item style={styles.itemStyle} floatingLabel>
+                    <Label style={styles.labelStyle}>Minimum Volunteers</Label>
+                    <Input
+                      style={styles.input}
+                      keyboardType={'number-pad'}
+                      returnKeyType="next"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      ref={ninthInput}
+                      value={minVolunteers}
+                      onChangeText={text => setMinVolunteers(text)}
+                      onSubmitEditing={() => {
+                        tenthInput.current._root.focus();
+                      }}
+                    />
+                  </Item>
+                  <Item style={styles.itemStyle} floatingLabel>
+                    <Label style={styles.labelStyle}>Maximum Volunteers</Label>
+                    <Input
+                      style={styles.input}
+                      keyboardType={'number-pad'}
+                      returnKeyType="next"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      ref={tenthInput}
+                      value={maxVolunteers}
+                      onChangeText={text => setMaxVolunteers(text)}
+                    />
+                  </Item>
+                  <Item style={styles.itemStyle} stackedLabel>
+                    <Label style={styles.labelStyle}>Start Date</Label>
+                    <DatePicker
+                      defaultDate={startDate}
+                      minimumDate={startDate}
+                      locale={'en-US'}
+                      timeZoneOffsetInMinutes={undefined}
+                      modalTransparent={false}
+                      animationType={'fade'}
+                      androidMode={'default'}
+                      textStyle={styles.input}
+                      onDateChange={date => {
+                        if (date > endDate) {
+                          setStartDate(date);
+                          setEndDate(date);
+                        } else {
+                          setStartDate(date);
+                        }
+                      }}
+                    />
+                  </Item>
+                  <Item style={styles.itemStyle} stackedLabel>
+                    <Label style={styles.labelStyle}>End Date</Label>
+                    <DatePicker
+                      defaultDate={endDate}
+                      minimumDate={startDate}
+                      locale={'en-US'}
+                      timeZoneOffsetInMinutes={undefined}
+                      modalTransparent={false}
+                      animationType={'fade'}
+                      androidMode={'default'}
+                      textStyle={styles.input}
+                      value={endDate}
+                      onDateChange={date => setEndDate(date)}
+                    />
+                  </Item>
+                  <TouchableOpacity
+                    style={styles.buttonStyle}
+                    onPress={() => {
+                      if (Object.keys(errors).some(k => errors[k])) {
+                        Alert.alert(
+                          'Error',
+                          'Please fill out all required fields',
+                          [
+                            {
+                              text: 'OK',
+                            },
+                          ],
+                          { cancelable: false }
+                        );
+                        setTouched(requiredFields);
+                      } else {
+                        createEvent();
+                        Alert.alert(
+                          'Success!',
+                          'Your event has been created!',
+                          [
+                            {
+                              text: 'OK',
+                              onPress: () => console.log('OK Pressed'),
+                            },
+                          ],
+                          { cancelable: false }
+                        );
+                      }
                     }}
-                    onChangeText={text => setName(text)}
-                  />
-                </Item>
-                {/*  Event Description section  */}
-                <Item style={styles.itemStyle}>
-                  <Input
-                    style={styles.input}
-                    placeholder="Event Description"
-                    placeholderTextColor="#adb4bc"
-                    keyboardType={'default'}
-                    returnKeyType="next"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    ref={secondInput}
-                    onSubmitEditing={() => {
-                      thirdInput.current._root.focus();
-                    }}
-                    onChangeText={text => setDescription(text)}
-                  />
-                </Item>
-                {/* Event Address section */}
-                <Item style={styles.itemStyle}>
-                  <Input
-                    style={styles.input}
-                    placeholder="Event Address"
-                    placeholderTextColor="#adb4bc"
-                    keyboardType={'default'}
-                    returnKeyType="done"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    secureTextEntry={false}
-                    ref={thirdInput}
-                    onSubmitEditing={() => {
-                      fourthInput.current._root.focus();
-                    }}
-                    onChangeText={text => setAddress(text)}
-                  />
-                </Item>
-                {/* Event Organization section  */}
-                <Item style={styles.itemStyle}>
-                  <Input
-                    style={styles.input}
-                    placeholder="Organization"
-                    placeholderTextColor="#adb4bc"
-                    keyboardType={'default'}
-                    returnKeyType="next"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    ref={fourthInput}
-                    onSubmitEditing={() => {
-                      fifthInput.current._root.focus();
-                    }}
-                    onChangeText={text => setOrg(text)}
-                  />
-                </Item>
-                {/* Coordinator section  */}
-                <Item style={styles.itemStyle}>
-                  <Input
-                    style={styles.input}
-                    placeholder="Coordinator"
-                    placeholderTextColor="#adb4bc"
-                    keyboardType={'default'}
-                    returnKeyType="next"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    ref={fifthInput}
-                    onSubmitEditing={() => {
-                      sixthInput.current._root.focus();
-                    }}
-                    onChangeText={text => setCoordinator(text)}
-                  />
-                </Item>
-                {/* Coordinator Phone section  */}
-                <Item style={styles.itemStyle}>
-                  <Input
-                    style={styles.input}
-                    placeholder="Coordinator Phone Number"
-                    placeholderTextColor="#adb4bc"
-                    keyboardType={'phone-pad'}
-                    returnKeyType="next"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    ref={sixthInput}
-                    onSubmitEditing={() => {
-                      seventhInput.current._root.focus();
-                    }}
-                    onChangeText={text => setCoordinatorPhone(text)}
-                  />
-                </Item>
-                {/* Coordinator Email section  */}
-                <Item style={styles.itemStyle}>
-                  <Input
-                    style={styles.input}
-                    placeholder="Coordinator Email"
-                    placeholderTextColor="#adb4bc"
-                    keyboardType={'email-address'}
-                    returnKeyType="next"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    ref={seventhInput}
-                    onSubmitEditing={() => {
-                      eigthInput.current._root.focus();
-                    }}
-                    onChangeText={text => setCoordinatorEmail(text)}
-                  />
-                </Item>
-                {/* Reward Point Value section  */}
-                <Item style={styles.itemStyle}>
-                  <Input
-                    style={styles.input}
-                    placeholder="Reward Point Value"
-                    placeholderTextColor="#adb4bc"
-                    keyboardType={'number-pad'}
-                    returnKeyType="next"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    ref={eigthInput}
-                    onSubmitEditing={() => {
-                      ninthInput.current._root.focus();
-                    }}
-                    onChangeText={text => setRewardPointValue(text)}
-                  />
-                </Item>
-                {/* Min Volunteers section  */}
-                <Item style={styles.itemStyle}>
-                  <Input
-                    style={styles.input}
-                    placeholder="Minimum Volunteers"
-                    placeholderTextColor="#adb4bc"
-                    keyboardType={'number-pad'}
-                    returnKeyType="next"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    ref={ninthInput}
-                    onSubmitEditing={() => {
-                      tenthInput.current._root.focus();
-                    }}
-                    onChangeText={text => setMinVolunteers(text)}
-                  />
-                </Item>
-                {/* Max Volunteers section  */}
-                <Item style={styles.itemStyle}>
-                  <Input
-                    style={styles.input}
-                    placeholder="Maximum Volunteers"
-                    placeholderTextColor="#adb4bc"
-                    keyboardType={'number-pad'}
-                    returnKeyType="next"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    ref={tenthInput}
-                    onSubmitEditing={() => {
-                      eleventhInput.current._root.focus();
-                    }}
-                    onChangeText={text => setMaxVolunteers(text)}
-                  />
-                </Item>
-                {/* Start Date section Use Date-Picker */}
-                <Item>
-                  <Text style={styles.textStyle}>{`Start Date: `}</Text>
-                  <DatePicker
-                    defaultDate={new Date()}
-                    minimumDate={new Date()}
-                    maximumDate={new Date(9999, 12, 31)}
-                    locale={"en-US"}
-                    timeZoneOffsetInMinutes={undefined}
-                    modalTransparent={true}
-                    animationType={"fade"}
-                    androidMode={"default"}
-                    placeHolderText="Select date"
-                    textStyle={{ color: "green" }}
-                    placeHolderTextStyle={{ color: "#d3d3d3" }}
-                    onDateChange={date => setBothDates(date)}
-                    disabled={false}
-                    ref={eleventhInput}
-                    onSubmitEditing={() => {
-                      twelfthInput.current._root.focus();
-                    }}
-                  />
-                </Item>
-                {/* End Date section  */}
-                <Item>
-                  <Text style={styles.textStyle}>{`End Date: `}</Text>
-                  <DatePicker
-                    defaultDate={new Date()}
-                    minimumDate={startDate}
-                    maximumDate={new Date(9999, 12, 31)}
-                    locale={"en-US"}
-                    timeZoneOffsetInMinutes={undefined}
-                    modalTransparent={true}
-                    animationType={"fade"}
-                    androidMode={"default"}
-                    placeHolderText="Select date"
-                    textStyle={{ color: "green" }}
-                    placeHolderTextStyle={{ color: "#d3d3d3" }}
-                    onDateChange={date => setEndDate(date)}
-                    disabled={false}
-                    ref={twelfthInput}
-                  />
-                </Item>
-                <TouchableOpacity
-                  style={styles.buttonStyle}
-                  onPress={() => {
-                    var create = false;
-                    event_details.name = name
-                    event_details.description = description
-                    event_details.address = address
-                    event_details.organization = org
-                    event_details.coordinator = coordinator
-                    event_details.coordinatorPhone = coordinatorPhone
-                    event_details.coordinatorEmail = coordinatorEmail
-                    event_details.rewardPointValue = rewardPointValue
-                    event_details.minVolunteers = minVolunteers
-                    event_details.maxVolunteers = maxVolunteers
-                    //event_details.volunteers = volunteers
-                    event_details.startDate = startDate
-                    event_details.endDate = endDate
-                    //console.log(event_details)
-                    if (event_details.name == '') {
-                      Alert.alert(
-                        'Error',
-                        'The event must have a name.',
-                        [
-                          {text: 'OK', onPress: () => console.log('OK Pressed')},
-                        ],
-                        {cancelable: false},
-                      );
-                    } else if (event_details.address == '') {
-                      Alert.alert(
-                        'Error',
-                        'The event must have a address/location.',
-                        [
-                          {text: 'OK', onPress: () => console.log('OK Pressed')},
-                        ],
-                        {cancelable: false},
-                      );
-                    } else if (event_details.organization == '') {
-                      Alert.alert(
-                        'Error',
-                        'The event must have an organizer.',
-                        [
-                          {text: 'OK', onPress: () => console.log('OK Pressed')},
-                        ],
-                        {cancelable: false},
-                      );
-                    } else if (event_details.coordinatorPhone == '') {
-                      Alert.alert(
-                        'Error',
-                        'The event must have a valid phone number for contact.',
-                        [
-                          {text: 'OK', onPress: () => console.log('OK Pressed')},
-                        ],
-                        {cancelable: false},
-                      );
-                    } else if (event_details.coordinatorEmail == '') {
-                      Alert.alert(
-                        'Error',
-                        'The event must have a valid email address for contact.',
-                        [
-                          {text: 'OK', onPress: () => console.log('OK Pressed')},
-                        ],
-                        {cancelable: false},
-                      );
-                    } else if (event_details.rewardPointValue == 0) {
-                      Alert.alert(
-                        'Error',
-                        'The event must have a reward value of at least 1..',
-                        [
-                          {text: 'OK', onPress: () => console.log('OK Pressed')},
-                        ],
-                        {cancelable: false},
-                      );
-                    } else {
-                      create = true;
-                    }
-                    if (create) {
-                      createEvent();
-                      Alert.alert(
-                        'Success!',
-                        'Your event has been created!',
-                        [
-                          {text: 'OK', onPress: () => console.log('OK Pressed')},
-                        ],
-                        {cancelable: false},
-                      );
-                    }
-                  }}
-                >
-                  <Text style={styles.buttonText}>Create Event</Text>
-                </TouchableOpacity>
-              </View>
-            </Container>
-          </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
-      </ScrollView>
+                  >
+                    <Text style={styles.buttonText}>Create Event</Text>
+                  </TouchableOpacity>
+                  <View style={{ flex: 1 }} />
+                </View>
+              </ScrollView>
+            </Content>
+          </Container>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 30,
     flex: 1,
     backgroundColor: '#fff',
-    justifyContent: 'center',
-    flexDirection: 'column',
+  },
+  inner: {
+    flex: 1,
+    justifyContent: 'flex-end',
   },
   input: {
-    flex: 1,
     fontSize: 17,
     fontWeight: 'bold',
     color: '#000',
   },
+  inputError: {
+    flex: 1,
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#F00',
+  },
   infoContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    padding: 30,
+    paddingHorizontal: 30,
+    paddingTop: 10,
+    paddingBottom: 30,
     backgroundColor: '#fff',
   },
   itemStyle: {
-    marginBottom: 10,
-  },
-  iconStyle: {
-    color: '#1faa00',
-    fontSize: 28,
-    marginRight: 15,
+    marginTop: 15,
+    marginBottom: 5,
+    alignItems: 'flex-start',
   },
   buttonStyle: {
     alignItems: 'center',
     backgroundColor: '#64dd17',
-    padding: 14,
-    marginBottom: 10,
+    padding: 15,
+    marginTop: 30,
     borderRadius: 3,
   },
   buttonText: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#000',
+  },
+  labelStyle: {
+    color: '#161',
+  },
+  labelStyleError: {
+    color: '#F00',
   },
 });
