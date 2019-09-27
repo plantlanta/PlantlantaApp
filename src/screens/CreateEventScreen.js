@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   ScrollView,
-  Platform,
+  Platform
 } from 'react-native';
 import {
   Container,
@@ -19,10 +19,63 @@ import {
   DatePicker,
   Content,
   Label,
-  Icon,
+  Icon
 } from 'native-base';
-import * as mutations from '../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
+import * as mutations from '../graphql/mutations';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff'
+  },
+  inner: {
+    flex: 1,
+    justifyContent: 'flex-end'
+  },
+  input: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#000'
+  },
+  inputError: {
+    flex: 1,
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#F00'
+  },
+  infoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingHorizontal: 30,
+    paddingTop: 10,
+    paddingBottom: 30,
+    backgroundColor: '#fff'
+  },
+  itemStyle: {
+    marginTop: 15,
+    marginBottom: 5,
+    alignItems: 'flex-start'
+  },
+  buttonStyle: {
+    alignItems: 'center',
+    backgroundColor: '#64dd17',
+    padding: 15,
+    marginTop: 30,
+    borderRadius: 3
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000'
+  },
+  labelStyle: {
+    color: '#161'
+  },
+  labelStyleError: {
+    color: '#F00'
+  }
+});
 
 const requiredFields = {
   name: true,
@@ -30,10 +83,10 @@ const requiredFields = {
   organization: true,
   coordinatorPhone: true,
   coordinatorEmail: true,
-  rewardPointValue: true,
+  rewardPointValue: true
 };
 
-export default CreateEventScreen = () => {
+const CreateEventScreen = () => {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [description, setDescription] = useState('');
@@ -49,8 +102,9 @@ export default CreateEventScreen = () => {
   const [errors, setErrors] = useState(requiredFields);
   const [touched, setTouched] = useState(() => {
     const temp = { ...requiredFields };
-    Object.keys(temp).forEach(key => (temp[key] = false));
-    console.log(temp);
+    Object.keys(temp).forEach(key => {
+      temp[key] = false;
+    });
     return temp;
   });
   const firstInput = useRef();
@@ -71,7 +125,7 @@ export default CreateEventScreen = () => {
       organization: organization.length === 0,
       coordinatorPhone: coordinatorPhone.length === 0,
       coordinatorEmail: coordinatorEmail.length === 0,
-      rewardPointValue: rewardPointValue.length === 0,
+      rewardPointValue: rewardPointValue.length === 0
     });
   }, [
     name,
@@ -79,26 +133,26 @@ export default CreateEventScreen = () => {
     organization,
     coordinatorPhone,
     coordinatorEmail,
-    rewardPointValue,
+    rewardPointValue
   ]);
 
-  handleBlur = field => {
+  const handleBlur = field => {
     setTouched({
       ...touched,
-      [field]: true,
+      [field]: true
     });
   };
 
-  shouldMarkError = field => {
+  const shouldMarkError = field => {
     return errors[field] && touched[field];
   };
 
-  createEvent = () => {
-    input = {
+  const createEvent = () => {
+    const input = {
       name,
       description,
       address,
-      org,
+      organization,
       coordinator,
       coordinatorPhone,
       coordinatorEmail,
@@ -106,9 +160,9 @@ export default CreateEventScreen = () => {
       minVolunteers,
       maxVolunteers,
       startDate,
-      endDate,
+      endDate
     };
-    API.graphql(graphqlOperation(mutations.createEvent, { input: input })).then(
+    API.graphql(graphqlOperation(mutations.createEvent, { input })).then(
       event => {
         console.log(event);
       }
@@ -152,7 +206,7 @@ export default CreateEventScreen = () => {
                     ) : null}
                     <Input
                       style={styles.input}
-                      keyboardType={'default'}
+                      keyboardType="default"
                       returnKeyType="next"
                       autoCapitalize="none"
                       autoCorrect={false}
@@ -163,7 +217,7 @@ export default CreateEventScreen = () => {
                         handleBlur('name');
                       }}
                       onSubmitEditing={() => {
-                        secondInput.current._root.focus();
+                        secondInput.current_root.focus();
                       }}
                     />
                   </Item>
@@ -171,7 +225,7 @@ export default CreateEventScreen = () => {
                     <Label style={styles.labelStyle}>Event Description</Label>
                     <Input
                       style={styles.input}
-                      keyboardType={'default'}
+                      keyboardType="default"
                       returnKeyType="next"
                       autoCapitalize="none"
                       autoCorrect={false}
@@ -204,7 +258,7 @@ export default CreateEventScreen = () => {
                     ) : null}
                     <Input
                       style={styles.input}
-                      keyboardType={'default'}
+                      keyboardType="default"
                       returnKeyType="done"
                       autoCapitalize="none"
                       autoCorrect={false}
@@ -241,7 +295,7 @@ export default CreateEventScreen = () => {
                     ) : null}
                     <Input
                       style={styles.input}
-                      keyboardType={'default'}
+                      keyboardType="default"
                       returnKeyType="next"
                       autoCapitalize="none"
                       autoCorrect={false}
@@ -260,7 +314,7 @@ export default CreateEventScreen = () => {
                     <Label style={styles.labelStyle}>Coordinator</Label>
                     <Input
                       style={styles.input}
-                      keyboardType={'default'}
+                      keyboardType="default"
                       returnKeyType="next"
                       autoCapitalize="none"
                       autoCorrect={false}
@@ -293,7 +347,7 @@ export default CreateEventScreen = () => {
                     ) : null}
                     <Input
                       style={styles.input}
-                      keyboardType={'phone-pad'}
+                      keyboardType="phone-pad"
                       returnKeyType="next"
                       autoCapitalize="none"
                       autoCorrect={false}
@@ -329,7 +383,7 @@ export default CreateEventScreen = () => {
                     ) : null}
                     <Input
                       style={styles.input}
-                      keyboardType={'email-address'}
+                      keyboardType="email-address"
                       returnKeyType="next"
                       autoCapitalize="none"
                       autoCorrect={false}
@@ -365,7 +419,7 @@ export default CreateEventScreen = () => {
                     ) : null}
                     <Input
                       style={styles.input}
-                      keyboardType={'number-pad'}
+                      keyboardType="number-pad"
                       returnKeyType="next"
                       autoCapitalize="none"
                       autoCorrect={false}
@@ -384,7 +438,7 @@ export default CreateEventScreen = () => {
                     <Label style={styles.labelStyle}>Minimum Volunteers</Label>
                     <Input
                       style={styles.input}
-                      keyboardType={'number-pad'}
+                      keyboardType="number-pad"
                       returnKeyType="next"
                       autoCapitalize="none"
                       autoCorrect={false}
@@ -400,7 +454,7 @@ export default CreateEventScreen = () => {
                     <Label style={styles.labelStyle}>Maximum Volunteers</Label>
                     <Input
                       style={styles.input}
-                      keyboardType={'number-pad'}
+                      keyboardType="number-pad"
                       returnKeyType="next"
                       autoCapitalize="none"
                       autoCorrect={false}
@@ -414,11 +468,11 @@ export default CreateEventScreen = () => {
                     <DatePicker
                       defaultDate={startDate}
                       minimumDate={startDate}
-                      locale={'en-US'}
+                      locale="en-US"
                       timeZoneOffsetInMinutes={undefined}
                       modalTransparent={false}
-                      animationType={'fade'}
-                      androidMode={'default'}
+                      animationType="fade"
+                      androidMode="default"
                       textStyle={styles.input}
                       onDateChange={date => {
                         if (date > endDate) {
@@ -435,11 +489,11 @@ export default CreateEventScreen = () => {
                     <DatePicker
                       defaultDate={endDate}
                       minimumDate={startDate}
-                      locale={'en-US'}
+                      locale="en-US"
                       timeZoneOffsetInMinutes={undefined}
                       modalTransparent={false}
-                      animationType={'fade'}
-                      androidMode={'default'}
+                      animationType="fade"
+                      androidMode="default"
                       textStyle={styles.input}
                       value={endDate}
                       onDateChange={date => setEndDate(date)}
@@ -454,8 +508,8 @@ export default CreateEventScreen = () => {
                           'Please fill out all required fields',
                           [
                             {
-                              text: 'OK',
-                            },
+                              text: 'OK'
+                            }
                           ],
                           { cancelable: false }
                         );
@@ -468,8 +522,8 @@ export default CreateEventScreen = () => {
                           [
                             {
                               text: 'OK',
-                              onPress: () => console.log('OK Pressed'),
-                            },
+                              onPress: () => console.log('OK Pressed')
+                            }
                           ],
                           { cancelable: false }
                         );
@@ -489,55 +543,4 @@ export default CreateEventScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  inner: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  input: {
-    fontSize: 17,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  inputError: {
-    flex: 1,
-    fontSize: 17,
-    fontWeight: 'bold',
-    color: '#F00',
-  },
-  infoContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingHorizontal: 30,
-    paddingTop: 10,
-    paddingBottom: 30,
-    backgroundColor: '#fff',
-  },
-  itemStyle: {
-    marginTop: 15,
-    marginBottom: 5,
-    alignItems: 'flex-start',
-  },
-  buttonStyle: {
-    alignItems: 'center',
-    backgroundColor: '#64dd17',
-    padding: 15,
-    marginTop: 30,
-    borderRadius: 3,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  labelStyle: {
-    color: '#161',
-  },
-  labelStyleError: {
-    color: '#F00',
-  },
-});
+export default CreateEventScreen;

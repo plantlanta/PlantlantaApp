@@ -5,7 +5,7 @@ import {
   createSwitchNavigator,
   createStackNavigator,
   createDrawerNavigator,
-  createMaterialTopTabNavigator,
+  createMaterialTopTabNavigator
 } from 'react-navigation';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -29,8 +29,8 @@ const configurations = {
       tabBarlabel: 'Events',
       tabBarIcon: ({ tintColor }) => {
         <Ionicons style={{ fontSize: 26, color: tintColor }} name="ios-menu" />;
-      },
-    },
+      }
+    }
   },
   Profile: {
     screen: ProfileScreen,
@@ -41,8 +41,8 @@ const configurations = {
           style={{ fontSize: 26, color: tintColor }}
           name="ios-person"
         />;
-      },
-    },
+      }
+    }
   },
   Settings: {
     screen: SettingsScreen,
@@ -53,8 +53,8 @@ const configurations = {
           style={{ fontSize: 26, color: tintColor }}
           name="ios-settings"
         />;
-      },
-    },
+      }
+    }
   },
   CreateEvent: {
     screen: CreateEventScreen,
@@ -65,9 +65,9 @@ const configurations = {
           style={{ fontSize: 26, color: tintColor }}
           name="ios-settings"
         />;
-      },
-    },
-  },
+      }
+    }
+  }
 };
 
 const options = {
@@ -75,36 +75,36 @@ const options = {
   swipeEnabled: true,
   animationEnabled: true,
   navigationOptions: {
-    tabBarVisible: true,
+    tabBarVisible: true
   },
   tabBarOptions: {
     showLabel: true,
     activeTintColor: '#fff',
     inactiveTintColor: '#fff9',
     style: {
-      backgroundColor: '#1faa00',
+      backgroundColor: '#1faa00'
     },
     labelStyle: {
       fontSize: 12,
       fontWeight: 'bold',
       marginBottom: 12,
-      marginTop: 12,
+      marginTop: 12
     },
     indicatorStyle: {
-      height: 0,
+      height: 0
     },
-    showIcon: true,
-  },
+    showIcon: true
+  }
 };
 
 // App tabs located at the bottom of the screen
 const AppTabNavigator = createMaterialTopTabNavigator(configurations, options);
 
 AppTabNavigator.navigationOptions = ({ navigation }) => {
-  let { routeName } = navigation.state.routes[navigation.state.index];
-  let headerTitle = routeName;
+  const { routeName } = navigation.state.routes[navigation.state.index];
+  const headerTitle = routeName;
   return {
-    headerTitle,
+    headerTitle
   };
 };
 
@@ -119,9 +119,9 @@ const AppStackNavigator = createStackNavigator({
             <Ionicons name="md-menu" size={26} />
           </View>
         </TouchableOpacity>
-      ),
-    }),
-  },
+      )
+    })
+  }
 });
 
 // App stack for the drawer
@@ -130,7 +130,7 @@ const AppDrawerNavigator = createDrawerNavigator({
   Events: EventListScreen,
   Profile: ProfileScreen,
   Settings: SettingsScreen,
-  CreateEvent: CreateEventScreen,
+  CreateEvent: CreateEventScreen
 });
 
 // Auth stack
@@ -139,27 +139,27 @@ const AuthStackNavigator = createStackNavigator({
     screen: SignInScreen,
     navigationOptions: () => ({
       title: `Log in to your account`,
-      headerBackTitle: 'Back',
-    }),
+      headerBackTitle: 'Back'
+    })
   },
   SignUp: {
     screen: SignUpScreen,
     navigationOptions: () => ({
-      title: `Create a new account`,
-    }),
+      title: `Create a new account`
+    })
   },
   ForgetPassword: {
     screen: ForgetPasswordScreen,
     navigationOptions: () => ({
-      title: `Create a new password`,
-    }),
-  },
+      title: `Create a new password`
+    })
+  }
 });
 
 export default createAppContainer(
   createSwitchNavigator({
     Authloading: AuthLoadingScreen,
     Auth: AuthStackNavigator,
-    App: AppDrawerNavigator,
+    App: AppDrawerNavigator
   })
 );

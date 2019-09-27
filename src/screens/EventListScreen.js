@@ -4,12 +4,25 @@ import {
   StyleSheet,
   FlatList,
   Text,
-  StatusBar,
   SafeAreaView,
-  TouchableOpacity,
+  TouchableOpacity
 } from 'react-native';
-import { useNavigation } from 'react-navigation-hooks';
+// import { useNavigation } from 'react-navigation-hooks';
 import { API, graphqlOperation } from 'aws-amplify';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'center'
+  },
+  textStyle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    padding: 10,
+    color: '#000'
+  }
+});
 
 const query = `query ListEvents(
         $filter: ModelEventFilterInput
@@ -32,13 +45,13 @@ const query = `query ListEvents(
       }
       `;
 
-const filter = {
-  endDate: {
-    ge: new Date(),
-  },
-};
+// const filter = {
+//   endDate: {
+//     ge: new Date()
+//   }
+// };
 
-Item = ({
+const Item = ({
   id,
   name,
   organization,
@@ -46,7 +59,7 @@ Item = ({
   maxVolunteers,
   volunteers,
   startDate,
-  endDate,
+  endDate
 }) => {
   return (
     <TouchableOpacity
@@ -56,42 +69,41 @@ Item = ({
       <Text style={styles.textStyle}>{name}</Text>
       <Text style={styles.textStyle}>{organization}</Text>
       <Text style={styles.textStyle}>{rewardPointValue}</Text>
-      <Text
-        style={styles.textStyle}
-      >{`Volunteers: ${volunteers.length}/${maxVolunteers}`}</Text>
-      <Text style={styles.textStyle}>{`Starts: ${new Date(
-        startDate
-      ).toDateString()}`}</Text>
-      <Text style={styles.textStyle}>{`Ends: ${new Date(
-        endDate
-      ).toDateString()}`}</Text>
+      <Text style={styles.textStyle}>
+        {`Volunteers: ${volunteers.length}/${maxVolunteers}`}
+      </Text>
+      <Text style={styles.textStyle}>
+        {`Starts: ${new Date(startDate).toDateString()}`}
+      </Text>
+      <Text style={styles.textStyle}>
+        {`Ends: ${new Date(endDate).toDateString()}`}
+      </Text>
     </TouchableOpacity>
   );
 };
 
-export default EventListScreen = () => {
-  const { navigate } = useNavigation();
+const EventListScreen = () => {
+  // const { navigate } = useNavigation();
   const [events, setEvents] = useState();
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    loadEvents();
-  }, []);
-
-  loadEvents = () => {
+  const loadEvents = () => {
     if (!refreshing) {
       setRefreshing(true);
       API.graphql(graphqlOperation(query)).then(res => {
-        console.log(res);
+        // console.log(res);
         setEvents(res.data.listEvents.items);
         setRefreshing(false);
       });
     }
   };
 
+  useEffect(() => {
+    loadEvents();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar />
       <FlatList
         style={{ flex: 1 }}
         data={events}
@@ -112,7 +124,7 @@ export default EventListScreen = () => {
             style={{
               height: 1,
               width: '100%',
-              backgroundColor: '#CED0CE',
+              backgroundColor: '#CED0CE'
             }}
           />
         )}
@@ -124,16 +136,4 @@ export default EventListScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-  },
-  textStyle: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    padding: 10,
-    color: '#000',
-  },
-});
+export default EventListScreen;

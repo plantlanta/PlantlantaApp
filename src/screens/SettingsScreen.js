@@ -9,7 +9,7 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Keyboard,
-  Alert,
+  Alert
 } from 'react-native';
 import { Container, Item, Input } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
@@ -47,9 +47,9 @@ export default ScreenName = () => {
         {
           text: 'Cancel',
           onPress: () => console.log('Canceled'),
-          style: 'cancel',
+          style: 'cancel'
         },
-        { text: 'OK', onPress: () => this.signOut() },
+        { text: 'OK', onPress: () => this.signOut() }
       ],
       { cancelable: false }
     );
@@ -73,13 +73,13 @@ export default ScreenName = () => {
           onPress={Keyboard.dismiss}
         >
           <View style={styles.container}>
-            {/*Infos*/}
+            {/*Infos */}
             <Container style={styles.infoContainer}>
               <View style={styles.container}>
                 <View
                   style={[
                     styles.buttonStyle,
-                    { borderRadius: 4, marginBottom: 20 },
+                    { borderRadius: 4, marginBottom: 20 }
                   ]}
                 >
                   <Text style={styles.buttonText}>Change password</Text>
@@ -94,7 +94,7 @@ export default ScreenName = () => {
                     returnKeyType="next"
                     autoCapitalize="none"
                     autoCorrect={false}
-                    secureTextEntry={true}
+                    secureTextEntry
                     onSubmitEditing={() => {
                       inputRef.current.focus();
                     }}
@@ -111,7 +111,7 @@ export default ScreenName = () => {
                     returnKeyType="go"
                     autoCapitalize="none"
                     autoCorrect={false}
-                    secureTextEntry={true}
+                    secureTextEntry
                     ref={inputRef}
                     onChangeText={value => setPassword2(value)}
                   />
@@ -126,7 +126,7 @@ export default ScreenName = () => {
                   style={{
                     justifyContent: 'center',
                     alignItems: 'center',
-                    marginBottom: 100,
+                    marginBottom: 100
                   }}
                 />
                 <TouchableOpacity
@@ -134,8 +134,8 @@ export default ScreenName = () => {
                     styles.buttonStyle,
                     {
                       flexDirection: 'row',
-                      justifyContent: 'center',
-                    },
+                      justifyContent: 'center'
+                    }
                   ]}
                   onPress={signOutAlert}
                 >
@@ -158,13 +158,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   input: {
     flex: 1,
     fontSize: 17,
     fontWeight: 'bold',
-    color: '#000',
+    color: '#000'
   },
   infoContainer: {
     position: 'absolute',
@@ -175,26 +175,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 30,
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   itemStyle: {
-    marginTop: 20,
+    marginTop: 20
   },
   iconStyle: {
     color: '#1faa00',
     fontSize: 28,
-    marginRight: 15,
+    marginRight: 15
   },
   buttonStyle: {
     alignItems: 'center',
     backgroundColor: '#64dd17',
     padding: 14,
     marginTop: 20,
-    borderRadius: 3,
+    borderRadius: 3
   },
   buttonText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000',
-  },
+    color: '#000'
+  }
 });
