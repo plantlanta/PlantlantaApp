@@ -15,7 +15,6 @@ import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 import SignInScreen from './src/screens/SignInScreen';
 import ForgetPasswordScreen from './src/screens/ForgetPasswordScreen';
-import HomeScreen from './src/screens/HomeScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import EventListScreen from './src/screens/EventListScreen';
@@ -24,15 +23,6 @@ import CreateEventScreen from './src/screens/CreateEventScreen';
 Amplify.configure(config);
 
 const configurations = {
-  Home: {
-    screen: HomeScreen,
-    navigationOptions: {
-      tabBarLabel: 'Home',
-      tabBarIcon: ({ tintColor }) => {
-        <Ionicons style={{ fontSize: 26, color: tintColor }} name="ios-home" />;
-      },
-    },
-  },
   EventList: {
     screen: EventListScreen,
     navigationOptions: {
@@ -137,7 +127,6 @@ const AppStackNavigator = createStackNavigator({
 // App stack for the drawer
 const AppDrawerNavigator = createDrawerNavigator({
   Tabs: AppStackNavigator,
-  Home: HomeScreen,
   Events: EventListScreen,
   Profile: ProfileScreen,
   Settings: SettingsScreen,
