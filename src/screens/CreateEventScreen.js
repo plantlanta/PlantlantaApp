@@ -100,6 +100,7 @@ const CreateEventScreen = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [errors, setErrors] = useState(requiredFields);
+  const [volunteers, setVolunteers] = useState([])
   const [touched, setTouched] = useState(() => {
     const temp = { ...requiredFields };
     Object.keys(temp).forEach(key => {

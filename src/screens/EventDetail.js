@@ -9,10 +9,14 @@ import {
   Left,
   Right
 } from 'native-base';
-import { Text } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { API, graphqlOperation } from 'aws-amplify';
+import Auth from '@aws-amplify/auth';
 import { useNavigationParam } from 'react-navigation-hooks';
 import * as queries from '../graphql/queries';
+
+
+
 
 const EventDetail = () => {
   const [event, setEvent] = useState();
@@ -31,6 +35,15 @@ const EventDetail = () => {
   useEffect(() => {
     loadEvent();
   }, []);
+
+  signUp = async () => {
+    await Auth.currentAuthenticatedUser()
+      .then(user => {
+        console.log(user.username);
+        event.volunteers.push(user.username)
+        console.log(event)
+      })
+  };
 
   return event ? (
     <Container>
@@ -83,9 +96,12 @@ const EventDetail = () => {
           <CardItem>
             <Left />
             <Right>
-              <Button success>
-                <Text>Sign Up</Text>
-              </Button>
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={signUp}
+              >
+                <Text style={styles.buttonText}>Sign Up</Text>
+              </TouchableOpacity>
             </Right>
           </CardItem>
         </Card>
@@ -95,3 +111,24 @@ const EventDetail = () => {
 };
 
 export default EventDetail;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f0f',
+    justifyContent: 'center',
+    flexDirection: 'column'
+  },
+  buttonStyle: {
+    alignItems: 'center',
+    backgroundColor: '#64dd17',
+    padding: 14,
+    marginTop: 20,
+    borderRadius: 3
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000'
+  }
+});
