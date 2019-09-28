@@ -160,7 +160,8 @@ const CreateEventScreen = () => {
       minVolunteers,
       maxVolunteers,
       startDate,
-      endDate
+      endDate,
+      volunteers: []
     };
     API.graphql(graphqlOperation(mutations.createEvent, { input })).then(
       event => {
