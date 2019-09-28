@@ -66,14 +66,13 @@ export default ScreenName = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar />
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
         <TouchableWithoutFeedback
           style={styles.container}
           onPress={Keyboard.dismiss}
         >
           <View style={styles.container}>
-            {/*Infos */}
+            {/* Infos */}
             <Container style={styles.infoContainer}>
               <View style={styles.container}>
                 <View
@@ -156,7 +155,7 @@ export default ScreenName = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f0f',
     justifyContent: 'center',
     flexDirection: 'column'
   },
@@ -167,14 +166,11 @@ const styles = StyleSheet.create({
     color: '#000'
   },
   infoContainer: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    height: 600,
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 30,
+    padding: 30,
     backgroundColor: '#fff'
   },
   itemStyle: {
