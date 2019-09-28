@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   TouchableOpacity
 } from 'react-native';
-// import { useNavigation } from 'react-navigation-hooks';
+import { useNavigation } from 'react-navigation-hooks';
 import { API, graphqlOperation } from 'aws-amplify';
 
 const styles = StyleSheet.create({
@@ -61,10 +61,15 @@ const Item = ({
   startDate,
   endDate
 }) => {
+  const { navigate } = useNavigation();
+
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => console.log(`pressed ${id}`)}
+      onPress={() => {
+        console.log(`pressed ${id}`);
+        navigate('EventDetail', { id });
+      }}
     >
       <Text style={styles.textStyle}>{name}</Text>
       <Text style={styles.textStyle}>{organization}</Text>
@@ -85,7 +90,6 @@ const Item = ({
 };
 
 const EventListScreen = () => {
-  // const { navigate } = useNavigation();
   const [events, setEvents] = useState();
   const [refreshing, setRefreshing] = useState(false);
 

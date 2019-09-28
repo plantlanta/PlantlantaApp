@@ -1,110 +1,97 @@
 import React, { useState, useEffect } from 'react';
-import {Container, Card, Body, Content, CardItem, Button, Left, Right} from 'native-base';
-import { Text } from 'react-native'
-import * as queries from '../graphql/queries';
+import {
+  Container,
+  Card,
+  Body,
+  Content,
+  CardItem,
+  Button,
+  Left,
+  Right
+} from 'native-base';
+import { Text } from 'react-native';
 import { API, graphqlOperation } from 'aws-amplify';
+import { useNavigationParam } from 'react-navigation-hooks';
+import * as queries from '../graphql/queries';
 
+const EventDetail = () => {
+  const [event, setEvent] = useState();
+  const id = useNavigationParam('id');
 
-Item = ({
-    name,
-    organization,
-    address,
-    description,
-    startDate,
-    endDate,
-    coorName,
-    coorEmail,
-    coorContact,
-}) => {
-    return (
-        <Container>
-        <Content>
+  const loadEvent = () => {
+    API.graphql(
+      graphqlOperation(queries.getEvent, {
+        id
+      })
+    ).then(res => {
+      setEvent(res.data.getEvent);
+    });
+  };
 
-          <Card transparent>
-            <CardItem header style={{allignItems:'center', justifyContent:'center'}}>
-                <Text style = {{fontWeight: 'bold'}}>{name}</Text>
-                <Text>{organization}</Text>
-            </CardItem>
-          </Card>      
-        
-          <Card>
-            <CardItem>
-              <Text>{address}</Text>
-            </CardItem>
-            <CardItem>
-              <Text>{description}</Text>
-            </CardItem>
-            <CardItem>
-              <Body>
-                <Text>{`Start Date: ${new Date(startDate).toDateString()}`}</Text>
-                <Text>{`End Date: ${new Date(endDate).toDateString()}`}</Text>
-              </Body>
-            </CardItem>
-          </Card>
+  useEffect(() => {
+    loadEvent();
+  }, []);
 
-          <Card>
-            <CardItem header>
-              <Text>Coordinator Contact Information</Text>
-            </CardItem>
-            <CardItem>
-              <Body>
-                <Text>{coorName}</Text>
-                <Text>{coorEmail}</Text>
-                <Text>{coorContact}</Text>
-              </Body>
-            </CardItem>
-          </Card>
+  return event ? (
+    <Container>
+      <Content>
+        <Card transparent>
+          <CardItem
+            header
+            style={{ allignItems: 'center', justifyContent: 'center' }}
+          >
+            <Body>
+              <Text style={{ fontWeight: 'bold' }}>{event.name}</Text>
+              <Text>{event.organization}</Text>
+            </Body>
+          </CardItem>
+        </Card>
 
-          <Card transparent>
-            <CardItem>
-              <Left></Left>
-              <Right>
-                <Button success>
-                  <Text>Sign Up</Text>
-                </Button>
-              </Right>
-              </CardItem>
-          </Card>
-        </Content>
-      </Container>
-    );
+        <Card>
+          <CardItem>
+            <Text>{event.address}</Text>
+          </CardItem>
+          <CardItem>
+            <Text>{event.description}</Text>
+          </CardItem>
+          <CardItem>
+            <Body>
+              <Text>
+                {`Start Date: ${new Date(event.startDate).toDateString()}`}
+              </Text>
+              <Text>
+                {`End Date: ${new Date(event.endDate).toDateString()}`}
+              </Text>
+            </Body>
+          </CardItem>
+        </Card>
+
+        <Card>
+          <CardItem header>
+            <Text>Coordinator Contact Information</Text>
+          </CardItem>
+          <CardItem>
+            <Body>
+              <Text>{event.coordinator}</Text>
+              <Text>{event.coordinatorEmail}</Text>
+              <Text>{event.coordinatorPhone}</Text>
+            </Body>
+          </CardItem>
+        </Card>
+
+        <Card transparent>
+          <CardItem>
+            <Left />
+            <Right>
+              <Button success>
+                <Text>Sign Up</Text>
+              </Button>
+            </Right>
+          </CardItem>
+        </Card>
+      </Content>
+    </Container>
+  ) : null;
 };
 
-export default EventDetail = () => {
-    let [detail, setDetail] = useState();
-    const [refreshing, setRefreshing] = useState(false);
-
-    changeDetail = (variable) => setDetail(variable);
-
-    useEffect(() => {
-        loadDetail();
-      }, []);
-    
-
-
-    loadDetail = async () => {
-        if (!refreshing) {
-            setRefreshing(true);
-            const event = await API.graphql(graphqlOperation(
-              queries.getEvent, {id: '52aa4cd6-8f2f-45bc-92e6-e7baf25508ad'}));
-            
-            changeDetail(event.data.getEvent);
-            console.log(detail);
-            setRefreshing(false);
-            }
-    };
-
-    return (
-        <Item
-        // name = {}
-        // organization = {}
-        // address = {}
-        // description = {}
-        // startDate = {}
-        // endDate = {}
-        // coorName = {}
-        // coorEmail = {}
-        // coorContact = {}
-        />
-    );
-};
+export default EventDetail;
