@@ -68,9 +68,11 @@ const Item = ({
     >
       <Text style={styles.textStyle}>{name}</Text>
       <Text style={styles.textStyle}>{organization}</Text>
-      <Text style={styles.textStyle}>{rewardPointValue}</Text>
       <Text style={styles.textStyle}>
-        {`Volunteers: ${volunteers.length}/${maxVolunteers}`}
+        {`Reward Points: ${rewardPointValue}`}
+      </Text>
+      <Text style={styles.textStyle}>
+        {`Volunteers: ${volunteers ? volunteers.length : 0}/${maxVolunteers}`}
       </Text>
       <Text style={styles.textStyle}>
         {`Starts: ${new Date(startDate).toDateString()}`}
