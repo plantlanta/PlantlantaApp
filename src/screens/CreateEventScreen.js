@@ -266,7 +266,7 @@ export default CreateEventScreen = props => {
                     maximumDate={new Date(9999, 12, 31)}
                     locale={"en-US"}
                     timeZoneOffsetInMinutes={undefined}
-                    modalTransparent={true}
+                    modalTransparent={false}
                     animationType={"fade"}
                     androidMode={"default"}
                     placeHolderText="Select date"
@@ -289,7 +289,7 @@ export default CreateEventScreen = props => {
                     maximumDate={new Date(9999, 12, 31)}
                     locale={"en-US"}
                     timeZoneOffsetInMinutes={undefined}
-                    modalTransparent={true}
+                    modalTransparent={false}
                     animationType={"fade"}
                     androidMode={"default"}
                     placeHolderText="Select date"
