@@ -155,7 +155,7 @@ export default ScreenName = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f',
+    backgroundColor: '#fff',
     justifyContent: 'center',
     flexDirection: 'column'
   },
