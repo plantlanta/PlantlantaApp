@@ -10,10 +10,13 @@ import {
   Right
 } from 'native-base';
 import { Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { FloatingAction } from "react-native-floating-action";
 import { API, graphqlOperation } from 'aws-amplify';
 import Auth from '@aws-amplify/auth';
 import { useNavigationParam } from 'react-navigation-hooks';
 import * as queries from '../graphql/queries';
+import * as mutations from '../graphql/mutations';
+import Icon from 'react-native-vector-icons/Foundation';
 
 
 
@@ -32,6 +35,9 @@ const EventDetail = () => {
     });
   };
 
+  const plusIcon = <Icon name="plus" size={30} color="#008000" />;
+  const xIcon = <Icon name="x" size={30} color="#008000" />;
+
   useEffect(() => {
     loadEvent();
   }, []);
@@ -39,11 +45,23 @@ const EventDetail = () => {
   signUp = async () => {
     await Auth.currentAuthenticatedUser()
       .then(user => {
+        this.floatingAction.icon = xIcon
         console.log(user.username);
-        event.volunteers.push(user.username)
+        if (event.volunteers.includes(user.username)) {
+          event.volunteers.pop(user.username)
+        } else {
+          event.volunteers.push(user.username)
+        }
         console.log(event)
       })
+      const input = event
+      API.graphql(graphqlOperation(mutations.updateEvent, { input })).then(
+        event => {
+          console.log(event);
+        }
+      );
   };
+
 
   return event ? (
     <Container>
@@ -91,20 +109,16 @@ const EventDetail = () => {
             </Body>
           </CardItem>
         </Card>
-
-        <Card transparent>
-          <CardItem>
-            <Left />
-            <Right>
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={signUp}
-              >
-                <Text style={styles.buttonText}>Sign Up</Text>
-              </TouchableOpacity>
-            </Right>
-          </CardItem>
+        <Card>
+          <FloatingAction
+            // actions={actions}
+            ref={(ref) => { this.floatingAction = ref; }}
+            color='#FFFFFF'
+            onPressMain={signUp}
+            floatingIcon={plusIcon}
+          />
         </Card>
+
       </Content>
     </Container>
   ) : null;
