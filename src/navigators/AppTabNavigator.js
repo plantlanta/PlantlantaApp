@@ -1,4 +1,5 @@
-import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { Icon } from 'native-base';
 import { createMaterialTopTabNavigator } from 'react-navigation';
 import EventListScreen from '../screens/EventListScreen';
 import ProfileScreen from '../screens/AccountScreen';
@@ -10,45 +11,36 @@ const configurations = {
     screen: EventListScreen,
     navigationOptions: {
       tabBarlabel: 'Events',
-      tabBarIcon: ({ tintColor }) => {
-        <Ionicons style={{ fontSize: 26, color: tintColor }} name="ios-menu" />;
-      }
+      tabBarIcon: ({ tintColor }) => (
+        <Icon style={{ fontSize: 26, color: tintColor }} name="ios-menu" />
+      )
     }
   },
   Profile: {
     screen: ProfileScreen,
     navigationOptions: {
       tabBarLabel: 'Profile',
-      tabBarIcon: ({ tintColor }) => {
-        <Ionicons
-          style={{ fontSize: 26, color: tintColor }}
-          name="ios-person"
-        />;
-      }
+      tabBarIcon: ({ tintColor }) => (
+        <Icon style={{ fontSize: 26, color: tintColor }} name="ios-person" />
+      )
     }
   },
   Settings: {
     screen: SettingsScreen,
     navigationOptions: {
       tabBarLabel: 'Settings',
-      tabBarIcon: ({ tintColor }) => {
-        <Ionicons
-          style={{ fontSize: 26, color: tintColor }}
-          name="ios-settings"
-        />;
-      }
+      tabBarIcon: ({ tintColor }) => (
+        <Icon style={{ fontSize: 26, color: tintColor }} name="ios-settings" />
+      )
     }
   },
   CreateEvent: {
     screen: CreateEventScreen,
     navigationOptions: {
       tabBarLabel: 'Create Event',
-      tabBarIcon: ({ tintColor }) => {
-        <Ionicons
-          style={{ fontSize: 26, color: tintColor }}
-          name="ios-settings"
-        />;
-      }
+      tabBarIcon: ({ tintColor }) => (
+        <Icon style={{ fontSize: 26, color: tintColor }} name="ios-settings" />
+      )
     }
   }
 };

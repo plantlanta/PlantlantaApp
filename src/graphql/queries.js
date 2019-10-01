@@ -46,3 +46,38 @@ export const listEvents = `query ListEvents(
   }
 }
 `;
+export const getReward = `query GetReward($id: ID!) {
+  getReward(id: $id) {
+    id
+    name
+    description
+    brand
+    link
+    coupon
+    rewardPointValue
+    startDate
+    endDate
+  }
+}
+`;
+export const listRewards = `query ListRewards(
+  $filter: ModelRewardFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listRewards(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      name
+      description
+      brand
+      link
+      coupon
+      rewardPointValue
+      startDate
+      endDate
+    }
+    nextToken
+  }
+}
+`;

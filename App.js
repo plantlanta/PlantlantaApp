@@ -1,5 +1,5 @@
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import Amplify from '@aws-amplify/core';
+import Amplify from 'aws-amplify';
 import config from './src/aws-exports';
 import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
 import AuthStackNavigator from './src/navigators/AuthStackNavigator';

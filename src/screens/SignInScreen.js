@@ -9,22 +9,67 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Keyboard,
-  Alert,
+  Alert
 } from 'react-native';
-import { Container, Item, Input } from 'native-base';
-import { Ionicons } from '@expo/vector-icons';
+import { Container, Item, Input, Icon } from 'native-base';
 import { useNavigation } from 'react-navigation-hooks';
-import Auth from '@aws-amplify/auth';
+import Auth from 'aws-amplify';
 
-export default SignInScreen = () => {
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    flexDirection: 'column'
+  },
+  input: {
+    flex: 1,
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#000'
+  },
+  infoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 30,
+    backgroundColor: '#fff'
+  },
+  itemStyle: {
+    marginBottom: 20
+  },
+  iconStyle: {
+    color: '#fff',
+    fontSize: 30,
+    marginRight: 15
+  },
+  buttonStyle: {
+    alignItems: 'center',
+    backgroundColor: '#64dd17',
+    padding: 14,
+    marginBottom: 20,
+    borderRadius: 3
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000'
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly'
+  }
+});
+
+const SignInScreen = () => {
   const { navigate } = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const secondInput = useRef();
 
-  signIn = async () => {
+  const signIn = async () => {
     await Auth.signIn(email, password)
-      .then(user => {
+      .then(() => {
         navigate('Authloading');
       })
       .catch(err => {
@@ -49,12 +94,12 @@ export default SignInScreen = () => {
           <Container style={styles.infoContainer}>
             <View style={styles.container}>
               <Item style={styles.itemStyle}>
-                <Ionicons name="ios-person" style={styles.iconStyle} />
+                <Icon name="ios-person" style={styles.iconStyle} />
                 <Input
                   style={styles.input}
                   placeholder="Email"
                   placeholderTextColor="#adb4bc"
-                  keyboardType={'email-address'}
+                  keyboardType="email-address"
                   returnKeyType="next"
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -65,7 +110,7 @@ export default SignInScreen = () => {
                 />
               </Item>
               <Item style={styles.itemStyle}>
-                <Ionicons name="ios-lock" style={styles.iconStyle} />
+                <Icon name="ios-lock" style={styles.iconStyle} />
                 <Input
                   style={styles.input}
                   placeholder="Password"
@@ -73,7 +118,7 @@ export default SignInScreen = () => {
                   returnKeyType="go"
                   autoCapitalize="none"
                   autoCorrect={false}
-                  secureTextEntry={true}
+                  secureTextEntry
                   ref={secondInput}
                   onChangeText={value => setPassword(value)}
                 />
@@ -107,48 +152,5 @@ export default SignInScreen = () => {
     </SafeAreaView>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    flexDirection: 'column',
-  },
-  input: {
-    flex: 1,
-    fontSize: 17,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  infoContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 30,
-    backgroundColor: '#fff',
-  },
-  itemStyle: {
-    marginBottom: 20,
-  },
-  iconStyle: {
-    color: '#fff',
-    fontSize: 30,
-    marginRight: 15,
-  },
-  buttonStyle: {
-    alignItems: 'center',
-    backgroundColor: '#64dd17',
-    padding: 14,
-    marginBottom: 20,
-    borderRadius: 3,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-  },
-});
+
+export default SignInScreen;

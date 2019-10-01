@@ -1,11 +1,11 @@
 import { createDrawerNavigator } from 'react-navigation-drawer';
-import EventNavigator from './EventStackNavigator';
+import EventStackNavigator from './EventStackNavigator';
 import AccountStackNavigator from './AccountStackNavigator';
 import SettingsStackNavigator from './SettingsStackNavigator';
 import CreateEventStackNavigator from './CreateEventStackNavigator';
 
 const RouteConfig = {
-  Events: { screen: EventNavigator },
+  Events: { screen: EventStackNavigator },
   Account: { screen: AccountStackNavigator },
   Settings: { screen: SettingsStackNavigator },
   CreateEvent: { screen: CreateEventStackNavigator }
