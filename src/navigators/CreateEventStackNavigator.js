@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Icon } from 'native-base';
 import { createStackNavigator } from 'react-navigation';
 import CreateEventScreen from '../screens/CreateEventScreen';
 
@@ -12,7 +12,7 @@ const RouteConfig = {
       headerLeft: (
         <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
           <View style={{ paddingHorizontal: 10 }}>
-            <Ionicons name="md-menu" size={26} />
+            <Icon name="md-menu" size={26} />
           </View>
         </TouchableOpacity>
       )

@@ -14,3 +14,15 @@ type Event @model {
   startDate: AWSDateTime
   endDate: AWSDateTime
 }
+
+type Reward @model {
+  id: ID!
+  name: String
+  description: String
+  brand: String
+  link: AWSURL
+  coupon: [String]
+  rewardPointValue: Int
+  startDate: AWSDateTime
+  endDate: AWSDateTime
+}

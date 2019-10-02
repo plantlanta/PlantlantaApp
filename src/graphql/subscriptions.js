@@ -58,3 +58,45 @@ export const onDeleteEvent = `subscription OnDeleteEvent {
   }
 }
 `;
+export const onCreateReward = `subscription OnCreateReward {
+  onCreateReward {
+    id
+    name
+    description
+    brand
+    link
+    coupon
+    rewardPointValue
+    startDate
+    endDate
+  }
+}
+`;
+export const onUpdateReward = `subscription OnUpdateReward {
+  onUpdateReward {
+    id
+    name
+    description
+    brand
+    link
+    coupon
+    rewardPointValue
+    startDate
+    endDate
+  }
+}
+`;
+export const onDeleteReward = `subscription OnDeleteReward {
+  onDeleteReward {
+    id
+    name
+    description
+    brand
+    link
+    coupon
+    rewardPointValue
+    startDate
+    endDate
+  }
+}
+`;

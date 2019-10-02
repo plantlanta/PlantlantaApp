@@ -58,3 +58,45 @@ export const deleteEvent = `mutation DeleteEvent($input: DeleteEventInput!) {
   }
 }
 `;
+export const createReward = `mutation CreateReward($input: CreateRewardInput!) {
+  createReward(input: $input) {
+    id
+    name
+    description
+    brand
+    link
+    coupon
+    rewardPointValue
+    startDate
+    endDate
+  }
+}
+`;
+export const updateReward = `mutation UpdateReward($input: UpdateRewardInput!) {
+  updateReward(input: $input) {
+    id
+    name
+    description
+    brand
+    link
+    coupon
+    rewardPointValue
+    startDate
+    endDate
+  }
+}
+`;
+export const deleteReward = `mutation DeleteReward($input: DeleteRewardInput!) {
+  deleteReward(input: $input) {
+    id
+    name
+    description
+    brand
+    link
+    coupon
+    rewardPointValue
+    startDate
+    endDate
+  }
+}
+`;
