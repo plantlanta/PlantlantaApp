@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import Auth from 'aws-amplify';
+import Auth from '@aws-amplify/auth';
 
 const styles = StyleSheet.create({
   container: {

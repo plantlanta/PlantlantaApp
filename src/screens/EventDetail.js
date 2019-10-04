@@ -36,7 +36,6 @@ const EventDetail = () => {
   };
 
   const plusIcon = <Icon name="plus" size={30} color="#008000" />;
-  const xIcon = <Icon name="x" size={30} color="#008000" />;
 
   useEffect(() => {
     loadEvent();
@@ -45,7 +44,6 @@ const EventDetail = () => {
   signUp = async () => {
     await Auth.currentAuthenticatedUser()
       .then(user => {
-        this.floatingAction.icon = xIcon
         console.log(user.username);
         if (event.volunteers.includes(user.username)) {
           event.volunteers.pop(user.username)
