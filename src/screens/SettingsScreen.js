@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { Container, Item, Input, Icon } from 'native-base';
 import { useNavigation } from 'react-navigation-hooks';
-import Auth from 'aws-amplify';
+import Auth from '@aws-amplify/auth';
 
 const styles = StyleSheet.create({
   container: {

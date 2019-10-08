@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   Alert,
+  Picker,
 } from 'react-native';
 import { Container, Item, Input } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,6 +22,7 @@ export default SignUpScreen = props => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [accountType, setAccountType] = useState('');
   const [authCode, setAuthcode] = useState('');
   const secondInput = useRef();
   const thirdInput = useRef();
@@ -29,7 +31,7 @@ export default SignUpScreen = props => {
     await Auth.signUp({
       username: email,
       password: password,
-      attributes: { name },
+      attributes: { 'name': name, 'custom:accountType': accountType }
     })
       .then(() => {
         console.log('sign up successful!');
@@ -138,6 +140,16 @@ export default SignUpScreen = props => {
                   onChangeText={value => setName(value)}
                 />
               </Item>
+              <Picker
+                selectedValue={accountType}
+                mode='dropdown'
+                // style={{height: 50, width: 100}}
+                onValueChange={(itemValue) =>
+                  setAccountType(itemValue)
+                }>
+                <Picker.Item label="Volunteer" value="volunteer" />
+                <Picker.Item label="Staff" value="staff" />
+              </Picker>
               <TouchableOpacity
                 style={styles.buttonStyle}
                 onPress={() => signUp()}

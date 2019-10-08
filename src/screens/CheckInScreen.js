@@ -17,14 +17,6 @@ import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
 
 
-// function Item({ title }) {
-//   return (
-//     <View style={styles.item}>
-//       <Text style={styles.title}>{title}</Text>
-//     </View>
-//   );
-// }
-
 const CheckInScreen = () => {
   const [event, setEvent] = useState();
   const [volunteers, setVolunteers] = useState();
@@ -53,7 +45,6 @@ const CheckInScreen = () => {
   useEffect(() => {
     loadEvent();
   }, []);
-
 
 
 
