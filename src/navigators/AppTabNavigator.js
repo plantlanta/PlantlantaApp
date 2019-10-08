@@ -42,6 +42,15 @@ const configurations = {
         <Icon style={{ fontSize: 26, color: tintColor }} name="ios-settings" />
       )
     }
+  },
+  CheckIn : {
+    screen: EventCheckIn,
+    navigationOptions: {
+      tabBarLabel: 'Check In For Event',
+      tabBarIcon: ({ tintColor }) => (
+        <Icon style={{ fontSize: 26, color: tintColor }} name="ios-settings" />
+      )
+    }
   }
 };
 
