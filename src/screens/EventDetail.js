@@ -24,6 +24,7 @@ import Icon from 'react-native-vector-icons/Foundation';
 const EventDetail = () => {
   const [event, setEvent] = useState();
   const id = useNavigationParam('id');
+  const [username, setUsername] = useState();
 
   const loadEvent = () => {
     API.graphql(
@@ -35,30 +36,43 @@ const EventDetail = () => {
     });
   };
 
+  const xIcon = <Icon name="x" size={30} color="#008000" />;
   const plusIcon = <Icon name="plus" size={30} color="#008000" />;
 
   useEffect(() => {
     loadEvent();
+    getUserName();
   }, []);
 
-  signUp = async () => {
-    await Auth.currentAuthenticatedUser()
-      .then(user => {
-        console.log(user.username);
-        if (event.volunteers.includes(user.username)) {
-          event.volunteers.pop(user.username)
-        } else {
-          event.volunteers.push(user.username)
-        }
-        console.log(event)
-      })
-      const input = event
-      API.graphql(graphqlOperation(mutations.updateEvent, { input })).then(
-        event => {
-          console.log(event);
-        }
-      );
+  getUserName = () => {
+    Auth.currentAuthenticatedUser().then(user => setUsername(user.username))
+  }
+
+  signUp = () => {
+    console.log(event)
+    if (event.volunteers.includes(username)) {
+      event.volunteers.pop(username)
+    } else {
+      event.volunteers.push(username)
+    }
+    const input = event
+    API.graphql(graphqlOperation(mutations.updateEvent, { input })).then(
+      event => {
+        setEvent(event.data.updateEvent);
+      }
+    );
   };
+
+  checkParticipation = () => {
+    // console.log(event.volunteers)
+    if (event.volunteers.includes(username)) {
+      console.log("True")
+      return true;
+    } else {
+      console.log("false")
+      return false;
+    }
+  }
 
 
   return event ? (
@@ -110,13 +124,11 @@ const EventDetail = () => {
         <Card>
           <FloatingAction
             // actions={actions}
-            ref={(ref) => { this.floatingAction = ref; }}
             color='#FFFFFF'
             onPressMain={signUp}
-            floatingIcon={plusIcon}
+            floatingIcon={checkParticipation() ? plusIcon : xIcon}
           />
         </Card>
-
       </Content>
     </Container>
   ) : null;
