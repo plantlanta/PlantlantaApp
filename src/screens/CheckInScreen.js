@@ -9,7 +9,7 @@ import {
   Left,
   Right
 } from 'native-base';
-import { FlatList, Text, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
+import { FlatList, Text, SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { API, graphqlOperation } from 'aws-amplify';
 import Auth from '@aws-amplify/auth';
 import { useNavigationParam } from 'react-navigation-hooks';
@@ -47,7 +47,7 @@ const CheckInScreen = () => {
   }, []);
 
   const checkin = (item) => {
-    console.log(item);
+    console.log(item.key);
   }
 
 
@@ -55,14 +55,12 @@ const CheckInScreen = () => {
     <SafeAreaView style={styles.container}>
       <FlatList
         data={volunteers}
-        renderItem={({item}) => <TouchableOpacity
-            style={styles.container}
-            onPress={() => {
-              console.log(`pressed ${item}`);
-              checkin(item);
-            }}
-          />
-          <Text style={styles.item}>{item.key}</Text>
+        renderItem={({item}) =>
+          <TouchableOpacity onPress={checkin(item)}>
+            <View style={{ paddingHorizontal: 10, paddingVertical:10 }}>
+              <Text>{item.key}</Text>
+            </View>
+          </TouchableOpacity>}
       />
     </SafeAreaView>
   ) : null;

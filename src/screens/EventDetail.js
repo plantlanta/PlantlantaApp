@@ -126,7 +126,7 @@ const EventDetail = () => {
             // actions={actions}
             color='#FFFFFF'
             onPressMain={signUp}
-            floatingIcon={checkParticipation() ? plusIcon : xIcon}
+            floatingIcon={checkParticipation() ? xIcon : plusIcon}
           />
         </Card>
       </Content>
