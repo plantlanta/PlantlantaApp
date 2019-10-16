@@ -21,7 +21,7 @@ const routeConfigMap = {
   },
   EventDetail: {
     screen: CheckInScreen,
-    navigationOptions: { title: 'Event Detail' }
+    navigationOptions: { title: 'Event Check In' }
   }
 };
 

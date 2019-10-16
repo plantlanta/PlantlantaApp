@@ -21,6 +21,7 @@ const CheckInScreen = () => {
   const [event, setEvent] = useState();
   const [volunteers, setVolunteers] = useState();
   const [eventPoints, setEventPoints] = useState();
+  const [currUser, setCurrUser] = useState();
   const id = useNavigationParam('id');
 
   const loadEvent = () => {
@@ -31,24 +32,27 @@ const CheckInScreen = () => {
     ).then(res => {
       setEvent(res.data.getEvent);
       loadVolunteers(res.data.getEvent)
-      setRewardPointValue(event.rewardPointValue)
+
     });
   };
 
+
   const loadVolunteers = (event) => {
     var volunteerData = []
-    event.volunteers.forEach(volunteer => {
-      // API.graphql(
-      //   graphqlOperation(queries.getUser, {
-      //     volunteer
-      //   })
-      // ).then(res => {
-      //   console.log(res)
-      // })
-      volunteerData.push({key: volunteer,})
+    console.log(event.volunteers)
+    event.volunteers.forEach(id => {
+      API.graphql(
+        graphqlOperation(queries.getUser, {
+          id
+        })
+      ).then(res => {
+        // setCurrUser(res.data.getUser.name)
+        console.log(res)
+        volunteerData.push({id: id, name: res.data.getUser.name})
+      })
     });
+    console.log(volunterData)
     setVolunteers(volunteerData)
-
   }
 
   useEffect(() => {
@@ -61,7 +65,7 @@ const CheckInScreen = () => {
         id
       })
     ).then(res => {
-      console.log(res)
+      console.log(res.data.getUser)
     })
   }
 
@@ -71,7 +75,7 @@ const CheckInScreen = () => {
       <FlatList
         data={volunteers}
         renderItem={({item}) =>
-          <TouchableOpacity onPress={checkin(item.key)}>
+          <TouchableOpacity onPress={checkin(item.id)}>
             <View style={{ paddingHorizontal: 10, paddingVertical:10 }}>
               <Text>{item.key}</Text>
             </View>

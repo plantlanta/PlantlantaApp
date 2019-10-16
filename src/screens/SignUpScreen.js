@@ -16,6 +16,7 @@ import { Container, Item, Input } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'react-navigation-hooks';
 import Auth from '@aws-amplify/auth';
+import { API, graphqlOperation } from 'aws-amplify';
 import * as mutations from '../graphql/mutations';
 
 export default SignUpScreen = props => {
@@ -34,7 +35,9 @@ export default SignUpScreen = props => {
       password: password,
       attributes: { 'name': name, 'custom:accountType': accountType }
     })
-      .then(() => {
+      .then((res) => {
+        console.log(res.userSub)
+        createUser(res.userSub)
         console.log('sign up successful!');
         Alert.alert('Enter the confirmation code you recieved');
       })
@@ -54,7 +57,6 @@ export default SignUpScreen = props => {
       .then(() => {
         navigate('SignIn');
         console.log('Confirm sign up successful');
-        createUser();
       })
       .catch(err => {
         if (!err.message) {
@@ -67,17 +69,18 @@ export default SignUpScreen = props => {
       });
   };
 
-  const createUser = () => {
+  const createUser = (id) => {
     const input = {
+      id: id,
       name: name,
       email: email,
-      rewardPoints: 0,
       accountType: accountType,
-      eventHistory: [],
-    };
+      rewardPoints: 0,
+      eventHistory: []
+    }
     API.graphql(graphqlOperation(mutations.createUser, { input })).then(
-      user => {
-        console.log(user);
+      newUser => {
+        console.log(newUser);
       }
     );
   };
@@ -164,6 +167,7 @@ export default SignUpScreen = props => {
                 onValueChange={(itemValue) =>
                   setAccountType(itemValue)
                 }>
+                <Picker.Item label="" value=""/>
                 <Picker.Item label="Volunteer" value="volunteer" />
                 <Picker.Item label="Staff" value="staff" />
               </Picker>
