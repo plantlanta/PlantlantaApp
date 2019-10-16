@@ -100,3 +100,36 @@ export const deleteReward = `mutation DeleteReward($input: DeleteRewardInput!) {
   }
 }
 `;
+export const createUser = `mutation CreateUser($input: CreateUserInput!) {
+  createUser(input: $input) {
+    id
+    name
+    email
+    rewardPoints
+    accountType
+    eventHistory
+  }
+}
+`;
+export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
+  updateUser(input: $input) {
+    id
+    name
+    email
+    rewardPoints
+    accountType
+    eventHistory
+  }
+}
+`;
+export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
+  deleteUser(input: $input) {
+    id
+    name
+    email
+    rewardPoints
+    accountType
+    eventHistory
+  }
+}
+`;

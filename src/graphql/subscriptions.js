@@ -100,3 +100,36 @@ export const onDeleteReward = `subscription OnDeleteReward {
   }
 }
 `;
+export const onCreateUser = `subscription OnCreateUser {
+  onCreateUser {
+    id
+    name
+    email
+    rewardPoints
+    accountType
+    eventHistory
+  }
+}
+`;
+export const onUpdateUser = `subscription OnUpdateUser {
+  onUpdateUser {
+    id
+    name
+    email
+    rewardPoints
+    accountType
+    eventHistory
+  }
+}
+`;
+export const onDeleteUser = `subscription OnDeleteUser {
+  onDeleteUser {
+    id
+    name
+    email
+    rewardPoints
+    accountType
+    eventHistory
+  }
+}
+`;

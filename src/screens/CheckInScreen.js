@@ -20,6 +20,7 @@ import * as mutations from '../graphql/mutations';
 const CheckInScreen = () => {
   const [event, setEvent] = useState();
   const [volunteers, setVolunteers] = useState();
+  const [eventPoints, setEventPoints] = useState();
   const id = useNavigationParam('id');
 
   const loadEvent = () => {
@@ -30,12 +31,20 @@ const CheckInScreen = () => {
     ).then(res => {
       setEvent(res.data.getEvent);
       loadVolunteers(res.data.getEvent)
+      setRewardPointValue(event.rewardPointValue)
     });
   };
 
   const loadVolunteers = (event) => {
     var volunteerData = []
     event.volunteers.forEach(volunteer => {
+      // API.graphql(
+      //   graphqlOperation(queries.getUser, {
+      //     volunteer
+      //   })
+      // ).then(res => {
+      //   console.log(res)
+      // })
       volunteerData.push({key: volunteer,})
     });
     setVolunteers(volunteerData)
@@ -46,8 +55,14 @@ const CheckInScreen = () => {
     loadEvent();
   }, []);
 
-  const checkin = (item) => {
-    console.log(item.key);
+  const checkin = (id) => {
+    API.graphql(
+      graphqlOperation(queries.getUser, {
+        id
+      })
+    ).then(res => {
+      console.log(res)
+    })
   }
 
 
@@ -56,7 +71,7 @@ const CheckInScreen = () => {
       <FlatList
         data={volunteers}
         renderItem={({item}) =>
-          <TouchableOpacity onPress={checkin(item)}>
+          <TouchableOpacity onPress={checkin(item.key)}>
             <View style={{ paddingHorizontal: 10, paddingVertical:10 }}>
               <Text>{item.key}</Text>
             </View>

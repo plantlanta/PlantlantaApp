@@ -16,6 +16,7 @@ import { Container, Item, Input } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'react-navigation-hooks';
 import Auth from '@aws-amplify/auth';
+import * as mutations from '../graphql/mutations';
 
 export default SignUpScreen = props => {
   const { navigate } = useNavigation();
@@ -53,6 +54,7 @@ export default SignUpScreen = props => {
       .then(() => {
         navigate('SignIn');
         console.log('Confirm sign up successful');
+        createUser();
       })
       .catch(err => {
         if (!err.message) {
@@ -63,6 +65,21 @@ export default SignUpScreen = props => {
           Alert.alert('Error when entering confirmation code: ', err.message);
         }
       });
+  };
+
+  const createUser = () => {
+    const input = {
+      name: name,
+      email: email,
+      rewardPoints: 0,
+      accountType: accountType,
+      eventHistory: [],
+    };
+    API.graphql(graphqlOperation(mutations.createUser, { input })).then(
+      user => {
+        console.log(user);
+      }
+    );
   };
 
   resendSignUp = async () => {

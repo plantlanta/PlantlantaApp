@@ -81,3 +81,32 @@ export const listRewards = `query ListRewards(
   }
 }
 `;
+export const getUser = `query GetUser($id: ID!) {
+  getUser(id: $id) {
+    id
+    name
+    email
+    rewardPoints
+    accountType
+    eventHistory
+  }
+}
+`;
+export const listUsers = `query ListUsers(
+  $filter: ModelUserFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      name
+      email
+      rewardPoints
+      accountType
+      eventHistory
+    }
+    nextToken
+  }
+}
+`;
