@@ -19,10 +19,11 @@ import * as mutations from '../graphql/mutations';
 
 const CheckInScreen = () => {
   const [event, setEvent] = useState();
-  const [volunteers, setVolunteers] = useState();
+  const [volunteers, setVolunteers] = useState([]);
   const [eventPoints, setEventPoints] = useState();
   const [currUser, setCurrUser] = useState();
   const id = useNavigationParam('id');
+  var volunteerData = [];
 
   const loadEvent = () => {
     API.graphql(
@@ -32,13 +33,11 @@ const CheckInScreen = () => {
     ).then(res => {
       setEvent(res.data.getEvent);
       loadVolunteers(res.data.getEvent)
-
     });
   };
 
 
   const loadVolunteers = (event) => {
-    var volunteerData = []
     console.log(event.volunteers)
     event.volunteers.forEach(id => {
       API.graphql(
@@ -47,26 +46,34 @@ const CheckInScreen = () => {
         })
       ).then(res => {
         // setCurrUser(res.data.getUser.name)
-        console.log(res)
-        volunteerData.push({id: id, name: res.data.getUser.name})
+        // addVolunteer(res.data.getUser)
+        console.log(res);
+        setVolunteers(old => [...old, res.data.getUser])
+        // var newList = volunteers.concat({id: id, name: res.data.getUser.name,});
+        // setVolunteers(newList)
       })
     });
-    console.log(volunterData)
-    setVolunteers(volunteerData)
+    // setVolunteers(volunteerData)
   }
 
   useEffect(() => {
     loadEvent();
   }, []);
 
-  const checkin = (id) => {
-    API.graphql(
-      graphqlOperation(queries.getUser, {
-        id
-      })
-    ).then(res => {
-      console.log(res.data.getUser)
-    })
+
+  const checkin = (item) => {
+    var input = item;
+    if (!input.eventHistory.includes(event.id)) {
+      input.rewardPoints += event.rewardPointValue
+      input.eventHistory.push(event.id)
+      API.graphql(graphqlOperation(mutations.updateUser, { input })).then(
+        res => {
+          console.log(res);
+        }
+      );
+    } else {
+      console.log("already checked in");
+    }
   }
 
 
@@ -75,11 +82,12 @@ const CheckInScreen = () => {
       <FlatList
         data={volunteers}
         renderItem={({item}) =>
-          <TouchableOpacity onPress={checkin(item.id)}>
+          <TouchableOpacity onPress={() => checkin(item)}>
             <View style={{ paddingHorizontal: 10, paddingVertical:10 }}>
-              <Text>{item.key}</Text>
+              <Text>{item.name}</Text>
             </View>
           </TouchableOpacity>}
+        keyExtractor={(item, index) => index.toString()}
       />
     </SafeAreaView>
   ) : null;
