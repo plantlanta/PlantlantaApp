@@ -17,6 +17,7 @@ export const onCreateEvent = `subscription OnCreateEvent {
     volunteers
     startDate
     endDate
+    creator
   }
 }
 `;
@@ -36,6 +37,7 @@ export const onUpdateEvent = `subscription OnUpdateEvent {
     volunteers
     startDate
     endDate
+    creator
   }
 }
 `;
@@ -55,6 +57,7 @@ export const onDeleteEvent = `subscription OnDeleteEvent {
     volunteers
     startDate
     endDate
+    creator
   }
 }
 `;

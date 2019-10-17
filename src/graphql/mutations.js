@@ -17,6 +17,7 @@ export const createEvent = `mutation CreateEvent($input: CreateEventInput!) {
     volunteers
     startDate
     endDate
+    creator
   }
 }
 `;
@@ -36,6 +37,7 @@ export const updateEvent = `mutation UpdateEvent($input: UpdateEventInput!) {
     volunteers
     startDate
     endDate
+    creator
   }
 }
 `;
@@ -55,6 +57,7 @@ export const deleteEvent = `mutation DeleteEvent($input: DeleteEventInput!) {
     volunteers
     startDate
     endDate
+    creator
   }
 }
 `;

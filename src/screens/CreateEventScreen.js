@@ -23,6 +23,7 @@ import {
 } from 'native-base';
 import { API, graphqlOperation } from 'aws-amplify';
 import * as mutations from '../graphql/mutations';
+import Auth from '@aws-amplify/auth';
 
 const styles = StyleSheet.create({
   container: {
@@ -101,6 +102,7 @@ const CreateEventScreen = () => {
   const [endDate, setEndDate] = useState(new Date());
   const [errors, setErrors] = useState(requiredFields);
   const [volunteers, setVolunteers] = useState([])
+  const [creator, setCreator] = useState('');
   const [touched, setTouched] = useState(() => {
     const temp = { ...requiredFields };
     Object.keys(temp).forEach(key => {
@@ -120,6 +122,7 @@ const CreateEventScreen = () => {
   const tenthInput = useRef();
 
   useEffect(() => {
+    setUser();
     setErrors({
       name: name.length === 0,
       address: address.length === 0,
@@ -148,6 +151,10 @@ const CreateEventScreen = () => {
     return errors[field] && touched[field];
   };
 
+  const setUser = async () => {
+    Auth.currentAuthenticatedUser().then(user => setCreator(user.username))
+  }
+
   const createEvent = () => {
     const input = {
       name,
@@ -162,7 +169,8 @@ const CreateEventScreen = () => {
       maxVolunteers,
       startDate,
       endDate,
-      volunteers: []
+      volunteers: [],
+      creator
     };
     API.graphql(graphqlOperation(mutations.createEvent, { input })).then(
       event => {

@@ -17,6 +17,7 @@ export const getEvent = `query GetEvent($id: ID!) {
     volunteers
     startDate
     endDate
+    creator
   }
 }
 `;
@@ -41,6 +42,7 @@ export const listEvents = `query ListEvents(
       volunteers
       startDate
       endDate
+      creator
     }
     nextToken
   }

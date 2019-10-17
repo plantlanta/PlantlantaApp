@@ -13,6 +13,7 @@ type Event @model {
   volunteers: [String]
   startDate: AWSDateTime
   endDate: AWSDateTime
+  creator: String
 }
 
 type Reward @model {
