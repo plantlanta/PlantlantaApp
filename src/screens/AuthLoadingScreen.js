@@ -1,50 +1,40 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { useNavigation } from 'react-navigation-hooks';
 import { Auth } from 'aws-amplify';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#aa73b7',
+    backgroundColor: '#FFF',
     alignItems: 'center',
     justifyContent: 'center'
   }
 });
 
-class AuthLoadingScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userToken: null
-    };
-  }
+const AuthLoadingScreen = () => {
+  const { navigate } = useNavigation();
 
-  async componentDidMount() {
-    await this.loadApp();
-  }
-
-  async loadApp() {
-    await Auth.currentSession()
+  useEffect(() => {
+    Auth.currentSession()
       .then(data => {
-        this.setState({
-          userToken: data.accessToken.jwtToken
-        });
+        if (data.accessToken.jwtToken) {
+          navigate('App');
+        } else {
+          navigate('Auth');
+        }
       })
       .catch(err => {
         console.log(err);
+        navigate('Auth');
       });
-    const { userToken } = this.state;
-    const { navigation } = this.props;
-    navigation.navigate(userToken ? 'App' : 'Auth');
-  }
+  }, []);
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#fff" />
-      </View>
-    );
-  }
-}
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color="#000" />
+    </View>
+  );
+};
 
 export default AuthLoadingScreen;

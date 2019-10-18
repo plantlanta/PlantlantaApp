@@ -4,9 +4,10 @@ import { Icon } from 'native-base';
 import { createStackNavigator } from 'react-navigation';
 import EventListScreen from '../screens/EventListScreen';
 import EventDetailScreen from '../screens/EventDetailScreen';
+import CreateEventScreen from '../screens/CreateEventScreen';
 
 const routeConfigMap = {
-  EventList: {
+  EventListScreen: {
     screen: EventListScreen,
     navigationOptions: ({ navigation }) => ({
       title: 'Event List',
@@ -22,6 +23,10 @@ const routeConfigMap = {
   EventDetailScreen: {
     screen: EventDetailScreen,
     navigationOptions: { title: 'Event Detail' }
+  },
+  CreateEventScreen: {
+    screen: CreateEventScreen,
+    navigationOptions: { title: 'Create New Event' }
   }
 };
 

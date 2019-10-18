@@ -5,71 +5,49 @@ import {
   Body,
   Content,
   CardItem,
-  Button,
-  Left,
-  Right
+  Icon,
+  Fab
 } from 'native-base';
-import { Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { FloatingAction } from 'react-native-floating-action';
+import { Text } from 'react-native';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
-import Icon from 'react-native-vector-icons/Foundation';
 import { useNavigationParam } from 'react-navigation-hooks';
 import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
 
 const UserEventDetail = () => {
-  const id = useNavigationParam('id');
-  console.log(`THES IDDSS ::: ${id}`);
+  const eventId = useNavigationParam('id');
   const [event, setEvent] = useState();
-  const [username, setUsername] = useState();
+  const [username, setUsername] = useState(
+    Auth.currentAuthenticatedUser().then(user => setUsername(user.username))
+  );
 
-  const loadEvent = () => {
+  useEffect(() => {
     API.graphql(
       graphqlOperation(queries.getEvent, {
-        id
+        id: eventId
       })
     ).then(res => {
       setEvent(res.data.getEvent);
     });
-  };
-
-  const xIcon = <Icon name="x" size={30} color="#008000" />;
-  const plusIcon = <Icon name="plus" size={30} color="#008000" />;
-
-  useEffect(() => {
-    loadEvent();
-    getUserName();
   }, []);
 
-  getUserName = () => {
-    Auth.currentAuthenticatedUser().then(user => setUsername(user.username));
-  };
+  const checkParticipation = () => event.volunteers.includes(username);
 
-  signUp = () => {
-    console.log(event);
-    if (event.volunteers.includes(username)) {
+  // TODO add error catching and handling
+  const signUp = () => {
+    if (checkParticipation()) {
       event.volunteers.pop(username);
     } else {
       event.volunteers.push(username);
     }
-    const input = event;
-    API.graphql(graphqlOperation(mutations.updateEvent, { input })).then(
-      event => {
-        setEvent(event.data.updateEvent);
+    API.graphql(graphqlOperation(mutations.updateEvent, { input: event })).then(
+      updatedEvent => {
+        setEvent(updatedEvent.data.updateEvent);
       }
     );
   };
 
-  checkParticipation = () => {
-    // console.log(event.volunteers)
-    if (event.volunteers.includes(username)) {
-      console.log('True');
-      return true;
-    }
-    console.log('false');
-    return false;
-  };
-
+  // TODO add an error message if event failed to load
   return event ? (
     <Container>
       <Content>
@@ -116,38 +94,24 @@ const UserEventDetail = () => {
             </Body>
           </CardItem>
         </Card>
-        <Card>
-          <FloatingAction
-            // actions={actions}
-            color="#FFFFFF"
-            onPressMain={signUp}
-            floatingIcon={checkParticipation() ? xIcon : plusIcon}
-          />
-        </Card>
       </Content>
+      <Fab
+        position="bottomRight"
+        onPress={signUp}
+        style={
+          checkParticipation()
+            ? { backgroundColor: '#A00' }
+            : { backgroundColor: '#64dd17' }
+        }
+      >
+        {checkParticipation() ? (
+          <Icon name="md-close" />
+        ) : (
+          <Icon name="md-add" />
+        )}
+      </Fab>
     </Container>
   ) : null;
 };
 
 export default UserEventDetail;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f0f',
-    justifyContent: 'center',
-    flexDirection: 'column'
-  },
-  buttonStyle: {
-    alignItems: 'center',
-    backgroundColor: '#64dd17',
-    padding: 14,
-    marginTop: 20,
-    borderRadius: 3
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000'
-  }
-});

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { API, Auth, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import { useNavigationParam } from 'react-navigation-hooks';
 import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
@@ -25,46 +25,46 @@ const styles = StyleSheet.create({
 });
 
 const StaffCheckIn = () => {
+  const eventId = useNavigationParam('id');
   const [event, setEvent] = useState();
   const [volunteers, setVolunteers] = useState([]);
   const [eventPoints, setEventPoints] = useState();
   const [currUser, setCurrUser] = useState();
-  const id = useNavigationParam('id');
+  const [eventLoaded, setEventLoaded] = useState(false);
   const volunteerData = [];
 
-  const loadVolunteers = event => {
-    console.log(event.volunteers);
-    event.volunteers.forEach(id => {
-      API.graphql(
-        graphqlOperation(queries.getUser, {
-          id
-        })
-      ).then(res => {
-        // setCurrUser(res.data.getUser.name)
-        // addVolunteer(res.data.getUser)
-        console.log(res);
-        setVolunteers(old => [...old, res.data.getUser]);
-        // var newList = volunteers.concat({id: id, name: res.data.getUser.name,});
-        // setVolunteers(newList)
-      });
-    });
-    // setVolunteers(volunteerData)
-  };
-
-  const loadEvent = () => {
+  useEffect(() => {
     API.graphql(
       graphqlOperation(queries.getEvent, {
-        id
+        id: eventId
       })
     ).then(res => {
       setEvent(res.data.getEvent);
-      loadVolunteers(res.data.getEvent);
+      setEventLoaded(true);
     });
-  };
+  }, []);
 
   useEffect(() => {
-    loadEvent();
-  }, []);
+    if (eventLoaded) {
+      console.log(event);
+
+      event.volunteers.forEach(id => {
+        API.graphql(
+          graphqlOperation(queries.getUser, {
+            id
+          })
+        ).then(res => {
+          // setCurrUser(res.data.getUser.name)
+          // addVolunteer(res.data.getUser)
+          console.log(res);
+          setVolunteers(old => [...old, res.data.getUser]);
+          // var newList = volunteers.concat({id: id, name: res.data.getUser.name,});
+          // setVolunteers(newList)
+        });
+      });
+      // setVolunteers(volunteerData)
+    }
+  }, [eventLoaded]);
 
   const checkin = item => {
     const input = item;

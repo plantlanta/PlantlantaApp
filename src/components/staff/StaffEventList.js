@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useNavigation } from 'react-navigation-hooks';
 import { API, graphqlOperation } from 'aws-amplify';
+import { Fab, Icon, Container } from 'native-base';
 
 const styles = StyleSheet.create({
   container: {
@@ -68,7 +69,7 @@ const Item = ({
       style={styles.container}
       onPress={() => {
         console.log(`pressed ${id}`);
-        navigate('StaffCheckIn', { id });
+        navigate('EventDetailScreen', { id });
       }}
     >
       <Text style={styles.textStyle}>{name}</Text>
@@ -90,6 +91,8 @@ const Item = ({
 };
 
 const StaffEventList = () => {
+  const { navigate } = useNavigation();
+
   const [events, setEvents] = useState();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -97,7 +100,6 @@ const StaffEventList = () => {
     if (!refreshing) {
       setRefreshing(true);
       API.graphql(graphqlOperation(query)).then(res => {
-        // console.log(res);
         setEvents(res.data.listEvents.items);
         setRefreshing(false);
       });
@@ -110,34 +112,45 @@ const StaffEventList = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
-        style={{ flex: 1 }}
-        data={events}
-        renderItem={({ item }) => (
-          <Item
-            id={item.id}
-            name={item.name}
-            organization={item.organization}
-            rewardPointValue={item.rewardPointValue}
-            maxVolunteers={item.maxVolunteers}
-            volunteers={item.volunteers}
-            startDate={item.startDate}
-            endDate={item.endDate}
-          />
-        )}
-        ItemSeparatorComponent={() => (
-          <View
-            style={{
-              height: 1,
-              width: '100%',
-              backgroundColor: '#CED0CE'
-            }}
-          />
-        )}
-        keyExtractor={item => item.id}
-        onRefresh={loadEvents}
-        refreshing={refreshing}
-      />
+      <Container>
+        <FlatList
+          style={{ flex: 1 }}
+          data={events}
+          renderItem={({ item }) => (
+            <Item
+              id={item.id}
+              name={item.name}
+              organization={item.organization}
+              rewardPointValue={item.rewardPointValue}
+              maxVolunteers={item.maxVolunteers}
+              volunteers={item.volunteers}
+              startDate={item.startDate}
+              endDate={item.endDate}
+            />
+          )}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                height: 1,
+                width: '100%',
+                backgroundColor: '#CED0CE'
+              }}
+            />
+          )}
+          keyExtractor={item => item.id}
+          onRefresh={loadEvents}
+          refreshing={refreshing}
+        />
+        <Fab
+          position="bottomRight"
+          style={{ backgroundColor: '#64dd17' }}
+          onPress={() => {
+            navigate('CreateEventScreen');
+          }}
+        >
+          <Icon name="md-add" style={{ color: '#FFF' }} />
+        </Fab>
+      </Container>
     </SafeAreaView>
   );
 };

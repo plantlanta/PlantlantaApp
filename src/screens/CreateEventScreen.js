@@ -100,8 +100,9 @@ const CreateEventScreen = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [errors, setErrors] = useState(requiredFields);
-  const [volunteers, setVolunteers] = useState([]);
-  const [creator, setCreator] = useState('');
+  const [creator, setCreator] = useState(
+    Auth.currentAuthenticatedUser().then(user => setCreator(user.username))
+  );
   const [touched, setTouched] = useState(() => {
     const temp = { ...requiredFields };
     Object.keys(temp).forEach(key => {
@@ -121,7 +122,6 @@ const CreateEventScreen = () => {
   const tenthInput = useRef();
 
   useEffect(() => {
-    setUser();
     setErrors({
       name: name.length === 0,
       address: address.length === 0,
@@ -148,10 +148,6 @@ const CreateEventScreen = () => {
 
   const shouldMarkError = field => {
     return errors[field] && touched[field];
-  };
-
-  const setUser = async () => {
-    Auth.currentAuthenticatedUser().then(user => setCreator(user.username));
   };
 
   const createEvent = () => {
