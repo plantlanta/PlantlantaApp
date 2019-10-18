@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import Auth from '@aws-amplify/auth';
+import { Auth } from 'aws-amplify';
 
 const styles = StyleSheet.create({
   container: {
@@ -24,13 +24,15 @@ class AuthLoadingScreen extends Component {
   }
 
   async loadApp() {
-    await Auth.currentAuthenticatedUser()
-      .then(user => {
+    await Auth.currentSession()
+      .then(data => {
         this.setState({
-          userToken: user.signInUserSession.accessToken.jwtToken
+          userToken: data.accessToken.jwtToken
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+      });
     const { userToken } = this.state;
     const { navigation } = this.props;
     navigation.navigate(userToken ? 'App' : 'Auth');

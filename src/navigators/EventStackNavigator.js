@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 import { Icon } from 'native-base';
 import { createStackNavigator } from 'react-navigation';
 import EventListScreen from '../screens/EventListScreen';
-import EventDetailScreen from '../screens/EventDetail';
+import EventDetailScreen from '../screens/EventDetailScreen';
 
 const routeConfigMap = {
   EventList: {
@@ -19,7 +19,7 @@ const routeConfigMap = {
       )
     })
   },
-  EventDetail: {
+  EventDetailScreen: {
     screen: EventDetailScreen,
     navigationOptions: { title: 'Event Detail' }
   }

@@ -68,7 +68,7 @@ const Item = ({
       style={styles.container}
       onPress={() => {
         console.log(`pressed ${id}`);
-        navigate('EventDetail', { id });
+        navigate('StaffCheckIn', { id });
       }}
     >
       <Text style={styles.textStyle}>{name}</Text>
@@ -89,7 +89,7 @@ const Item = ({
   );
 };
 
-const EventCheckIn = () => {
+const StaffEventList = () => {
   const [events, setEvents] = useState();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -142,4 +142,4 @@ const EventCheckIn = () => {
   );
 };
 
-export default EventCheckIn;
+export default StaffEventList;

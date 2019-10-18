@@ -21,9 +21,8 @@ import {
   Label,
   Icon
 } from 'native-base';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation, Auth } from 'aws-amplify';
 import * as mutations from '../graphql/mutations';
-import Auth from '@aws-amplify/auth';
 
 const styles = StyleSheet.create({
   container: {
@@ -101,7 +100,7 @@ const CreateEventScreen = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [errors, setErrors] = useState(requiredFields);
-  const [volunteers, setVolunteers] = useState([])
+  const [volunteers, setVolunteers] = useState([]);
   const [creator, setCreator] = useState('');
   const [touched, setTouched] = useState(() => {
     const temp = { ...requiredFields };
@@ -152,8 +151,8 @@ const CreateEventScreen = () => {
   };
 
   const setUser = async () => {
-    Auth.currentAuthenticatedUser().then(user => setCreator(user.username))
-  }
+    Auth.currentAuthenticatedUser().then(user => setCreator(user.username));
+  };
 
   const createEvent = () => {
     const input = {

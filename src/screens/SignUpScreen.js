@@ -10,13 +10,12 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   Alert,
-  Picker,
+  Picker
 } from 'react-native';
 import { Container, Item, Input } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'react-navigation-hooks';
-import Auth from '@aws-amplify/auth';
-import { API, graphqlOperation } from 'aws-amplify';
+import { Auth, API, graphqlOperation } from 'aws-amplify';
 import * as mutations from '../graphql/mutations';
 
 export default SignUpScreen = props => {
@@ -32,12 +31,12 @@ export default SignUpScreen = props => {
   signUp = async () => {
     await Auth.signUp({
       username: email,
-      password: password,
-      attributes: { 'name': name, 'custom:accountType': accountType }
+      password,
+      attributes: { name, 'custom:accountType': accountType }
     })
-      .then((res) => {
-        console.log(res.userSub)
-        createUser(res.userSub)
+      .then(res => {
+        console.log(res.userSub);
+        createUser(res.userSub);
         console.log('sign up successful!');
         Alert.alert('Enter the confirmation code you recieved');
       })
@@ -69,15 +68,15 @@ export default SignUpScreen = props => {
       });
   };
 
-  const createUser = (id) => {
+  const createUser = id => {
     const input = {
-      id: id,
-      name: name,
-      email: email,
-      accountType: accountType,
+      id,
+      name,
+      email,
+      accountType,
       rewardPoints: 0,
       eventHistory: []
-    }
+    };
     API.graphql(graphqlOperation(mutations.createUser, { input })).then(
       newUser => {
         console.log(newUser);
@@ -116,7 +115,7 @@ export default SignUpScreen = props => {
                   style={styles.input}
                   placeholder="Email"
                   placeholderTextColor="#adb4bc"
-                  keyboardType={'email-address'}
+                  keyboardType="email-address"
                   returnKeyType="next"
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -136,7 +135,7 @@ export default SignUpScreen = props => {
                   returnKeyType="next"
                   autoCapitalize="none"
                   autoCorrect={false}
-                  secureTextEntry={true}
+                  secureTextEntry
                   ref={secondInput}
                   onSubmitEditing={() => {
                     thirdInput.current._root.focus();
@@ -151,7 +150,7 @@ export default SignUpScreen = props => {
                   style={styles.input}
                   placeholder="Name"
                   placeholderTextColor="#adb4bc"
-                  keyboardType={'email-address'}
+                  keyboardType="email-address"
                   returnKeyType="done"
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -162,12 +161,11 @@ export default SignUpScreen = props => {
               </Item>
               <Picker
                 selectedValue={accountType}
-                mode='dropdown'
+                mode="dropdown"
                 // style={{height: 50, width: 100}}
-                onValueChange={(itemValue) =>
-                  setAccountType(itemValue)
-                }>
-                <Picker.Item label="" value=""/>
+                onValueChange={itemValue => setAccountType(itemValue)}
+              >
+                <Picker.Item label="" value="" />
                 <Picker.Item label="Volunteer" value="volunteer" />
                 <Picker.Item label="Staff" value="staff" />
               </Picker>
@@ -184,7 +182,7 @@ export default SignUpScreen = props => {
                   style={styles.input}
                   placeholder="Confirmation code"
                   placeholderTextColor="#adb4bc"
-                  keyboardType={'numeric'}
+                  keyboardType="numeric"
                   returnKeyType="done"
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -217,38 +215,38 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   input: {
     flex: 1,
     fontSize: 17,
     fontWeight: 'bold',
-    color: '#000',
+    color: '#000'
   },
   infoContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     padding: 30,
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   itemStyle: {
-    marginBottom: 10,
+    marginBottom: 10
   },
   iconStyle: {
     color: '#1faa00',
     fontSize: 28,
-    marginRight: 15,
+    marginRight: 15
   },
   buttonStyle: {
     alignItems: 'center',
     backgroundColor: '#64dd17',
     padding: 14,
     marginBottom: 10,
-    borderRadius: 3,
+    borderRadius: 3
   },
   buttonText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000',
-  },
+    color: '#000'
+  }
 });

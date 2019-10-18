@@ -10,20 +10,17 @@ import {
   Right
 } from 'native-base';
 import { Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { FloatingAction } from "react-native-floating-action";
-import { API, graphqlOperation } from 'aws-amplify';
-import Auth from '@aws-amplify/auth';
-import { useNavigationParam } from 'react-navigation-hooks';
-import * as queries from '../graphql/queries';
-import * as mutations from '../graphql/mutations';
+import { FloatingAction } from 'react-native-floating-action';
+import { Auth, API, graphqlOperation } from 'aws-amplify';
 import Icon from 'react-native-vector-icons/Foundation';
+import { useNavigationParam } from 'react-navigation-hooks';
+import * as queries from '../../graphql/queries';
+import * as mutations from '../../graphql/mutations';
 
-
-
-
-const EventDetail = () => {
-  const [event, setEvent] = useState();
+const UserEventDetail = () => {
   const id = useNavigationParam('id');
+  console.log(`THES IDDSS ::: ${id}`);
+  const [event, setEvent] = useState();
   const [username, setUsername] = useState();
 
   const loadEvent = () => {
@@ -45,17 +42,17 @@ const EventDetail = () => {
   }, []);
 
   getUserName = () => {
-    Auth.currentAuthenticatedUser().then(user => setUsername(user.username))
-  }
+    Auth.currentAuthenticatedUser().then(user => setUsername(user.username));
+  };
 
   signUp = () => {
-    console.log(event)
+    console.log(event);
     if (event.volunteers.includes(username)) {
-      event.volunteers.pop(username)
+      event.volunteers.pop(username);
     } else {
-      event.volunteers.push(username)
+      event.volunteers.push(username);
     }
-    const input = event
+    const input = event;
     API.graphql(graphqlOperation(mutations.updateEvent, { input })).then(
       event => {
         setEvent(event.data.updateEvent);
@@ -66,14 +63,12 @@ const EventDetail = () => {
   checkParticipation = () => {
     // console.log(event.volunteers)
     if (event.volunteers.includes(username)) {
-      console.log("True")
+      console.log('True');
       return true;
-    } else {
-      console.log("false")
-      return false;
     }
-  }
-
+    console.log('false');
+    return false;
+  };
 
   return event ? (
     <Container>
@@ -124,7 +119,7 @@ const EventDetail = () => {
         <Card>
           <FloatingAction
             // actions={actions}
-            color='#FFFFFF'
+            color="#FFFFFF"
             onPressMain={signUp}
             floatingIcon={checkParticipation() ? xIcon : plusIcon}
           />
@@ -134,7 +129,7 @@ const EventDetail = () => {
   ) : null;
 };
 
-export default EventDetail;
+export default UserEventDetail;
 
 const styles = StyleSheet.create({
   container: {

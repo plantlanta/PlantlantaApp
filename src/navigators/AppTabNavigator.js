@@ -1,93 +1,95 @@
-import React from 'react';
-import { Icon } from 'native-base';
-import { createMaterialTopTabNavigator } from 'react-navigation';
-import EventListScreen from '../screens/EventListScreen';
-import ProfileScreen from '../screens/AccountScreen';
-import SettingsScreen from '../screens/SettingsScreen';
-import CreateEventScreen from '../screens/CreateEventScreen';
+// TODO REMOVE
 
-const configurations = {
-  EventList: {
-    screen: EventListScreen,
-    navigationOptions: {
-      tabBarlabel: 'Events',
-      tabBarIcon: ({ tintColor }) => (
-        <Icon style={{ fontSize: 26, color: tintColor }} name="ios-menu" />
-      )
-    }
-  },
-  Profile: {
-    screen: ProfileScreen,
-    navigationOptions: {
-      tabBarLabel: 'Profile',
-      tabBarIcon: ({ tintColor }) => (
-        <Icon style={{ fontSize: 26, color: tintColor }} name="ios-person" />
-      )
-    }
-  },
-  Settings: {
-    screen: SettingsScreen,
-    navigationOptions: {
-      tabBarLabel: 'Settings',
-      tabBarIcon: ({ tintColor }) => (
-        <Icon style={{ fontSize: 26, color: tintColor }} name="ios-settings" />
-      )
-    }
-  },
-  CreateEvent: {
-    screen: CreateEventScreen,
-    navigationOptions: {
-      tabBarLabel: 'Create Event',
-      tabBarIcon: ({ tintColor }) => (
-        <Icon style={{ fontSize: 26, color: tintColor }} name="ios-settings" />
-      )
-    }
-  },
-  CheckIn : {
-    screen: EventCheckIn,
-    navigationOptions: {
-      tabBarLabel: 'Check In For Event',
-      tabBarIcon: ({ tintColor }) => (
-        <Icon style={{ fontSize: 26, color: tintColor }} name="ios-settings" />
-      )
-    }
-  }
-};
+// import React from 'react';
+// import { Icon } from 'native-base';
+// import { createMaterialTopTabNavigator } from 'react-navigation';
+// import EventListScreen from '../screens/EventListScreen';
+// import ProfileScreen from '../screens/AccountScreen';
+// import SettingsScreen from '../screens/SettingsScreen';
+// import CreateEventScreen from '../screens/CreateEventScreen';
 
-const options = {
-  tabBarPosition: 'bottom',
-  swipeEnabled: true,
-  animationEnabled: true,
-  navigationOptions: {
-    tabBarVisible: true
-  },
-  tabBarOptions: {
-    showLabel: true,
-    activeTintColor: '#fff',
-    inactiveTintColor: '#fff9',
-    style: {
-      backgroundColor: '#1faa00'
-    },
-    labelStyle: {
-      fontSize: 12,
-      fontWeight: 'bold',
-      marginBottom: 12,
-      marginTop: 12
-    },
-    indicatorStyle: {
-      height: 0
-    },
-    showIcon: true
-  }
-};
+// const configurations = {
+//   EventList: {
+//     screen: EventListScreen,
+//     navigationOptions: {
+//       tabBarlabel: 'Events',
+//       tabBarIcon: ({ tintColor }) => (
+//         <Icon style={{ fontSize: 26, color: tintColor }} name="ios-menu" />
+//       )
+//     }
+//   },
+//   Profile: {
+//     screen: ProfileScreen,
+//     navigationOptions: {
+//       tabBarLabel: 'Profile',
+//       tabBarIcon: ({ tintColor }) => (
+//         <Icon style={{ fontSize: 26, color: tintColor }} name="ios-person" />
+//       )
+//     }
+//   },
+//   Settings: {
+//     screen: SettingsScreen,
+//     navigationOptions: {
+//       tabBarLabel: 'Settings',
+//       tabBarIcon: ({ tintColor }) => (
+//         <Icon style={{ fontSize: 26, color: tintColor }} name="ios-settings" />
+//       )
+//     }
+//   },
+//   CreateEvent: {
+//     screen: CreateEventScreen,
+//     navigationOptions: {
+//       tabBarLabel: 'Create Event',
+//       tabBarIcon: ({ tintColor }) => (
+//         <Icon style={{ fontSize: 26, color: tintColor }} name="ios-settings" />
+//       )
+//     }
+//   },
+//   CheckIn : {
+//     screen: EventCheckIn,
+//     navigationOptions: {
+//       tabBarLabel: 'Check In For Event',
+//       tabBarIcon: ({ tintColor }) => (
+//         <Icon style={{ fontSize: 26, color: tintColor }} name="ios-settings" />
+//       )
+//     }
+//   }
+// };
 
-// App tabs located at the bottom of the screen
-const AppTabNavigator = createMaterialTopTabNavigator(configurations, options);
+// const options = {
+//   tabBarPosition: 'bottom',
+//   swipeEnabled: true,
+//   animationEnabled: true,
+//   navigationOptions: {
+//     tabBarVisible: true
+//   },
+//   tabBarOptions: {
+//     showLabel: true,
+//     activeTintColor: '#fff',
+//     inactiveTintColor: '#fff9',
+//     style: {
+//       backgroundColor: '#1faa00'
+//     },
+//     labelStyle: {
+//       fontSize: 12,
+//       fontWeight: 'bold',
+//       marginBottom: 12,
+//       marginTop: 12
+//     },
+//     indicatorStyle: {
+//       height: 0
+//     },
+//     showIcon: true
+//   }
+// };
 
-AppTabNavigator.navigationOptions = ({ navigation }) => {
-  const { routeName } = navigation.state.routes[navigation.state.index];
-  const headerTitle = routeName;
-  return {
-    headerTitle
-  };
-};
+// // App tabs located at the bottom of the screen
+// const AppTabNavigator = createMaterialTopTabNavigator(configurations, options);
+
+// AppTabNavigator.navigationOptions = ({ navigation }) => {
+//   const { routeName } = navigation.state.routes[navigation.state.index];
+//   const headerTitle = routeName;
+//   return {
+//     headerTitle
+//   };
+// };
