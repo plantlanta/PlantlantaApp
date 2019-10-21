@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { Auth } from 'aws-amplify';
-import StaffEventList from '../components/staff/StaffEventList';
-import UserEventList from '../components/user/UserEventList';
+import UserMarketplace from '../components/user/UserMarketplace';
+import AdminMarketplace from '../components/admin/AdminMarketplace';
 
 const styles = StyleSheet.create({
   container: {
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const EventListScreen = () => {
+const MarketplaceScreen = () => {
   const [accountType, setAccountType] = useState();
   useEffect(() => {
     Auth.currentAuthenticatedUser().then(user => {
@@ -21,15 +21,13 @@ const EventListScreen = () => {
     });
   }, []);
 
-  if (accountType === 'staff') {
-    return <StaffEventList />;
-  }
   if (accountType === 'volunteer') {
-    return <UserEventList />;
+    return <UserMarketplace />;
   }
   if (accountType === 'admin') {
-    return <UserEventList />;
+      return <AdminMarketplace />;
   }
+
   return (
     <View style={styles.container}>
       <ActivityIndicator size="large" color="#000" />
@@ -37,4 +35,4 @@ const EventListScreen = () => {
   );
 };
 
-export default EventListScreen;
+export default MarketplaceScreen;

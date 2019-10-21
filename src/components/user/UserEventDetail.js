@@ -38,7 +38,12 @@ const UserEventDetail = () => {
     if (checkParticipation()) {
       event.volunteers.pop(username);
     } else {
-      event.volunteers.push(username);
+      if (event.volunteers.length < event.maxVolunteers) {
+        event.volunteers.push(username);
+      } else {
+        console.log("Max volunteers signed up");
+      }
+      
     }
     API.graphql(graphqlOperation(mutations.updateEvent, { input: event })).then(
       updatedEvent => {

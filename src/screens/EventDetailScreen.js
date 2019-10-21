@@ -28,6 +28,9 @@ const EventDetailScreen = () => {
   if (accountType === 'volunteer') {
     return <UserEventDetail />;
   }
+  if (accountType === 'admin') {
+    return <UserEventDetail />;
+  }
   return (
     <View style={styles.container}>
       <ActivityIndicator size="large" color="#000" />

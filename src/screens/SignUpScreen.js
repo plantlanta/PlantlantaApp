@@ -208,6 +208,7 @@ const SignUpScreen = () => {
                 <Picker.Item label="" value="" />
                 <Picker.Item label="Volunteer" value="volunteer" />
                 <Picker.Item label="Staff" value="staff" />
+                <Picker.Item label="Admin" value="admin" />
               </Picker>
               <TouchableOpacity
                 style={styles.buttonStyle}
