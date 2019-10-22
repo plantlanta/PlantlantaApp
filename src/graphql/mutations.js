@@ -72,6 +72,7 @@ export const createReward = `mutation CreateReward($input: CreateRewardInput!) {
     rewardPointValue
     startDate
     endDate
+    creator
   }
 }
 `;
@@ -86,6 +87,7 @@ export const updateReward = `mutation UpdateReward($input: UpdateRewardInput!) {
     rewardPointValue
     startDate
     endDate
+    creator
   }
 }
 `;
@@ -100,6 +102,7 @@ export const deleteReward = `mutation DeleteReward($input: DeleteRewardInput!) {
     rewardPointValue
     startDate
     endDate
+    creator
   }
 }
 `;

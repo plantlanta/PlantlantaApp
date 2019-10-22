@@ -72,6 +72,7 @@ export const onCreateReward = `subscription OnCreateReward {
     rewardPointValue
     startDate
     endDate
+    creator
   }
 }
 `;
@@ -86,6 +87,7 @@ export const onUpdateReward = `subscription OnUpdateReward {
     rewardPointValue
     startDate
     endDate
+    creator
   }
 }
 `;
@@ -100,6 +102,7 @@ export const onDeleteReward = `subscription OnDeleteReward {
     rewardPointValue
     startDate
     endDate
+    creator
   }
 }
 `;

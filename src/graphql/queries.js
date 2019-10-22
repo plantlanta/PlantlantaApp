@@ -59,6 +59,7 @@ export const getReward = `query GetReward($id: ID!) {
     rewardPointValue
     startDate
     endDate
+    creator
   }
 }
 `;
@@ -78,6 +79,7 @@ export const listRewards = `query ListRewards(
       rewardPointValue
       startDate
       endDate
+      creator
     }
     nextToken
   }

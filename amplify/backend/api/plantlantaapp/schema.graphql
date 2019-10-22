@@ -26,6 +26,7 @@ type Reward @model {
   rewardPointValue: Int
   startDate: AWSDateTime
   endDate: AWSDateTime
+  creator: String
 }
 
 type User @model {

@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { useNavigation } from 'react-navigation-hooks';
 import { API, graphqlOperation } from 'aws-amplify';
+import { Fab, Icon, Container } from 'native-base';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -77,6 +79,8 @@ const Item = ({
 const AdminMarketplace = () => {
   const [rewards, setRewards] = useState();
   const [refreshing, setRefreshing] = useState(false);
+  const { navigate } = useNavigation();
+
 
   const loadRewards = () => {
     if (!refreshing) {
@@ -118,7 +122,17 @@ const AdminMarketplace = () => {
         onRefresh={loadRewards}
         refreshing={refreshing}
       />
+      <Fab
+          position="bottomRight"
+          style={{ backgroundColor: '#64dd17' }}
+          onPress={() => {
+            navigate('CreateRewardScreen');
+          }}
+        >
+          <Icon name="md-add" style={{ color: '#FFF' }} />
+        </Fab>
     </SafeAreaView>
+    
   );
 };
 
