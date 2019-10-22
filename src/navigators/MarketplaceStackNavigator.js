@@ -4,6 +4,7 @@ import { Icon } from 'native-base';
 import { createStackNavigator } from 'react-navigation';
 import MarketplaceScreen from '../screens/MarketplaceScreen';
 import CreateRewardScreen from '../screens/CreateRewardScreen';
+import RewardDetailScreen from '../screens/RewardDetailScreen';
 
 const routeConfigMap = {
   MarketplaceScreen: {
@@ -22,6 +23,11 @@ const routeConfigMap = {
   CreateRewardScreen: {
     screen: CreateRewardScreen,
     navigationOptions: { title: 'Create New Reward' }
+  },
+  RewardDetailScreen: {
+      screen: RewardDetailScreen,
+      navigationOptions: { title: 'Reward Detail'}
+
   }
 };
 

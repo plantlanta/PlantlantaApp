@@ -60,7 +60,7 @@ const Item = ({
       style={styles.container}
       onPress={() => {
         console.log(`pressed ${id}`);
-        // navigate('RewardDetailScreen', { id });
+        navigate('RewardDetailScreen', { id });
       }}
     >
       <Text style={styles.textStyle}>{name}</Text>
