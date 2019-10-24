@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { Auth } from 'aws-amplify';
-import UserMarketplace from '../components/user/UserMarketplace';
+import VolunteerMarketplace from '../components/volunteer/VolunteerMarketplace';
 import AdminMarketplace from '../components/admin/AdminMarketplace';
 
 const styles = StyleSheet.create({
@@ -22,10 +22,10 @@ const MarketplaceScreen = () => {
   }, []);
 
   if (accountType === 'volunteer') {
-    return <UserMarketplace />;
+    return <VolunteerMarketplace />;
   }
   if (accountType === 'admin') {
-      return <AdminMarketplace />;
+    return <AdminMarketplace />;
   }
 
   return (

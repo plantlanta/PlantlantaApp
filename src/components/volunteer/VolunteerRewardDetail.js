@@ -14,12 +14,14 @@ import { useNavigationParam } from 'react-navigation-hooks';
 import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
 
-const UserRewardDetail = () => {
+const VolunteerRewardDetail = () => {
   const rewardId = useNavigationParam('id');
   const [reward, setReward] = useState();
   const [userPoints, setUserPoints] = useState(
-      Auth.currentAuthenticatedUser().then(user => setUserPoints(user.rewardPoints))
-    );
+    Auth.currentAuthenticatedUser().then(user =>
+      setUserPoints(user.rewardPoints)
+    )
+  );
   const [username, setUsername] = useState(
     Auth.currentAuthenticatedUser().then(user => setUsername(user.username))
   );
@@ -39,9 +41,9 @@ const UserRewardDetail = () => {
   // TODO add error catching and handling
   const buyReward = () => {
     if (checkValue()) {
-      console.log("buy reward");
+      console.log('buy reward');
     } else {
-        console.log("not enough points");
+      console.log('not enough points');
     }
     // API.graphql(graphqlOperation(mutations.updateEvent, { input: event })).then(
     //   updatedEvent => {
@@ -87,7 +89,6 @@ const UserRewardDetail = () => {
             </Body>
           </CardItem>
         </Card>
-
       </Content>
       <Fab
         position="bottomRight"
@@ -98,14 +99,10 @@ const UserRewardDetail = () => {
             : { backgroundColor: '#64dd17' }
         }
       >
-        {checkValue() ? (
-          <Icon name="md-close" />
-        ) : (
-          <Icon name="md-add" />
-        )}
+        {checkValue() ? <Icon name="md-close" /> : <Icon name="md-add" />}
       </Fab>
     </Container>
   ) : null;
 };
 
-export default UserRewardDetail;
+export default VolunteerRewardDetail;

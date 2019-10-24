@@ -14,7 +14,7 @@ import { useNavigationParam } from 'react-navigation-hooks';
 import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
 
-const UserEventDetail = () => {
+const VolunteerEventDetail = () => {
   const eventId = useNavigationParam('id');
   const [event, setEvent] = useState();
   const [username, setUsername] = useState(
@@ -37,13 +37,10 @@ const UserEventDetail = () => {
   const signUp = () => {
     if (checkParticipation()) {
       event.volunteers.pop(username);
+    } else if (event.volunteers.length < event.maxVolunteers) {
+      event.volunteers.push(username);
     } else {
-      if (event.volunteers.length < event.maxVolunteers) {
-        event.volunteers.push(username);
-      } else {
-        console.log("Max volunteers signed up");
-      }
-      
+      console.log('Max volunteers signed up');
     }
     API.graphql(graphqlOperation(mutations.updateEvent, { input: event })).then(
       updatedEvent => {
@@ -119,4 +116,4 @@ const UserEventDetail = () => {
   ) : null;
 };
 
-export default UserEventDetail;
+export default VolunteerEventDetail;
