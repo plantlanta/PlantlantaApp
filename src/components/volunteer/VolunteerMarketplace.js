@@ -47,12 +47,7 @@ const query = `query ListRewards(
 //   }
 // };
 
-const Item = ({
-    id,
-    name,
-    brand,
-    rewardPointValue
-}) => {
+const Item = ({ id, name, brand, rewardPointValue }) => {
   const { navigate } = useNavigation();
 
   return (
@@ -67,14 +62,12 @@ const Item = ({
       <Text style={styles.textStyle}>
         {`Reward Points: ${rewardPointValue}`}
       </Text>
-      <Text style={styles.textStyle}>
-        {`Brand: ${brand}`}
-      </Text>
+      <Text style={styles.textStyle}>{`Brand: ${brand}`}</Text>
     </TouchableOpacity>
   );
 };
 
-const UserMarketplace = () => {
+const VolunteerMarketplace = () => {
   const [rewards, setRewards] = useState();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -122,4 +115,4 @@ const UserMarketplace = () => {
   );
 };
 
-export default UserMarketplace;
+export default VolunteerMarketplace;

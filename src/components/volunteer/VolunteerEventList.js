@@ -89,7 +89,7 @@ const Item = ({
   );
 };
 
-const UserEventList = () => {
+const VolunteerEventList = () => {
   const [events, setEvents] = useState();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -142,4 +142,4 @@ const UserEventList = () => {
   );
 };
 
-export default UserEventList;
+export default VolunteerEventList;

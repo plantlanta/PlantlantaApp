@@ -14,13 +14,21 @@ import { useNavigationParam } from 'react-navigation-hooks';
 import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
 
-const UserRewardDetail = () => {
+const VolunteerRewardDetail = () => {
   const rewardId = useNavigationParam('id');
   const [reward, setReward] = useState();
   const [user, setUser] = useState();
   const [rewardLoaded, setRewardLoaded] = useState(false);
   const [userLoaded, setUserLoaded] = useState(false);
   const [purchased, setPurchased] = useState(false);
+  const [userPoints, setUserPoints] = useState(
+    Auth.currentAuthenticatedUser().then(user =>
+      setUserPoints(user.rewardPoints)
+    )
+  );
+  const [username, setUsername] = useState(
+    Auth.currentAuthenticatedUser().then(user => setUsername(user.username))
+  );
 
   useEffect(() => {
     API.graphql(
@@ -68,7 +76,6 @@ const UserRewardDetail = () => {
         console.log("not enough points");
       }
     }
-    
   };
 
   // TODO add an error message if event failed to load
@@ -108,7 +115,6 @@ const UserRewardDetail = () => {
             </Body>
           </CardItem>
         </Card>
-
       </Content>
       <Fab
         position="bottomRight"
@@ -129,4 +135,4 @@ const UserRewardDetail = () => {
   ) : null;
 };
 
-export default UserRewardDetail;
+export default VolunteerRewardDetail;

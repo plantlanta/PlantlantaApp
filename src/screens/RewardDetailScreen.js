@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { Auth } from 'aws-amplify';
-import UserRewardDetail from '../components/user/UserRewardDetail';
 import AdminRewardDetail from '../components/admin/AdminRewardDetail';
+import VolunteerRewardDetail from '../components/volunteer/VolunteerEventDetail';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,7 +23,7 @@ const RewardDetailScreen = () => {
   }, []);
 
   if (accountType === 'volunteer') {
-    return <UserRewardDetail />;
+    return <VolunteerRewardDetail />;
   }
   if (accountType === 'admin') {
     return <AdminRewardDetail />;
