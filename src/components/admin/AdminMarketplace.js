@@ -8,7 +8,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { useNavigation } from 'react-navigation-hooks';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { Fab, Icon, Container } from 'native-base';
 
 
@@ -26,28 +26,9 @@ const styles = StyleSheet.create({
   }
 });
 
-const query = `query ListRewards(
-    $filter: ModelRewardFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listRewards(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        brand
-        rewardPointValue
-      }
-      nextToken
-    }
-  }
-  `;
 
-// const filter = {
-//   endDate: {
-//     ge: new Date()
-//   }
-// };
+
+
 
 const Item = ({
     id,
@@ -80,11 +61,36 @@ const AdminMarketplace = () => {
   const [rewards, setRewards] = useState();
   const [refreshing, setRefreshing] = useState(false);
   const { navigate } = useNavigation();
+  const [user, setUser] = useState(Auth.currentAuthenticatedUser().then(user => setUser(user.username)))
 
+  const filter = {
+    creator: {
+      ge: user
+    }
+  };
+
+  
+  const query = `query ListRewards(
+    $filter: ModelRewardFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRewards(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        brand
+        rewardPointValue
+      }
+      nextToken
+    }
+  }
+  `;
 
   const loadRewards = () => {
     if (!refreshing) {
       setRefreshing(true);
+      console.log(user);
       API.graphql(graphqlOperation(query)).then(res => {
         setRewards(res.data.listRewards.items);
         setRefreshing(false);

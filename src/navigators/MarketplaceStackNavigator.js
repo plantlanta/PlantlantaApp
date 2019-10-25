@@ -5,6 +5,7 @@ import { createStackNavigator } from 'react-navigation';
 import MarketplaceScreen from '../screens/MarketplaceScreen';
 import CreateRewardScreen from '../screens/CreateRewardScreen';
 import RewardDetailScreen from '../screens/RewardDetailScreen';
+import EditRewardScreen from '../screens/EditRewardScreen';
 
 const routeConfigMap = {
   MarketplaceScreen: {
@@ -27,8 +28,12 @@ const routeConfigMap = {
   RewardDetailScreen: {
       screen: RewardDetailScreen,
       navigationOptions: { title: 'Reward Detail'}
-
+  },
+  EditRewardScreen: {
+    screen: EditRewardScreen,
+    navigationOptions: { title: 'Edit Reward'}
   }
+
 };
 
 const StackConfig = {};

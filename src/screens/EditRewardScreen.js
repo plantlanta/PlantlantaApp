@@ -23,6 +23,8 @@ import {
 } from 'native-base';
 import { API, graphqlOperation, Auth } from 'aws-amplify';
 import * as mutations from '../graphql/mutations';
+import { useNavigationParam } from 'react-navigation-hooks';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -87,7 +89,7 @@ const requiredFields = {
 };
 
 
-const CreateRewardScreen = () => {
+const EditRewardScreen = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [brand, setBrand] = useState('');
@@ -141,7 +143,7 @@ const CreateRewardScreen = () => {
   };
 
 
-  const createReward = () => {
+  const updateReward = () => {
     var coupon = couponString.split(", ");
     const input = {
         name,
@@ -155,7 +157,7 @@ const CreateRewardScreen = () => {
         creator
     };
     console.log(input)
-    API.graphql(graphqlOperation(mutations.createReward, { input })).then(
+    API.graphql(graphqlOperation(mutations.updateReward, { input })).then(
       reward => {
         console.log(reward);
       }
@@ -421,7 +423,7 @@ const CreateRewardScreen = () => {
                       }
                     }}
                   >
-                    <Text style={styles.buttonText}>Create Reward</Text>
+                    <Text style={styles.buttonText}>Update Reward</Text>
                   </TouchableOpacity>
                   <View style={{ flex: 1 }} />
                 </View>
@@ -434,4 +436,4 @@ const CreateRewardScreen = () => {
   );
 };
 
-export default CreateRewardScreen;
+export default EditRewardScreen;

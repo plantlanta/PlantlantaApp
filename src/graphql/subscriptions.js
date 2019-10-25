@@ -114,6 +114,7 @@ export const onCreateUser = `subscription OnCreateUser {
     rewardPoints
     accountType
     eventHistory
+    rewardHistory
   }
 }
 `;
@@ -125,6 +126,7 @@ export const onUpdateUser = `subscription OnUpdateUser {
     rewardPoints
     accountType
     eventHistory
+    rewardHistory
   }
 }
 `;
@@ -136,6 +138,7 @@ export const onDeleteUser = `subscription OnDeleteUser {
     rewardPoints
     accountType
     eventHistory
+    rewardHistory
   }
 }
 `;

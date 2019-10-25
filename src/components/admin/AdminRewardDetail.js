@@ -10,14 +10,17 @@ import {
 } from 'native-base';
 import { Text, Alert } from 'react-native';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
-import { useNavigationParam } from 'react-navigation-hooks';
+import { useNavigationParam, useNavigation } from 'react-navigation-hooks';
+
 import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
 
-const UserRewardDetail = () => {
+const AdminRewardDetail = () => {
   const rewardId = useNavigationParam('id');
   const [reward, setReward] = useState();
   const [user, setUser] = useState();
+  const { navigate } = useNavigation();
+
   const [rewardLoaded, setRewardLoaded] = useState(false);
   const [userLoaded, setUserLoaded] = useState(false);
   const [purchased, setPurchased] = useState(false);
@@ -37,7 +40,6 @@ const UserRewardDetail = () => {
           id: user.username
         })
       ).then(res => {
-        console.log(res);
         setUser(res.data.getUser);
         setUserLoaded(true)
       })
@@ -45,28 +47,11 @@ const UserRewardDetail = () => {
 
   }, []);
 
-  const checkValue = () => {
-
-    return user.rewardPoints >= reward.rewardPointValue;
-  }
 
   // TODO add error catching and handling
-  const buyReward = () => {
+  const editReward = () => {
     if (userLoaded && rewardLoaded) {
-      if (checkValue()) {
-        user.rewardPoints = user.rewardPoints - reward.rewardPointValue;
-        user.purchaseHistory = [...user.purchaseHistory, rewardId]
-        API.graphql(graphqlOperation(mutations.updateUser, { input: user })).then(
-          updatedUser => {
-            console.log(updatedUser);
-            setUser(updatedUser.data.updatedUser);
-          }
-        );
-        setPurchased(true);
-      } else {
-        Alert.alert('Not enough points');
-        console.log("not enough points");
-      }
+      console.log("edit reward here")
     }
     
   };
@@ -112,21 +97,17 @@ const UserRewardDetail = () => {
       </Content>
       <Fab
         position="bottomRight"
-        onPress={buyReward}
-        style={
-          purchased
-            ? { backgroundColor: '#A00' }
-            : { backgroundColor: '#64dd17' }
-        }
+        onPress={() => {
+            navigate('EditRewardScreen');
+          }}
+        style={ {backgroundColor: '#A00'} }
       >
-        {purchased ? (
-          <Icon name="md-close" />
-        ) : (
-          <Icon name="md-add" />
+        {(
+          <Icon name="md-clipboard" />
         )}
       </Fab>
     </Container>
   ) : null;
 };
 
-export default UserRewardDetail;
+export default AdminRewardDetail;

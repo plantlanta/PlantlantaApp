@@ -114,6 +114,7 @@ export const createUser = `mutation CreateUser($input: CreateUserInput!) {
     rewardPoints
     accountType
     eventHistory
+    rewardHistory
   }
 }
 `;
@@ -125,6 +126,7 @@ export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
     rewardPoints
     accountType
     eventHistory
+    rewardHistory
   }
 }
 `;
@@ -136,6 +138,7 @@ export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
     rewardPoints
     accountType
     eventHistory
+    rewardHistory
   }
 }
 `;

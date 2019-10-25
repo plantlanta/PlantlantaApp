@@ -93,6 +93,7 @@ export const getUser = `query GetUser($id: ID!) {
     rewardPoints
     accountType
     eventHistory
+    rewardHistory
   }
 }
 `;
@@ -109,6 +110,7 @@ export const listUsers = `query ListUsers(
       rewardPoints
       accountType
       eventHistory
+      rewardHistory
     }
     nextToken
   }

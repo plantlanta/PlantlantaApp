@@ -36,4 +36,5 @@ type User @model {
   rewardPoints: Int
   accountType: String
   eventHistory: [String]
+  rewardHistory: [String]
 }
