@@ -23,6 +23,8 @@ import {
 } from 'native-base';
 import { API, graphqlOperation, Auth } from 'aws-amplify';
 import * as mutations from '../graphql/mutations';
+import * as queries from '../graphql/queries';
+
 import { useNavigationParam } from 'react-navigation-hooks';
 
 
@@ -90,18 +92,18 @@ const requiredFields = {
 
 
 const EditRewardScreen = () => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [brand, setBrand] = useState('');
-  const [link, setLink] = useState('');
-  const [couponString, setCouponString] = useState('');
-  const [rewardPointValue, setRewardPointValue] = useState('');
+  const rewardId = useNavigationParam('id');
+  const reward = useNavigationParam('reward');
+  const [name, setName] = useState(reward.name);
+  const [description, setDescription] = useState(reward.description);
+  const [brand, setBrand] = useState(reward.brand);
+  const [link, setLink] = useState(reward.link);
+  const [couponString, setCouponString] = useState(reward.coupon.join(", "));
+  const [rewardPointValue, setRewardPointValue] = useState(reward.rewardPointValue.toString());
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [errors, setErrors] = useState(requiredFields);
-  const [creator, setCreator] = useState(
-    Auth.currentAuthenticatedUser().then(user => setCreator(user.username))
-  );
+  const [creator, setCreator] = useState(reward.creator);
   const [touched, setTouched] = useState(() => {
     const temp = { ...requiredFields };
     Object.keys(temp).forEach(key => {
@@ -131,6 +133,24 @@ const EditRewardScreen = () => {
     rewardPointValue
   ]);
 
+  // const setFields = () => {
+  //   API.graphql(
+  //     graphqlOperation(queries.getReward, {
+  //       id: rewardId
+  //     })
+  //   ).then(res => {
+  //     setName(res.data.getReward.name);
+  //     setDescription(res.data.getReward.description);
+  //     setBrand(res.data.getReward.brand);
+  //     setLink(res.data.getReward.link);
+  //     setCouponString(res.data.getReward.coupon.join(", "));
+  //     setRewardPointValue(res.data.getReward.rewardPointValue.toString());
+  //     setStartDate(res.data.getReward.startDate);
+  //     setEndDate(res.data.getReward.endDate);
+  //     setCreator(res.data.getReward.creator);
+  //   });
+  // }
+
   const handleBlur = field => {
     setTouched({
       ...touched,
@@ -146,15 +166,16 @@ const EditRewardScreen = () => {
   const updateReward = () => {
     var coupon = couponString.split(", ");
     const input = {
-        name,
-        description,
-        brand,
-        link,
-        coupon,
-        rewardPointValue,
-        startDate,
-        endDate,
-        creator
+        id: rewardId,
+        name: name,
+        description: description,
+        brand: brand,
+        link: link,
+        coupon: coupon,
+        rewardPointValue: rewardPointValue,
+        startDate: startDate,
+        endDate: endDate,
+        creator: creator
     };
     console.log(input)
     API.graphql(graphqlOperation(mutations.updateReward, { input })).then(
@@ -408,10 +429,10 @@ const EditRewardScreen = () => {
                         );
                         setTouched(requiredFields);
                       } else {
-                        createReward();
+                        updateReward();
                         Alert.alert(
                           'Success!',
-                          'Your reward has been created!',
+                          'Your reward has been updated!',
                           [
                             {
                               text: 'OK',

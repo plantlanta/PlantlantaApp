@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { Auth } from 'aws-amplify';
 import StaffCheckIn from '../components/staff/StaffCheckIn';
-import UserEventDetail from '../components/user/UserEventDetail';
+import VolunteerEventDetail from '../components/volunteer/VolunteerEventDetail';
 
 const styles = StyleSheet.create({
   container: {
@@ -26,10 +26,10 @@ const EventDetailScreen = () => {
     return <StaffCheckIn />;
   }
   if (accountType === 'volunteer') {
-    return <UserEventDetail />;
+    return <VolunteerEventDetail />;
   }
   if (accountType === 'admin') {
-    return <UserEventDetail />;
+    return <VolunteerEventDetail />;
   }
   return (
     <View style={styles.container}>

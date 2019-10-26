@@ -23,7 +23,6 @@ const AdminRewardDetail = () => {
 
   const [rewardLoaded, setRewardLoaded] = useState(false);
   const [userLoaded, setUserLoaded] = useState(false);
-  const [purchased, setPurchased] = useState(false);
 
   useEffect(() => {
     API.graphql(
@@ -51,7 +50,7 @@ const AdminRewardDetail = () => {
   // TODO add error catching and handling
   const editReward = () => {
     if (userLoaded && rewardLoaded) {
-      console.log("edit reward here")
+        navigate('EditRewardScreen', { id: reward.id, reward: reward } );
     }
     
   };
@@ -97,9 +96,7 @@ const AdminRewardDetail = () => {
       </Content>
       <Fab
         position="bottomRight"
-        onPress={() => {
-            navigate('EditRewardScreen');
-          }}
+        onPress={editReward}
         style={ {backgroundColor: '#A00'} }
       >
         {(
