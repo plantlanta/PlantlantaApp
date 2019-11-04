@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { Auth } from 'aws-amplify';
+import AccountType from '../components/AccountType';
+import AdminEventList from '../components/admin/AdminEventList';
 import StaffEventList from '../components/staff/StaffEventList';
 import VolunteerEventList from '../components/volunteer/VolunteerEventList';
 
@@ -14,21 +15,16 @@ const styles = StyleSheet.create({
 });
 
 const EventListScreen = () => {
-  const [accountType, setAccountType] = useState();
-  useEffect(() => {
-    Auth.currentAuthenticatedUser().then(user => {
-      setAccountType(user.attributes['custom:accountType']);
-    });
-  }, []);
+  const accountType = AccountType();
 
-  if (accountType === 'staff') {
-    return <StaffEventList />;
-  }
   if (accountType === 'volunteer') {
     return <VolunteerEventList />;
   }
+  if (accountType === 'staff') {
+    return <StaffEventList />;
+  }
   if (accountType === 'admin') {
-    return <VolunteerEventList />;
+    return <AdminEventList />;
   }
   return (
     <View style={styles.container}>

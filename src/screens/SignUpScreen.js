@@ -75,7 +75,8 @@ const SignUpScreen = () => {
       email,
       accountType,
       rewardPoints: 0,
-      eventHistory: []
+      eventHistory: [],
+      adminApproved: accountType === 'volunteer'
     };
     API.graphql(graphqlOperation(mutations.createUser, { input })).then(
       newUser => {

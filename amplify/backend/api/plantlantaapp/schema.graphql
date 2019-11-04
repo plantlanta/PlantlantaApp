@@ -14,6 +14,7 @@ type Event @model {
   startDate: AWSDateTime
   endDate: AWSDateTime
   creator: String
+  adminApproved: Boolean
 }
 
 type Reward @model {
@@ -37,4 +38,5 @@ type User @model {
   accountType: String
   eventHistory: [String]
   rewardHistory: [String]
+  adminApproved: Boolean
 }

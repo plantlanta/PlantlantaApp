@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { Auth } from 'aws-amplify';
+import AccountType from '../components/AccountType';
 import VolunteerMarketplace from '../components/volunteer/VolunteerMarketplace';
 import AdminMarketplace from '../components/admin/AdminMarketplace';
 
@@ -14,12 +14,7 @@ const styles = StyleSheet.create({
 });
 
 const MarketplaceScreen = () => {
-  const [accountType, setAccountType] = useState();
-  useEffect(() => {
-    Auth.currentAuthenticatedUser().then(user => {
-      setAccountType(user.attributes['custom:accountType']);
-    });
-  }, []);
+  const accountType = AccountType();
 
   if (accountType === 'volunteer') {
     return <VolunteerMarketplace />;
