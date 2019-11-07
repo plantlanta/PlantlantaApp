@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { Auth } from 'aws-amplify';
 import AdminRewardDetail from '../components/admin/AdminRewardDetail';
-import VolunteerRewardDetail from '../components/volunteer/VolunteerEventDetail';
+import VolunteerRewardDetail from '../components/volunteer/VolunteerRewardDetail';
 
 const styles = StyleSheet.create({
   container: {

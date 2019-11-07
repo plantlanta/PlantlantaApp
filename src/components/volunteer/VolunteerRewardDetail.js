@@ -10,7 +10,8 @@ import {
 } from 'native-base';
 import { Text, Alert } from 'react-native';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
-import { useNavigationParam } from 'react-navigation-hooks';
+import { useNavigationParam, useNavigation } from 'react-navigation-hooks';
+
 import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
 
@@ -18,17 +19,10 @@ const VolunteerRewardDetail = () => {
   const rewardId = useNavigationParam('id');
   const [reward, setReward] = useState();
   const [user, setUser] = useState();
+  const { navigate } = useNavigation();
+
   const [rewardLoaded, setRewardLoaded] = useState(false);
   const [userLoaded, setUserLoaded] = useState(false);
-  const [purchased, setPurchased] = useState(false);
-  const [userPoints, setUserPoints] = useState(
-    Auth.currentAuthenticatedUser().then(user =>
-      setUserPoints(user.rewardPoints)
-    )
-  );
-  const [username, setUsername] = useState(
-    Auth.currentAuthenticatedUser().then(user => setUsername(user.username))
-  );
 
   useEffect(() => {
     API.graphql(
@@ -53,29 +47,91 @@ const VolunteerRewardDetail = () => {
 
   }, []);
 
-  const checkValue = () => {
 
-    return user.rewardPoints >= reward.rewardPointValue;
+  const checkRewardNotAvailable = () => {
+    if (rewardLoaded) {
+      if (reward.coupon.length == 0) {
+        return true;
+      }
+      return false;
+    }
   }
 
   // TODO add error catching and handling
   const buyReward = () => {
     if (userLoaded && rewardLoaded) {
-      if (checkValue()) {
-        user.rewardPoints = user.rewardPoints - reward.rewardPointValue;
-        user.purchaseHistory = [...user.purchaseHistory, rewardId]
-        API.graphql(graphqlOperation(mutations.updateUser, { input: user })).then(
-          updatedUser => {
-            console.log(updatedUser);
-            setUser(updatedUser.data.updatedUser);
+      if (user.rewardPoints >= reward.rewardPointValue) {
+        console.log(reward);
+        var newcoupon = reward.coupon.pop();
+        if (newcoupon == null) {
+          Alert.alert(
+            'Error!',
+            'This reward has no more coupons available!',
+            [
+              {
+                text: 'OK',
+                onPress: () => console.log('OK Pressed')
+              }
+            ],
+            { cancelable: false }
+          );
+          console.log("No more coupons");
+          return;
+        }
+        setReward(reward); 
+        console.log(newcoupon);
+
+        var userReward = {
+          id: rewardId,
+          name: reward.name,
+          link: reward.link,
+          coupon: newcoupon
+        }
+        user.rewardHistory = [...user.rewardHistory, userReward];
+        // console.log(user)
+
+        // update user and reward data
+        var input = reward;
+        API.graphql(graphqlOperation(mutations.updateReward, { input })).then(
+          res => {
+            console.log(res);
           }
         );
-        setPurchased(true);
+        input = user;
+        API.graphql(graphqlOperation(mutations.updateUser, { input })).then(
+          res => {
+            console.log(res);
+          }
+        );
+        Alert.alert(
+          'Success!',
+          'Your reward has been added to your account!',
+          [
+            {
+              text: 'OK',
+              onPress: () => console.log('OK Pressed')
+            }
+          ],
+          { cancelable: false }
+        );
+
       } else {
-        Alert.alert('Not enough points');
+        Alert.alert(
+          'Error!',
+          'Not enough points!',
+          [
+            {
+              text: 'OK',
+              onPress: () => console.log('OK Pressed')
+            }
+          ],
+          { cancelable: false }
+        );
         console.log("not enough points");
       }
+      
     }
+    
   };
 
   // TODO add an error message if event failed to load
@@ -115,19 +171,18 @@ const VolunteerRewardDetail = () => {
             </Body>
           </CardItem>
         </Card>
+
       </Content>
       <Fab
         position="bottomRight"
         onPress={buyReward}
         style={
-          purchased
+          checkRewardNotAvailable()
             ? { backgroundColor: '#A00' }
             : { backgroundColor: '#64dd17' }
         }
       >
-        {purchased ? (
-          <Icon name="md-close" />
-        ) : (
+        {(
           <Icon name="md-add" />
         )}
       </Fab>

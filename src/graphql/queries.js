@@ -18,6 +18,7 @@ export const getEvent = `query GetEvent($id: ID!) {
     startDate
     endDate
     creator
+    adminApproved
   }
 }
 `;
@@ -43,6 +44,7 @@ export const listEvents = `query ListEvents(
       startDate
       endDate
       creator
+      adminApproved
     }
     nextToken
   }
@@ -93,7 +95,13 @@ export const getUser = `query GetUser($id: ID!) {
     rewardPoints
     accountType
     eventHistory
-    rewardHistory
+    rewardHistory {
+      id
+      name
+      link
+      coupon
+    }
+    adminApproved
   }
 }
 `;
@@ -110,7 +118,13 @@ export const listUsers = `query ListUsers(
       rewardPoints
       accountType
       eventHistory
-      rewardHistory
+      rewardHistory {
+        id
+        name
+        link
+        coupon
+      }
+      adminApproved
     }
     nextToken
   }

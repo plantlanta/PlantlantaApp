@@ -18,6 +18,7 @@ export const onCreateEvent = `subscription OnCreateEvent {
     startDate
     endDate
     creator
+    adminApproved
   }
 }
 `;
@@ -38,6 +39,7 @@ export const onUpdateEvent = `subscription OnUpdateEvent {
     startDate
     endDate
     creator
+    adminApproved
   }
 }
 `;
@@ -58,6 +60,7 @@ export const onDeleteEvent = `subscription OnDeleteEvent {
     startDate
     endDate
     creator
+    adminApproved
   }
 }
 `;
@@ -114,7 +117,13 @@ export const onCreateUser = `subscription OnCreateUser {
     rewardPoints
     accountType
     eventHistory
-    rewardHistory
+    rewardHistory {
+      id
+      name
+      link
+      coupon
+    }
+    adminApproved
   }
 }
 `;
@@ -126,7 +135,13 @@ export const onUpdateUser = `subscription OnUpdateUser {
     rewardPoints
     accountType
     eventHistory
-    rewardHistory
+    rewardHistory {
+      id
+      name
+      link
+      coupon
+    }
+    adminApproved
   }
 }
 `;
@@ -138,7 +153,13 @@ export const onDeleteUser = `subscription OnDeleteUser {
     rewardPoints
     accountType
     eventHistory
-    rewardHistory
+    rewardHistory {
+      id
+      name
+      link
+      coupon
+    }
+    adminApproved
   }
 }
 `;

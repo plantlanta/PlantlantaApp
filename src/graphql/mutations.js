@@ -18,6 +18,7 @@ export const createEvent = `mutation CreateEvent($input: CreateEventInput!) {
     startDate
     endDate
     creator
+    adminApproved
   }
 }
 `;
@@ -38,6 +39,7 @@ export const updateEvent = `mutation UpdateEvent($input: UpdateEventInput!) {
     startDate
     endDate
     creator
+    adminApproved
   }
 }
 `;
@@ -58,6 +60,7 @@ export const deleteEvent = `mutation DeleteEvent($input: DeleteEventInput!) {
     startDate
     endDate
     creator
+    adminApproved
   }
 }
 `;
@@ -114,7 +117,13 @@ export const createUser = `mutation CreateUser($input: CreateUserInput!) {
     rewardPoints
     accountType
     eventHistory
-    rewardHistory
+    rewardHistory {
+      id
+      name
+      link
+      coupon
+    }
+    adminApproved
   }
 }
 `;
@@ -126,7 +135,13 @@ export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
     rewardPoints
     accountType
     eventHistory
-    rewardHistory
+    rewardHistory {
+      id
+      name
+      link
+      coupon
+    }
+    adminApproved
   }
 }
 `;
@@ -138,7 +153,13 @@ export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
     rewardPoints
     accountType
     eventHistory
-    rewardHistory
+    rewardHistory {
+      id
+      name
+      link
+      coupon
+    }
+    adminApproved
   }
 }
 `;
