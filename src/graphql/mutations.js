@@ -116,7 +116,11 @@ export const createUser = `mutation CreateUser($input: CreateUserInput!) {
     email
     rewardPoints
     accountType
-    eventHistory
+    eventHistory {
+      id
+      timeIn
+      timeOut
+    }
     rewardHistory {
       id
       name
@@ -134,7 +138,11 @@ export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
     email
     rewardPoints
     accountType
-    eventHistory
+    eventHistory {
+      id
+      timeIn
+      timeOut
+    }
     rewardHistory {
       id
       name
@@ -152,7 +160,11 @@ export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
     email
     rewardPoints
     accountType
-    eventHistory
+    eventHistory {
+      id
+      timeIn
+      timeOut
+    }
     rewardHistory {
       id
       name

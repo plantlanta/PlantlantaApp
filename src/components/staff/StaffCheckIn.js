@@ -5,8 +5,10 @@ import {
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
-  View
+  View,
+  Alert
 } from 'react-native';
+import { Fab } from 'native-base';
 import { API, graphqlOperation } from 'aws-amplify';
 import { useNavigationParam } from 'react-navigation-hooks';
 import * as queries from '../../graphql/queries';
@@ -32,6 +34,7 @@ const StaffCheckIn = () => {
   const [currUser, setCurrUser] = useState();
   const [eventLoaded, setEventLoaded] = useState(false);
   const volunteerData = [];
+  var checkedIn = [];
 
   useEffect(() => {
     API.graphql(
@@ -68,17 +71,41 @@ const StaffCheckIn = () => {
 
   const checkin = item => {
     const input = item;
-    if (!input.eventHistory.includes(event.id)) {
-      input.rewardPoints += event.rewardPointValue;
-      input.eventHistory.push(event.id);
+    var inEvent = false;
+    input.eventHistory.forEach(entry => {
+      if (entry.id == event.id && entry.timeIn != null) {
+        inEvent = true;
+        return;
+      }
+    });
+    if (inEvent) {
+      Alert.alert(
+        'Error!',
+        'This user is already checked in!',
+        [
+          {
+            text: 'OK',
+            onPress: () => console.log('OK Pressed')
+          }
+        ],
+        { cancelable: false }
+      );
+    } else {
+      const currDate = new Date();
+      console.log(currDate);
+      const newUserEvent = {
+        id: event.id,
+        timeIn: currDate,
+        timeOut: null
+      }
+      input.eventHistory.push(newUserEvent);
       API.graphql(graphqlOperation(mutations.updateUser, { input })).then(
         res => {
           console.log(res);
         }
       );
-    } else {
-      console.log('already checked in');
     }
+    
   };
 
   return event ? (
@@ -88,12 +115,21 @@ const StaffCheckIn = () => {
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => checkin(item)}>
             <View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
-              <Text>{item.name}</Text>
+              <Text style={{ fontSize: 24 }}>{item.name}</Text>
             </View>
           </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()}
       />
+      <Fab
+          position="bottomRight"
+          style={{ backgroundColor: '#64dd17' }}
+          onPress={() => {
+            console.log("Go to checkout screen")
+          }}
+        >
+          <Text style={{ color: '#FFF', fontSize: 12 }}>Check Out</Text>
+        </Fab>
     </SafeAreaView>
   ) : null;
 };

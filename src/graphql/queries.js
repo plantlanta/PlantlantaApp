@@ -94,7 +94,11 @@ export const getUser = `query GetUser($id: ID!) {
     email
     rewardPoints
     accountType
-    eventHistory
+    eventHistory {
+      id
+      timeIn
+      timeOut
+    }
     rewardHistory {
       id
       name
@@ -117,7 +121,11 @@ export const listUsers = `query ListUsers(
       email
       rewardPoints
       accountType
-      eventHistory
+      eventHistory {
+        id
+        timeIn
+        timeOut
+      }
       rewardHistory {
         id
         name

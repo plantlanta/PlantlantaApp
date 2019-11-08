@@ -116,7 +116,11 @@ export const onCreateUser = `subscription OnCreateUser {
     email
     rewardPoints
     accountType
-    eventHistory
+    eventHistory {
+      id
+      timeIn
+      timeOut
+    }
     rewardHistory {
       id
       name
@@ -134,7 +138,11 @@ export const onUpdateUser = `subscription OnUpdateUser {
     email
     rewardPoints
     accountType
-    eventHistory
+    eventHistory {
+      id
+      timeIn
+      timeOut
+    }
     rewardHistory {
       id
       name
@@ -152,7 +160,11 @@ export const onDeleteUser = `subscription OnDeleteUser {
     email
     rewardPoints
     accountType
-    eventHistory
+    eventHistory {
+      id
+      timeIn
+      timeOut
+    }
     rewardHistory {
       id
       name

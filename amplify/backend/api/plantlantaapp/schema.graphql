@@ -36,7 +36,7 @@ type User @model {
   email: AWSEmail
   rewardPoints: Int
   accountType: String
-  eventHistory: [String]
+  eventHistory: [UserEvent]
   rewardHistory: [UserReward]
   adminApproved: Boolean
 }
@@ -46,4 +46,10 @@ type UserReward {
   name: String
   link: AWSURL
   coupon: String
+}
+
+type UserEvent @model {
+  id: ID!
+  timeIn: AWSDateTime
+  timeOut: AWSDateTime
 }
