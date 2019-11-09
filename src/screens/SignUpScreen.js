@@ -63,7 +63,7 @@ const SignUpScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [accountType, setAccountType] = useState('');
+  const [accountType, setAccountType] = useState('volunteer');
   const [authCode, setAuthcode] = useState('');
   const secondInput = useRef();
   const thirdInput = useRef();
@@ -76,6 +76,7 @@ const SignUpScreen = () => {
       accountType,
       rewardPoints: 0,
       eventHistory: [],
+      rewardHistory: [],
       adminApproved: accountType === 'volunteer'
     };
     API.graphql(graphqlOperation(mutations.createUser, { input })).then(
@@ -206,7 +207,6 @@ const SignUpScreen = () => {
                 // style={{height: 50, width: 100}}
                 onValueChange={itemValue => setAccountType(itemValue)}
               >
-                <Picker.Item label="" value="" />
                 <Picker.Item label="Volunteer" value="volunteer" />
                 <Picker.Item label="Staff" value="staff" />
                 <Picker.Item label="Admin" value="admin" />

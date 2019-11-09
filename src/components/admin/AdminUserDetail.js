@@ -8,11 +8,25 @@ import {
   Icon,
   Fab
 } from 'native-base';
-import { Text } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import { API, graphqlOperation } from 'aws-amplify';
 import { useNavigationParam } from 'react-navigation-hooks';
-import * as queries from '../../graphql/queries';
-import * as mutations from '../../graphql/mutations';
+import { getUser } from '../../graphql/queries';
+import { updateUser } from '../../graphql/mutations';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'center'
+  },
+  textStyle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    padding: 10,
+    color: '#000'
+  }
+});
 
 const AdminUserDetail = () => {
   const userId = useNavigationParam('id');
@@ -20,7 +34,7 @@ const AdminUserDetail = () => {
 
   useEffect(() => {
     API.graphql(
-      graphqlOperation(queries.getUser, {
+      graphqlOperation(getUser, {
         id: userId
       })
     ).then(res => {
@@ -31,11 +45,11 @@ const AdminUserDetail = () => {
   // TODO add error catching and handling
   const approveUser = () => {
     API.graphql(
-      graphqlOperation(mutations.updateEvent, {
-        input: { ...user, adminApproved: true }
+      graphqlOperation(updateUser, {
+        input: { ...user, adminApproved: !user.adminApproved }
       })
-    ).then(updatedEvent => {
-      setUser(updatedEvent.data.updateEvent);
+    ).then(updatedUser => {
+      setUser(updatedUser.data.updateUser);
     });
   };
 
@@ -49,8 +63,14 @@ const AdminUserDetail = () => {
             style={{ allignItems: 'center', justifyContent: 'center' }}
           >
             <Body>
-              <Text style={{ fontWeight: 'bold' }}>{user.name}</Text>
-              <Text>{user.email}</Text>
+              <Text style={styles.textStyle}>{`Name: ${user.name}`}</Text>
+              <Text style={styles.textStyle}>{`Email: ${user.email}`}</Text>
+              <Text style={styles.textStyle}>
+                {`Account Type: ${user.accountType}`}
+              </Text>
+              <Text style={styles.textStyle}>
+                {`Admin Approved: ${user.adminApproved ? 'Yes' : 'No'}`}
+              </Text>
             </Body>
           </CardItem>
         </Card>

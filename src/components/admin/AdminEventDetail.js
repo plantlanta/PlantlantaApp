@@ -32,7 +32,7 @@ const AdminEventDetail = () => {
   const approveEvent = () => {
     API.graphql(
       graphqlOperation(mutations.updateEvent, {
-        input: { ...event, adminApproved: true }
+        input: { ...event, adminApproved: !event.adminApproved }
       })
     ).then(updatedEvent => {
       setEvent(updatedEvent.data.updateEvent);

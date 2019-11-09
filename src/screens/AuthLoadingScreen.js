@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Alert } from 'react-native';
 import { useNavigation } from 'react-navigation-hooks';
-import { Auth } from 'aws-amplify';
+import { Auth, API, graphqlOperation } from 'aws-amplify';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,14 +12,42 @@ const styles = StyleSheet.create({
   }
 });
 
+export const getUserApproved = `query GetUser($id: ID!) {
+  getUser(id: $id) {
+    adminApproved
+  }
+}
+`;
+
 const AuthLoadingScreen = () => {
   const { navigate } = useNavigation();
 
   useEffect(() => {
-    Auth.currentSession()
-      .then(data => {
-        if (data.accessToken.jwtToken) {
-          navigate('App');
+    Auth.currentAuthenticatedUser()
+      .then(user => {
+        // console.log(user);
+        if (user.username) {
+          API.graphql(
+            graphqlOperation(getUserApproved, {
+              id: user.username
+            })
+          )
+            .then(res => {
+              // console.log(res);
+              if (res.data.getUser.adminApproved) {
+                navigate('App');
+              } else {
+                Alert.alert(
+                  'Your account has not been approved by an Admin yet.'
+                );
+                navigate('Auth');
+              }
+            })
+            .catch(err => {
+              console.log(err);
+              console.log('DyanmoDB User entry not found.');
+              navigate('Auth');
+            });
         } else {
           navigate('Auth');
         }

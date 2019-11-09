@@ -46,13 +46,13 @@ const query = `query ListUsers(
 const filter = {
   adminApproved: {
     eq: false
-  },
-  accountType: {
-    eq: 'staff'
   }
+  //   accountType: {
+  //     eq: 'admin'
+  //   }
 };
 
-const Item = ({ id, accountType, name, email }) => {
+const Item = ({ id, accountType, adminApproved, name, email }) => {
   const { navigate } = useNavigation();
 
   return (
@@ -60,31 +60,35 @@ const Item = ({ id, accountType, name, email }) => {
       style={styles.container}
       onPress={() => {
         console.log(`pressed ${id}`);
-        navigate('AdminUserScreen', { id });
+        navigate('AdminUserDetailScreen', { id });
       }}
     >
-      <Text style={styles.textStyle}>{name}</Text>
-      <Text style={styles.textStyle}>{email}</Text>
+      <Text style={styles.textStyle}>{`Name: ${name}`}</Text>
+      <Text style={styles.textStyle}>{`Email: ${email}`}</Text>
+      <Text style={styles.textStyle}>{`Account Type: ${accountType}`}</Text>
+      <Text style={styles.textStyle}>
+        {`Admin Approved: ${adminApproved ? 'Yes' : 'No'}`}
+      </Text>
     </TouchableOpacity>
   );
 };
 
-const AdminStaffList = () => {
+const AdminUserList = () => {
   const [events, setEvents] = useState();
   const [refreshing, setRefreshing] = useState(false);
 
-  const loadEvents = () => {
+  const loadUsers = () => {
     if (!refreshing) {
       setRefreshing(true);
       API.graphql(graphqlOperation(query, filter)).then(res => {
-        setEvents(res.data.listEvents.items);
+        setEvents(res.data.listUsers.items);
         setRefreshing(false);
       });
     }
   };
 
   useEffect(() => {
-    loadEvents();
+    loadUsers();
   }, []);
 
   return (
@@ -93,8 +97,14 @@ const AdminStaffList = () => {
         <FlatList
           style={{ flex: 1 }}
           data={events}
-          renderItem={({ id, accountType, name, email }) => (
-            <Item id={id} accountType={accountType} name={name} email={email} />
+          renderItem={({ item }) => (
+            <Item
+              id={item.id}
+              accountType={item.accountType}
+              adminApproved={item.adminApproved}
+              name={item.name}
+              email={item.email}
+            />
           )}
           ItemSeparatorComponent={() => (
             <View
@@ -106,7 +116,7 @@ const AdminStaffList = () => {
             />
           )}
           keyExtractor={item => item.id}
-          onRefresh={loadEvents}
+          onRefresh={loadUsers}
           refreshing={refreshing}
         />
       </Container>
@@ -114,4 +124,4 @@ const AdminStaffList = () => {
   );
 };
 
-export default AdminStaffList;
+export default AdminUserList;

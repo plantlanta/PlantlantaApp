@@ -12,7 +12,8 @@ import {
 } from 'react-native';
 import { Container, Item, Input, Icon } from 'native-base';
 import { useNavigation } from 'react-navigation-hooks';
-import { Auth } from 'aws-amplify';
+import { Auth, API, graphqlOperation } from 'aws-amplify';
+import { deleteUser } from '../graphql/mutations';
 
 const styles = StyleSheet.create({
   container: {
@@ -110,6 +111,40 @@ const ScreenName = () => {
     );
   };
 
+  const deleteAccount = async () => {
+    Auth.currentAuthenticatedUser().then(user => {
+      console.log(user);
+      API.graphql(graphqlOperation(deleteUser, { id: user.attributes.sub }))
+        .then(() => {
+          user.deleteUser();
+          navigate('Authloading');
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  };
+
+  const deleteAccountAlert = async () => {
+    Alert.alert(
+      'Delete Account',
+      'Are you sure you want to delete your account?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Canceled'),
+          style: 'cancel'
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            deleteAccount();
+          }
+        }
+      ],
+      { cancelable: false }
+    );
+  };
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
@@ -171,9 +206,25 @@ const ScreenName = () => {
                   style={{
                     justifyContent: 'center',
                     alignItems: 'center',
-                    marginBottom: 100
+                    marginBottom: 50
                   }}
                 />
+                <TouchableOpacity
+                  style={[
+                    styles.buttonStyle,
+                    {
+                      flexDirection: 'row',
+                      justifyContent: 'center'
+                    }
+                  ]}
+                  onPress={deleteAccountAlert}
+                >
+                  <Icon
+                    name="md-power"
+                    style={{ color: '#000', marginRight: 10, fontSize: 24 }}
+                  />
+                  <Text style={styles.buttonText}>Delete Account</Text>
+                </TouchableOpacity>
                 <TouchableOpacity
                   style={[
                     styles.buttonStyle,

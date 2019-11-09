@@ -44,13 +44,20 @@ const query = `query ListEvents(
       }
       `;
 
-const filter = {
+const unapprovedFilter = {
   adminApproved: {
     eq: false
   }
 };
 
-const Item = ({ id, name, organization, startDate, endDate }) => {
+const Item = ({
+  id,
+  name,
+  organization,
+  startDate,
+  endDate,
+  adminApproved
+}) => {
   const { navigate } = useNavigation();
 
   return (
@@ -69,6 +76,9 @@ const Item = ({ id, name, organization, startDate, endDate }) => {
       <Text style={styles.textStyle}>
         {`Ends: ${new Date(endDate).toDateString()}`}
       </Text>
+      <Text style={styles.textStyle}>
+        {adminApproved ? 'Admin Approved: True' : 'Admin Approved: False'}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -77,13 +87,22 @@ const AdminEventList = () => {
   const [events, setEvents] = useState();
   const [refreshing, setRefreshing] = useState(false);
 
-  const loadEvents = () => {
+  const loadEvents = filter => {
     if (!refreshing) {
       setRefreshing(true);
-      API.graphql(graphqlOperation(query, filter)).then(res => {
-        setEvents(res.data.listEvents.items);
-        setRefreshing(false);
-      });
+      if (filter) {
+        API.graphql(graphqlOperation(query, filter)).then(res => {
+          setEvents(res.data.listEvents.items);
+          setRefreshing(false);
+        });
+        console.log('Filtered list');
+      } else {
+        API.graphql(graphqlOperation(query)).then(res => {
+          setEvents(res.data.listEvents.items);
+          setRefreshing(false);
+        });
+        console.log('Unfiltered list');
+      }
     }
   };
 
@@ -107,6 +126,7 @@ const AdminEventList = () => {
               volunteers={item.volunteers}
               startDate={item.startDate}
               endDate={item.endDate}
+              adminApproved={item.adminApproved}
             />
           )}
           ItemSeparatorComponent={() => (
