@@ -26,15 +26,12 @@ const styles = StyleSheet.create({
   }
 });
 
-const StaffCheckIn = () => {
+const StaffCheckOut = () => {
   const eventId = useNavigationParam('id');
-  const [event, setEvent] = useState();
   const [volunteers, setVolunteers] = useState([]);
-  const [eventPoints, setEventPoints] = useState();
-  const [currUser, setCurrUser] = useState();
+  const [volunteersLoaded, setVolunteersLoaded] = useState(false);
+  const [event, setEvent] = useState();
   const [eventLoaded, setEventLoaded] = useState(false);
-  const volunteerData = [];
-  var checkedIn = [];
   const { navigate } = useNavigation();
 
   useEffect(() => {
@@ -51,38 +48,50 @@ const StaffCheckIn = () => {
   useEffect(() => {
     if (eventLoaded) {
       console.log(event);
-
       event.volunteers.forEach(id => {
         API.graphql(
           graphqlOperation(queries.getUser, {
             id
           })
         ).then(res => {
-          // setCurrUser(res.data.getUser.name)
-          // addVolunteer(res.data.getUser)
           console.log(res);
           setVolunteers(old => [...old, res.data.getUser]);
-          // var newList = volunteers.concat({id: id, name: res.data.getUser.name,});
-          // setVolunteers(newList)
         });
       });
-      // setVolunteers(volunteerData)
     }
   }, [eventLoaded]);
 
-  const checkin = item => {
+  const checkout = item => {
     const input = item;
     var inEvent = false;
     input.eventHistory.forEach(entry => {
-      if (entry.id == event.id && entry.timeIn != null) {
+      if (entry.id == eventId && entry.timeIn != null) {
+        const ind = input.eventHistory.indexOf(entry);
         inEvent = true;
+        var currEvent = entry;
+        input.eventHistory.splice(ind, 1);
+        currEvent.timeOut = new Date();
+        input.eventHistory.push(currEvent);
+        console.log(currEvent.timeIn);
+        console.log(currEvent.timeOut);
+        var totalPoints = (new Date(currEvent.timeOut) - new Date(currEvent.timeIn)) / 1000;
+        totalPoints /= (60 * 60);
+        totalPoints *= 10; //10 points per hour worked
+        console.log(totalPoints)
+        input.rewardPoints += Math.round(totalPoints);
+        API.graphql(graphqlOperation(mutations.updateUser, { input })).then(
+          res => {
+            console.log(res);
+          }
+        );
         return;
       }
     });
-    if (inEvent) {
+    if (!inEvent) {
+      
       Alert.alert(
         'Error!',
-        'This user is already checked in!',
+        'This user is not checked in!',
         [
           {
             text: 'OK',
@@ -92,18 +101,16 @@ const StaffCheckIn = () => {
         { cancelable: false }
       );
     } else {
-      const currDate = new Date();
-      console.log(currDate);
-      const newUserEvent = {
-        id: event.id,
-        timeIn: currDate,
-        timeOut: null
-      }
-      input.eventHistory.push(newUserEvent);
-      API.graphql(graphqlOperation(mutations.updateUser, { input })).then(
-        res => {
-          console.log(res);
-        }
+      Alert.alert(
+        'Success!',
+        'This user has been checked out!',
+        [
+          {
+            text: 'OK',
+            onPress: () => console.log('OK Pressed')
+          }
+        ],
+        { cancelable: false }
       );
     }
     
@@ -114,7 +121,7 @@ const StaffCheckIn = () => {
       <FlatList
         data={volunteers}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => checkin(item)}>
+          <TouchableOpacity onPress={() => checkout(item)}>
             <View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
               <Text style={{ fontSize: 24 }}>{item.name}</Text>
             </View>
@@ -122,17 +129,8 @@ const StaffCheckIn = () => {
         )}
         keyExtractor={(item, index) => index.toString()}
       />
-      <Fab
-          position="bottomRight"
-          style={{ backgroundColor: '#64dd17' }}
-          onPress={() => {
-            navigate('CheckOutScreen', {id: eventId});
-          }}
-        >
-          <Text style={{ color: '#FFF', fontSize: 10 }}>Check Out</Text>
-        </Fab>
     </SafeAreaView>
   ) : null;
 };
 
-export default StaffCheckIn;
+export default StaffCheckOut;

@@ -5,6 +5,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import EventListScreen from '../screens/EventListScreen';
 import EventDetailScreen from '../screens/EventDetailScreen';
 import CreateEventScreen from '../screens/CreateEventScreen';
+import CheckOutScreen from '../screens/CheckOutScreen';
 
 const routeConfigMap = {
   EventListScreen: {
@@ -27,6 +28,10 @@ const routeConfigMap = {
   CreateEventScreen: {
     screen: CreateEventScreen,
     navigationOptions: { title: 'Create New Event' }
+  },
+  CheckOutScreen: {
+    screen: CheckOutScreen,
+    navigationOptions: { title: 'Check Out' }
   }
 };
 
