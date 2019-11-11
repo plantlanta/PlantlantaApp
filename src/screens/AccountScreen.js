@@ -1,71 +1,45 @@
-import React from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  textStyle: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    padding: 10,
-    color: '#000'
-  },
-  screen: {
-    padding: 50
-  },
-  centeredElem: {
-    alignItems: 'center'
-  },
-  icon: {
-    width: 100,
-    height: 100,
-    borderRadius: 100 / 2
-  },
-  displayname: {
-    fontSize: 20,
-    fontWeight: 'bold'
-  },
-  rowAlignment: {
-    alignItems: 'center',
-    paddingTop: 30,
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  score: {
-    textAlign: 'center',
-    borderColor: 'green',
-    borderWidth: 2,
-    padding: 2
-  }
-});
+import React, { useState, useEffect } from 'react';
+import { Auth, API, graphqlOperation } from 'aws-amplify';
+import {Container, Card, Body, Content, CardItem} from 'native-base';
+import {StyleSheet, Text} from 'react-native';
+import * as queries from '../graphql/queries';
 
 const AccountScreen = () => {
-  return (
-    <View style={styles.screen}>
-      <View style={styles.centeredElem}>
-        {/* <Image style={styles.icon} source={require('./assets/jn1.jpg')} /> */}
-        <Text style={styles.displayname}>John Snow</Text>
-      </View>
-
-      <View style={styles.rowAlignment}>
-        <Text style={{ paddingTop: 20 }}>Reward Point</Text>
-        <Text style={styles.score}>421</Text>
-      </View>
-
-      <View style={styles.rowAlignment}>
-        <Text>Email: winterfell123@got.com</Text>
-        <Button title="CHANGE" color="green" />
-      </View>
-
-      <View style={{ paddingTop: 20 }}>
-        <Button title="REPORT A PROBLEM" color="green" />
-      </View>
-    </View>
+  const [account, setAccount] = useState(
+  Auth.currentAuthenticatedUser()
+  .then(user => API.graphql(graphqlOperation(queries.getUser, {id : user.username})))
+  .then(res => {setAccount(res.data.getUser)})
   );
+  
+  return account ? (
+    <Container>
+        <Content>
+          <Card transparent>
+            <CardItem header style={{allignItems:'center', justifyContent:'center'}}>
+                <Text style = {{fontWeight:'bold'}}>{account.name}</Text>
+            </CardItem>
+          </Card>      
+        
+          <Card transparent style = {{padding: 20}}>
+          <CardItem>
+              <Text>Email:      {account.email}</Text>
+          </CardItem>
+          <CardItem>
+              <Text>Reward Points:      {account.rewardPoints}</Text>
+          </CardItem>
+          <CardItem>
+              <Text>Account Type:     {account.accountType}</Text>
+          </CardItem>
+          <CardItem>
+            <Body>
+              <Text>Event History:      {account.rewardHistory}</Text>
+              <Text>Reward History:     {account.eventHistory}</Text>
+            </Body>
+          </CardItem>
+          </Card>
+        </Content>
+      </Container>
+  ) : null ;
 };
 
 export default AccountScreen;
