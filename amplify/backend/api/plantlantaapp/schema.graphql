@@ -50,6 +50,7 @@ type UserReward {
 
 type UserEvent @model {
   id: ID!
+  name: String
   timeIn: AWSDateTime
   timeOut: AWSDateTime
 }

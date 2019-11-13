@@ -96,6 +96,7 @@ const StaffCheckIn = () => {
       console.log(currDate);
       const newUserEvent = {
         id: event.id,
+        name: event.name,
         timeIn: currDate,
         timeOut: null
       }

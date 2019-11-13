@@ -29,19 +29,20 @@ const RewardItem = ({
 
 const EventItem = ({
   id,
+  name,
   timeIn,
   timeOut
 }) => {
   return (
     <Card transparent style = {{padding: 20}}>
     <CardItem>
-        <Text>Event: {id}</Text>
+        <Text>Event: {name}</Text>
     </CardItem>
     <CardItem>
-        <Text>Check In: {timeIn}</Text>
+        <Text>Check In: {new Date(timeIn).toString()}</Text>
     </CardItem>
     <CardItem>
-        <Text>Check Out: {timeOut}</Text>
+        <Text>Check Out: {new Date(timeOut).toString()}</Text>
     </CardItem>
     </Card>
   );
