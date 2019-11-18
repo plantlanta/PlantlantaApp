@@ -96,6 +96,7 @@ export const getUser = `query GetUser($id: ID!) {
     accountType
     eventHistory {
       id
+      name
       timeIn
       timeOut
     }
@@ -123,6 +124,7 @@ export const listUsers = `query ListUsers(
       accountType
       eventHistory {
         id
+        name
         timeIn
         timeOut
       }
@@ -133,6 +135,31 @@ export const listUsers = `query ListUsers(
         coupon
       }
       adminApproved
+    }
+    nextToken
+  }
+}
+`;
+export const getUserEvent = `query GetUserEvent($id: ID!) {
+  getUserEvent(id: $id) {
+    id
+    name
+    timeIn
+    timeOut
+  }
+}
+`;
+export const listUserEvents = `query ListUserEvents(
+  $filter: ModelUserEventFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listUserEvents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      name
+      timeIn
+      timeOut
     }
     nextToken
   }

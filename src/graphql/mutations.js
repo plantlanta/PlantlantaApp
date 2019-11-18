@@ -118,6 +118,7 @@ export const createUser = `mutation CreateUser($input: CreateUserInput!) {
     accountType
     eventHistory {
       id
+      name
       timeIn
       timeOut
     }
@@ -140,6 +141,7 @@ export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
     accountType
     eventHistory {
       id
+      name
       timeIn
       timeOut
     }
@@ -162,6 +164,7 @@ export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
     accountType
     eventHistory {
       id
+      name
       timeIn
       timeOut
     }
@@ -172,6 +175,33 @@ export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
       coupon
     }
     adminApproved
+  }
+}
+`;
+export const createUserEvent = `mutation CreateUserEvent($input: CreateUserEventInput!) {
+  createUserEvent(input: $input) {
+    id
+    name
+    timeIn
+    timeOut
+  }
+}
+`;
+export const updateUserEvent = `mutation UpdateUserEvent($input: UpdateUserEventInput!) {
+  updateUserEvent(input: $input) {
+    id
+    name
+    timeIn
+    timeOut
+  }
+}
+`;
+export const deleteUserEvent = `mutation DeleteUserEvent($input: DeleteUserEventInput!) {
+  deleteUserEvent(input: $input) {
+    id
+    name
+    timeIn
+    timeOut
   }
 }
 `;

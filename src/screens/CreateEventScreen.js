@@ -10,7 +10,9 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   ScrollView,
-  Platform
+  Platform,
+  Image,
+  Button
 } from 'react-native';
 import {
   Container,
@@ -21,6 +23,7 @@ import {
   Label,
   Icon
 } from 'native-base';
+import ImagePicker from 'react-native-image-picker';
 import { API, graphqlOperation, Auth } from 'aws-amplify';
 import * as mutations from '../graphql/mutations';
 
@@ -86,6 +89,12 @@ const requiredFields = {
   rewardPointValue: true
 };
 
+const options = {
+  title: 'Select Image',
+  takePhotoButtonTitle: 'take photo with your camera',
+  chooseFromLibraryButtonTitle: 'choose photo from library',
+};
+
 const CreateEventScreen = () => {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
@@ -100,6 +109,7 @@ const CreateEventScreen = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [errors, setErrors] = useState(requiredFields);
+  const [filePath, setFilePath] = useState({});
   const [creator, setCreator] = useState(
     Auth.currentAuthenticatedUser().then(user => setCreator(user.username))
   );
@@ -120,6 +130,8 @@ const CreateEventScreen = () => {
   const eigthInput = useRef();
   const ninthInput = useRef();
   const tenthInput = useRef();
+
+  
 
   useEffect(() => {
     setErrors({
@@ -172,6 +184,24 @@ const CreateEventScreen = () => {
         console.log(event);
       }
     );
+  };
+
+  chooseFile = () => {
+    // Alert.alert("clicked");
+    ImagePicker.showImagePicker(options, response => {
+      console.log('Response = ', response);
+ 
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        let source = response;
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        this.setFilePath(source);
+      }
+    });
   };
 
   return (
@@ -503,6 +533,27 @@ const CreateEventScreen = () => {
                       value={endDate}
                       onDateChange={date => setEndDate(date)}
                     />
+                  </Item>
+                  <Item>
+                  <View style={styles.container}>
+                    {/*<Image 
+                    source={{ uri: this.state.filePath.path}} 
+                    style={{width: 100, height: 100}} />*/}
+                    <Image
+                      source={{
+                        uri: 'data:image/jpeg;base64,' + filePath.data,
+                      }}
+                      style={{ width: 100, height: 100 }}
+                    />
+                    <Image
+                      source={{ uri: filePath.uri }}
+                      style={{ width: 250, height: 250 }}
+                    />
+                    <Text style={{ alignItems: 'center' }}>
+                      {filePath.uri}
+                    </Text>
+                    <Button title="Choose File" onPress={this.chooseFile} />
+                  </View>
                   </Item>
                   <TouchableOpacity
                     style={styles.buttonStyle}
