@@ -23,8 +23,8 @@ import {
   Label,
   Icon
 } from 'native-base';
-import ImagePicker from 'react-native-image-picker';
 import { API, graphqlOperation, Auth } from 'aws-amplify';
+import ImagePickerComponent from '../components/ImagePickerComponent';
 import * as mutations from '../graphql/mutations';
 
 const styles = StyleSheet.create({
@@ -92,7 +92,7 @@ const requiredFields = {
 const options = {
   title: 'Select Image',
   takePhotoButtonTitle: 'take photo with your camera',
-  chooseFromLibraryButtonTitle: 'choose photo from library',
+  chooseFromLibraryButtonTitle: 'choose photo from library'
 };
 
 const CreateEventScreen = () => {
@@ -130,8 +130,6 @@ const CreateEventScreen = () => {
   const eigthInput = useRef();
   const ninthInput = useRef();
   const tenthInput = useRef();
-
-  
 
   useEffect(() => {
     setErrors({
@@ -190,13 +188,13 @@ const CreateEventScreen = () => {
     // Alert.alert("clicked");
     ImagePicker.showImagePicker(options, response => {
       console.log('Response = ', response);
- 
+
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        let source = response;
+        const source = response;
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
         this.setFilePath(source);
@@ -534,11 +532,11 @@ const CreateEventScreen = () => {
                       onDateChange={date => setEndDate(date)}
                     />
                   </Item>
-                  <Item>
+                  {/* <Item>
                   <View style={styles.container}>
-                    {/*<Image 
+                    <Image 
                     source={{ uri: this.state.filePath.path}} 
-                    style={{width: 100, height: 100}} />*/}
+                    style={{width: 100, height: 100}} />
                     <Image
                       source={{
                         uri: 'data:image/jpeg;base64,' + filePath.data,
@@ -554,7 +552,8 @@ const CreateEventScreen = () => {
                     </Text>
                     <Button title="Choose File" onPress={this.chooseFile} />
                   </View>
-                  </Item>
+                  </Item> */}
+                  <Item>{ImagePickerComponent()}</Item>
                   <TouchableOpacity
                     style={styles.buttonStyle}
                     onPress={() => {
