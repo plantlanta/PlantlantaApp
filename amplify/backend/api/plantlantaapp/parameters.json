@@ -1,1 +1,8 @@
-{}
+{
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authplantlantaapp365f848f",
+            "Outputs.UserPoolId"
+        ]
+    }
+}

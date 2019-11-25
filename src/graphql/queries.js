@@ -18,6 +18,11 @@ export const getEvent = `query GetEvent($id: ID!) {
     startDate
     endDate
     creator
+    file {
+      bucket
+      region
+      key
+    }
     adminApproved
   }
 }
@@ -44,6 +49,11 @@ export const listEvents = `query ListEvents(
       startDate
       endDate
       creator
+      file {
+        bucket
+        region
+        key
+      }
       adminApproved
     }
     nextToken

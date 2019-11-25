@@ -18,6 +18,11 @@ export const createEvent = `mutation CreateEvent($input: CreateEventInput!) {
     startDate
     endDate
     creator
+    file {
+      bucket
+      region
+      key
+    }
     adminApproved
   }
 }
@@ -39,6 +44,11 @@ export const updateEvent = `mutation UpdateEvent($input: UpdateEventInput!) {
     startDate
     endDate
     creator
+    file {
+      bucket
+      region
+      key
+    }
     adminApproved
   }
 }
@@ -60,6 +70,11 @@ export const deleteEvent = `mutation DeleteEvent($input: DeleteEventInput!) {
     startDate
     endDate
     creator
+    file {
+      bucket
+      region
+      key
+    }
     adminApproved
   }
 }

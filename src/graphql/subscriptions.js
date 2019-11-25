@@ -18,6 +18,11 @@ export const onCreateEvent = `subscription OnCreateEvent {
     startDate
     endDate
     creator
+    file {
+      bucket
+      region
+      key
+    }
     adminApproved
   }
 }
@@ -39,6 +44,11 @@ export const onUpdateEvent = `subscription OnUpdateEvent {
     startDate
     endDate
     creator
+    file {
+      bucket
+      region
+      key
+    }
     adminApproved
   }
 }
@@ -60,6 +70,11 @@ export const onDeleteEvent = `subscription OnDeleteEvent {
     startDate
     endDate
     creator
+    file {
+      bucket
+      region
+      key
+    }
     adminApproved
   }
 }

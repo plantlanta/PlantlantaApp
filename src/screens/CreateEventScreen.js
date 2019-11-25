@@ -10,10 +10,9 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   ScrollView,
-  Platform,
-  Image,
-  Button
+  Platform
 } from 'react-native';
+import uuid from 'uuid/v4';
 import {
   Container,
   Item,
@@ -23,9 +22,15 @@ import {
   Label,
   Icon
 } from 'native-base';
-import { API, graphqlOperation, Auth } from 'aws-amplify';
+import { API, graphqlOperation, Auth, Storage } from 'aws-amplify';
 import ImagePickerComponent from '../components/ImagePickerComponent';
+import config from '../aws-exports';
 import * as mutations from '../graphql/mutations';
+
+const {
+  aws_user_files_s3_bucket_region: region,
+  aws_user_files_s3_bucket: bucket
+} = config;
 
 const styles = StyleSheet.create({
   container: {
@@ -89,12 +94,6 @@ const requiredFields = {
   rewardPointValue: true
 };
 
-const options = {
-  title: 'Select Image',
-  takePhotoButtonTitle: 'take photo with your camera',
-  chooseFromLibraryButtonTitle: 'choose photo from library'
-};
-
 const CreateEventScreen = () => {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
@@ -103,13 +102,13 @@ const CreateEventScreen = () => {
   const [coordinator, setCoordinator] = useState('');
   const [coordinatorPhone, setCoordinatorPhone] = useState('');
   const [coordinatorEmail, setCoordinatorEmail] = useState('');
-  const [minVolunteers, setMinVolunteers] = useState('');
-  const [maxVolunteers, setMaxVolunteers] = useState('');
-  const [rewardPointValue, setRewardPointValue] = useState('');
+  const [minVolunteers, setMinVolunteers] = useState(0);
+  const [maxVolunteers, setMaxVolunteers] = useState(0);
+  const [rewardPointValue, setRewardPointValue] = useState(1);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [errors, setErrors] = useState(requiredFields);
-  const [filePath, setFilePath] = useState({});
+  const [image, setImage] = useState();
   const [creator, setCreator] = useState(
     Auth.currentAuthenticatedUser().then(user => setCreator(user.username))
   );
@@ -129,7 +128,6 @@ const CreateEventScreen = () => {
   const seventhInput = useRef();
   const eigthInput = useRef();
   const ninthInput = useRef();
-  const tenthInput = useRef();
 
   useEffect(() => {
     setErrors({
@@ -160,7 +158,29 @@ const CreateEventScreen = () => {
     return errors[field] && touched[field];
   };
 
-  const createEvent = () => {
+  const createEvent = async () => {
+    let imageForUpload = {};
+    if (image) {
+      const key = `${uuid()}`;
+
+      imageForUpload = {
+        bucket,
+        key,
+        region
+      };
+      Storage.put(key, image, {
+        level: 'public',
+        contentType: 'image/jpg'
+      })
+        .then(res => {
+          console.log(
+            `S3 file uploaded ${image === res ? `Successful` : `Failed`}`
+          );
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
     const input = {
       name,
       description,
@@ -175,31 +195,17 @@ const CreateEventScreen = () => {
       startDate,
       endDate,
       volunteers: [],
+      file: imageForUpload,
       creator
     };
-    API.graphql(graphqlOperation(mutations.createEvent, { input })).then(
-      event => {
+    console.log(input);
+    API.graphql(graphqlOperation(mutations.createEvent, { input }))
+      .then(event => {
         console.log(event);
-      }
-    );
-  };
-
-  chooseFile = () => {
-    // Alert.alert("clicked");
-    ImagePicker.showImagePicker(options, response => {
-      console.log('Response = ', response);
-
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        const source = response;
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        this.setFilePath(source);
-      }
-    });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   return (
@@ -431,42 +437,6 @@ const CreateEventScreen = () => {
                       }}
                     />
                   </Item>
-                  <Item
-                    style={styles.itemStyle}
-                    floatingLabel
-                    error={shouldMarkError('rewardPointValue')}
-                  >
-                    <Label
-                      style={
-                        shouldMarkError('rewardPointValue')
-                          ? styles.labelStyleError
-                          : styles.labelStyle
-                      }
-                    >
-                      {shouldMarkError('rewardPointValue')
-                        ? 'Reward Point Value required'
-                        : 'Reward Point Value'}
-                    </Label>
-                    {shouldMarkError('rewardPointValue') ? (
-                      <Icon name="close-circle" />
-                    ) : null}
-                    <Input
-                      style={styles.input}
-                      keyboardType="number-pad"
-                      returnKeyType="next"
-                      autoCapitalize="none"
-                      autoCorrect={false}
-                      ref={eigthInput}
-                      value={rewardPointValue}
-                      onChangeText={text => setRewardPointValue(text)}
-                      onBlur={() => {
-                        handleBlur('rewardPointValue');
-                      }}
-                      onSubmitEditing={() => {
-                        ninthInput.current._root.focus();
-                      }}
-                    />
-                  </Item>
                   <Item style={styles.itemStyle} floatingLabel>
                     <Label style={styles.labelStyle}>Minimum Volunteers</Label>
                     <Input
@@ -475,11 +445,11 @@ const CreateEventScreen = () => {
                       returnKeyType="next"
                       autoCapitalize="none"
                       autoCorrect={false}
-                      ref={ninthInput}
-                      value={minVolunteers}
+                      ref={eigthInput}
+                      value={`${minVolunteers}`}
                       onChangeText={text => setMinVolunteers(text)}
                       onSubmitEditing={() => {
-                        tenthInput.current._root.focus();
+                        ninthInput.current._root.focus();
                       }}
                     />
                   </Item>
@@ -491,8 +461,8 @@ const CreateEventScreen = () => {
                       returnKeyType="next"
                       autoCapitalize="none"
                       autoCorrect={false}
-                      ref={tenthInput}
-                      value={maxVolunteers}
+                      ref={ninthInput}
+                      value={`${maxVolunteers}`}
                       onChangeText={text => setMaxVolunteers(text)}
                     />
                   </Item>
@@ -532,28 +502,10 @@ const CreateEventScreen = () => {
                       onDateChange={date => setEndDate(date)}
                     />
                   </Item>
-                  {/* <Item>
-                  <View style={styles.container}>
-                    <Image 
-                    source={{ uri: this.state.filePath.path}} 
-                    style={{width: 100, height: 100}} />
-                    <Image
-                      source={{
-                        uri: 'data:image/jpeg;base64,' + filePath.data,
-                      }}
-                      style={{ width: 100, height: 100 }}
-                    />
-                    <Image
-                      source={{ uri: filePath.uri }}
-                      style={{ width: 250, height: 250 }}
-                    />
-                    <Text style={{ alignItems: 'center' }}>
-                      {filePath.uri}
-                    </Text>
-                    <Button title="Choose File" onPress={this.chooseFile} />
-                  </View>
-                  </Item> */}
-                  <Item>{ImagePickerComponent()}</Item>
+                  <Item style={styles.itemStyle} stackedLabel>
+                    <Label style={styles.labelStyle}>Event Photo</Label>
+                    {ImagePickerComponent(image, setImage)}
+                  </Item>
                   <TouchableOpacity
                     style={styles.buttonStyle}
                     onPress={() => {

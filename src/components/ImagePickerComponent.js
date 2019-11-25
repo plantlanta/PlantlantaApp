@@ -4,9 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 
-const ImagePickerComponent = () => {
-  const [image, setImage] = useState();
-
+const ImagePickerComponent = (image, setImage) => {
   const getPermissionsAsync = async () => {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -27,13 +25,12 @@ const ImagePickerComponent = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1
+      quality: 1,
+      base64: true
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
-      setImage(result.uri);
+      setImage(result.base64);
     }
   };
 
@@ -41,7 +38,11 @@ const ImagePickerComponent = () => {
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button title="Pick an image from camera roll" onPress={pickImage} />
       {image && (
-        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+        <Image
+          source={{ uri: `data:image/jpeg;base64,${image}` }}
+          // source={{ uri: image }}
+          style={{ width: 200, height: 200 }}
+        />
       )}
     </View>
   );

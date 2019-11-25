@@ -1,33 +1,38 @@
 {
-	"auth": {
-		"plantlantaapp365f848f": {
-			"service": "Cognito",
-			"providerPlugin": "awscloudformation",
-			"dependsOn": []
-		}
-	},
-	"api": {
-		"plantlantaapp": {
-			"service": "AppSync",
-			"providerPlugin": "awscloudformation",
-			"output": {
-				"authConfig": {
-					"additionalAuthenticationProviders": [],
-					"defaultAuthentication": {
-						"authenticationType": "API_KEY",
-						"apiKeyConfig": {
-							"description": "",
-							"apiKeyExpirationDays": "365"
-						}
-					}
-				}
-			}
-		}
-	},
-	"storage": {
-		"images": {
-			"service": "S3",
-			"providerPlugin": "awscloudformation"
-		}
-	}
+    "auth": {
+        "plantlantaapp365f848f": {
+            "service": "Cognito",
+            "providerPlugin": "awscloudformation",
+            "dependsOn": []
+        }
+    },
+    "api": {
+        "plantlantaapp": {
+            "service": "AppSync",
+            "providerPlugin": "awscloudformation",
+            "output": {
+                "authConfig": {
+                    "additionalAuthenticationProviders": [],
+                    "defaultAuthentication": {
+                        "authenticationType": "API_KEY",
+                        "apiKeyConfig": {
+                            "description": "",
+                            "apiKeyExpirationDays": "365"
+                        }
+                    }
+                },
+                "securityType": "AMAZON_COGNITO_USER_POOLS"
+            }
+        }
+    },
+    "storage": {
+        "images": {
+            "service": "S3",
+            "providerPlugin": "awscloudformation"
+        },
+        "eventImages": {
+            "service": "S3",
+            "providerPlugin": "awscloudformation"
+        }
+    }
 }
