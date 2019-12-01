@@ -17,15 +17,21 @@ Install amplify and configure and initialize it to create local files such as aw
 
 ```bash
 npm i -g @aws-amplify/cli
+```
+
+```bash
 amplify configure
 Specify the AWS Region
 ? region:  us-east-2Specify the username of the new IAM user:
 ? user name:  <YourUsername> (Dont Create a new user if you already have one, just cancel the creation)
-Enter the access key of the newly created user: (Gotten in IAM in your user's security credentials)
+Enter the access key of the newly created user: (Gotten in IAM in your user\'s security credentials)
 ? accessKeyId:  AKIA4O4GYT**********
 ? secretAccessKey:  ltQFRYkTkX5o4e7hnswu********************
 This would update/create the AWS Profile in your local machine
 ? Profile Name:  default
+```
+
+```bash
 amplify init
 ```
 
