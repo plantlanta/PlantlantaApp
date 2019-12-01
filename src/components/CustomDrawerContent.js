@@ -17,7 +17,8 @@ const CustomDrawerContent = props => {
   if (accountType === 'volunteer') {
     newItems = items.filter(obj => obj.routeName !== 'Users');
   } else if (accountType === 'staff') {
-    newItems = items.filter(obj => obj.routeName !== 'Rewards' || 'Users');
+    newItems = items.filter(obj => obj.routeName !== 'Rewards');
+    newItems = newItems.filter(obj => obj.routeName !== 'Users');
   } else if (accountType === 'admin') {
     // newItems = items.filter(obj => obj.routeName !== 'Rewards');
   }
