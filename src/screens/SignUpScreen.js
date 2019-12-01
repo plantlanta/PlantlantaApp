@@ -75,18 +75,27 @@ const SignUpScreen = () => {
       email,
       accountType,
       rewardPoints: 0,
-      eventHistory: [],
       rewardHistory: [],
       adminApproved: accountType === 'volunteer'
     };
-    API.graphql(graphqlOperation(mutations.createUser, { input })).then(
-      newUser => {
+    // API.graphql({
+    //   query: mutations.createUser,
+    //   variables: { input },
+    //   authMode: 'AWS_IAM'
+    // })
+    API.graphql(graphqlOperation(mutations.createUser, { input }))
+      .then(newUser => {
         console.log(newUser);
-      }
-    );
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   const signUp = async () => {
+    // Auth.currentCredentials()
+    //   .then(d => console.log('data: ', d))
+    //   .catch(e => console.log('error: ', e));
     await Auth.signUp({
       username: email,
       password,

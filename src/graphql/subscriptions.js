@@ -118,6 +118,7 @@ export const onCreateUser = `subscription OnCreateUser {
     accountType
     eventHistory {
       id
+      name
       timeIn
       timeOut
     }
@@ -140,6 +141,7 @@ export const onUpdateUser = `subscription OnUpdateUser {
     accountType
     eventHistory {
       id
+      name
       timeIn
       timeOut
     }
@@ -162,6 +164,7 @@ export const onDeleteUser = `subscription OnDeleteUser {
     accountType
     eventHistory {
       id
+      name
       timeIn
       timeOut
     }
@@ -172,6 +175,33 @@ export const onDeleteUser = `subscription OnDeleteUser {
       coupon
     }
     adminApproved
+  }
+}
+`;
+export const onCreateUserEvent = `subscription OnCreateUserEvent {
+  onCreateUserEvent {
+    id
+    name
+    timeIn
+    timeOut
+  }
+}
+`;
+export const onUpdateUserEvent = `subscription OnUpdateUserEvent {
+  onUpdateUserEvent {
+    id
+    name
+    timeIn
+    timeOut
+  }
+}
+`;
+export const onDeleteUserEvent = `subscription OnDeleteUserEvent {
+  onDeleteUserEvent {
+    id
+    name
+    timeIn
+    timeOut
   }
 }
 `;
