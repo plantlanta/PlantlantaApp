@@ -45,7 +45,9 @@ const AuthLoadingScreen = () => {
             })
             .catch(err => {
               console.log(err);
-              console.log('DyanmoDB User entry not found.');
+              console.log(
+                'Assuming Graphql and Appsync are setup correctly then the DyanmoDB User entry not found.'
+              );
               navigate('Auth');
             });
         } else {

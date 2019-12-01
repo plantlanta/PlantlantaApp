@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, Text } from 'react-native';
 import { API, graphqlOperation } from 'aws-amplify';
 
 const UserList = (renderItem, query) => {
   const [users, setUsers] = useState();
+  const [nextToken, setNextToken] = useState();
   const [refreshing, setRefreshing] = useState(false);
   const renderItemCall = useCallback(({ item }) => renderItem({ item }), []);
 
@@ -37,11 +38,26 @@ const UserList = (renderItem, query) => {
     }
   };
 
+  const loadAdditionalEvents = () => {
+    if (!refreshing) {
+      setRefreshing(true);
+      API.graphql(graphqlOperation(query, { nextToken })).then(res => {
+        setNextToken(res.data.listEvents.nextToken);
+        setUsers([...users, ...res.data.listUsers.items]);
+        setRefreshing(false);
+      });
+    }
+  };
+
   useEffect(() => {
     loadUsers();
   }, []);
 
-  return (
+  return users == null ? (
+    <>
+      <Text>Failed to load any Users</Text>
+    </>
+  ) : (
     <FlatList
       style={{ flex: 1 }}
       data={users}
@@ -58,6 +74,10 @@ const UserList = (renderItem, query) => {
       keyExtractor={item => item.id}
       onRefresh={loadUsers}
       refreshing={refreshing}
+      onEndReached={() => {
+        if (nextToken == null) return;
+        loadAdditionalEvents();
+      }}
     />
   );
 };

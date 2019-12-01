@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, Text } from 'react-native';
 import { API, graphqlOperation } from 'aws-amplify';
 
 const EventList = (renderItem, query) => {
   const [events, setEvents] = useState();
+  const [nextToken, setNextToken] = useState();
   const [refreshing, setRefreshing] = useState(false);
   const renderItemCall = useCallback(({ item }) => renderItem({ item }), []);
 
@@ -30,8 +31,19 @@ const EventList = (renderItem, query) => {
     if (!refreshing) {
       setRefreshing(true);
       API.graphql(graphqlOperation(query)).then(res => {
-        // console.log(res);
+        setNextToken(res.data.listEvents.nextToken);
         setEvents(res.data.listEvents.items);
+        setRefreshing(false);
+      });
+    }
+  };
+
+  const loadAdditionalEvents = () => {
+    if (!refreshing) {
+      setRefreshing(true);
+      API.graphql(graphqlOperation(query, { nextToken })).then(res => {
+        setNextToken(res.data.listEvents.nextToken);
+        setEvents([...events, ...res.data.listEvents.items]);
         setRefreshing(false);
       });
     }
@@ -41,7 +53,11 @@ const EventList = (renderItem, query) => {
     loadEvents();
   }, []);
 
-  return (
+  return events == null ? (
+    <>
+      <Text>Failed to load any Events</Text>
+    </>
+  ) : (
     <FlatList
       style={{ flex: 1 }}
       data={events}
@@ -58,6 +74,10 @@ const EventList = (renderItem, query) => {
       keyExtractor={item => item.id}
       onRefresh={loadEvents}
       refreshing={refreshing}
+      onEndReached={() => {
+        if (nextToken == null) return;
+        loadAdditionalEvents();
+      }}
     />
   );
 };
