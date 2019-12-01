@@ -74,14 +74,26 @@ const Item = ({ id, accountType, adminApproved, name, email }) => {
 };
 
 const AdminUserList = () => {
-  const [events, setEvents] = useState();
+  const [users, setUsers] = useState();
   const [refreshing, setRefreshing] = useState(false);
+  const [nextToken, setNextToken] = useState();
+
+  const loadAdditionalUsers = () => {
+    if (!refreshing) {
+      setRefreshing(true);
+      API.graphql(graphqlOperation(query, { nextToken })).then(res => {
+        setNextToken(res.data.listEvents.nextToken);
+        setUsers([...users, ...res.data.listUsers.items]);
+        setRefreshing(false);
+      });
+    }
+  };
 
   const loadUsers = () => {
     if (!refreshing) {
       setRefreshing(true);
       API.graphql(graphqlOperation(query, filter)).then(res => {
-        setEvents(res.data.listUsers.items);
+        setUsers(res.data.listUsers.items);
         setRefreshing(false);
       });
     }
@@ -96,7 +108,7 @@ const AdminUserList = () => {
       <Container>
         <FlatList
           style={{ flex: 1 }}
-          data={events}
+          data={users}
           renderItem={({ item }) => (
             <Item
               id={item.id}
@@ -118,6 +130,10 @@ const AdminUserList = () => {
           keyExtractor={item => item.id}
           onRefresh={loadUsers}
           refreshing={refreshing}
+          onEndReached={() => {
+            if (nextToken == null) return;
+            loadAdditionalUsers();
+          }}
         />
       </Container>
     </SafeAreaView>
