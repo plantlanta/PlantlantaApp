@@ -76,6 +76,7 @@ const SignUpScreen = () => {
       accountType,
       rewardPoints: 0,
       rewardHistory: [],
+      eventHistory: [],
       adminApproved: accountType === 'volunteer'
     };
     // API.graphql({
