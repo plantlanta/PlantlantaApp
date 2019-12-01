@@ -95,6 +95,18 @@ const StaffEventList = () => {
 
   const [events, setEvents] = useState();
   const [refreshing, setRefreshing] = useState(false);
+  const [nextToken, setNextToken] = useState();
+
+  const loadAdditionalEvents = () => {
+    if (!refreshing) {
+      setRefreshing(true);
+      API.graphql(graphqlOperation(query, { nextToken })).then(res => {
+        setNextToken(res.data.listEvents.nextToken);
+        setEvents([...events, ...res.data.listEvents.items]);
+        setRefreshing(false);
+      });
+    }
+  };
 
   const loadEvents = () => {
     if (!refreshing) {
@@ -140,6 +152,10 @@ const StaffEventList = () => {
           keyExtractor={item => item.id}
           onRefresh={loadEvents}
           refreshing={refreshing}
+          onEndReached={() => {
+            if (nextToken == null) return;
+            loadAdditionalEvents();
+          }}
         />
         <Fab
           position="bottomRight"
