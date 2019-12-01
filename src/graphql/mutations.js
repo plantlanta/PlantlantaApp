@@ -178,30 +178,3 @@ export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
   }
 }
 `;
-export const createUserEvent = `mutation CreateUserEvent($input: CreateUserEventInput!) {
-  createUserEvent(input: $input) {
-    id
-    name
-    timeIn
-    timeOut
-  }
-}
-`;
-export const updateUserEvent = `mutation UpdateUserEvent($input: UpdateUserEventInput!) {
-  updateUserEvent(input: $input) {
-    id
-    name
-    timeIn
-    timeOut
-  }
-}
-`;
-export const deleteUserEvent = `mutation DeleteUserEvent($input: DeleteUserEventInput!) {
-  deleteUserEvent(input: $input) {
-    id
-    name
-    timeIn
-    timeOut
-  }
-}
-`;

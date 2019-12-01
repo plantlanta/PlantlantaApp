@@ -48,7 +48,7 @@ type UserReward {
   coupon: String
 }
 
-type UserEvent @model {
+type UserEvent {
   id: ID!
   name: String
   timeIn: AWSDateTime
