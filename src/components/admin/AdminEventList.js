@@ -1,8 +1,15 @@
-import React from 'react';
-import { StyleSheet, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Text,
+  SafeAreaView,
+  TouchableOpacity
+} from 'react-native';
 import { useNavigation } from 'react-navigation-hooks';
+import { API, graphqlOperation } from 'aws-amplify';
 import { Container } from 'native-base';
-import EventList from '../EventList';
 
 const styles = StyleSheet.create({
   container: {
@@ -37,42 +44,105 @@ const query = `query ListEvents(
       }
       `;
 
-// const unapprovedFilter = {
-//   adminApproved: {
-//     eq: false
-//   }
-// };
+const unapprovedFilter = {
+  adminApproved: {
+    eq: false
+  }
+};
 
-const renderItem = ({ item }) => {
+const Item = ({
+  id,
+  name,
+  organization,
+  startDate,
+  endDate,
+  adminApproved
+}) => {
+  const { navigate } = useNavigation();
+
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={() => {
-        const { navigate } = useNavigation();
-        const { id } = item;
-        console.log(`pressed ${item.id}`);
+        console.log(`pressed ${id}`);
         navigate('EventDetailScreen', { id });
       }}
     >
-      <Text style={styles.textStyle}>{item.name}</Text>
-      <Text style={styles.textStyle}>{item.organization}</Text>
+      <Text style={styles.textStyle}>{name}</Text>
+      <Text style={styles.textStyle}>{organization}</Text>
       <Text style={styles.textStyle}>
-        {`Starts: ${new Date(item.startDate).toDateString()}`}
+        {`Starts: ${new Date(startDate).toDateString()}`}
       </Text>
       <Text style={styles.textStyle}>
-        {`Ends: ${new Date(item.endDate).toDateString()}`}
+        {`Ends: ${new Date(endDate).toDateString()}`}
       </Text>
       <Text style={styles.textStyle}>
-        {item.adminApproved ? 'Admin Approved: True' : 'Admin Approved: False'}
+        {adminApproved ? 'Admin Approved: True' : 'Admin Approved: False'}
       </Text>
     </TouchableOpacity>
   );
 };
 
 const AdminEventList = () => {
+  const [events, setEvents] = useState();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const loadEvents = filter => {
+    if (!refreshing) {
+      setRefreshing(true);
+      if (filter) {
+        API.graphql(graphqlOperation(query, filter)).then(res => {
+          setEvents(res.data.listEvents.items);
+          setRefreshing(false);
+        });
+        console.log('Filtered list');
+      } else {
+        API.graphql(graphqlOperation(query)).then(res => {
+          setEvents(res.data.listEvents.items);
+          setRefreshing(false);
+        });
+        console.log('Unfiltered list');
+      }
+    }
+  };
+
+  useEffect(() => {
+    loadEvents();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
-      <Container>{EventList(renderItem, query)}</Container>
+      <Container>
+        <FlatList
+          style={{ flex: 1 }}
+          data={events}
+          renderItem={({ item }) => (
+            <Item
+              id={item.id}
+              name={item.name}
+              organization={item.organization}
+              rewardPointValue={item.rewardPointValue}
+              maxVolunteers={item.maxVolunteers}
+              volunteers={item.volunteers}
+              startDate={item.startDate}
+              endDate={item.endDate}
+              adminApproved={item.adminApproved}
+            />
+          )}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                height: 1,
+                width: '100%',
+                backgroundColor: '#CED0CE'
+              }}
+            />
+          )}
+          keyExtractor={item => item.id}
+          onRefresh={loadEvents}
+          refreshing={refreshing}
+        />
+      </Container>
     </SafeAreaView>
   );
 };

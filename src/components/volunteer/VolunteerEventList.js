@@ -1,7 +1,14 @@
-import React from 'react';
-import { StyleSheet, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Text,
+  SafeAreaView,
+  TouchableOpacity
+} from 'react-native';
 import { useNavigation } from 'react-navigation-hooks';
-import EventList from '../EventList';
+import { API, graphqlOperation } from 'aws-amplify';
 
 const styles = StyleSheet.create({
   container: {
@@ -44,41 +51,93 @@ const query = `query ListEvents(
 //   }
 // };
 
-const renderItem = ({ item }) => {
+const Item = ({
+  id,
+  name,
+  organization,
+  rewardPointValue,
+  maxVolunteers,
+  volunteers,
+  startDate,
+  endDate
+}) => {
+  const { navigate } = useNavigation();
+
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={() => {
-        const { navigate } = useNavigation();
-        const { id } = item;
-        console.log(`pressed ${item.id}`);
+        console.log(`pressed ${id}`);
         navigate('EventDetailScreen', { id });
       }}
     >
-      <Text style={styles.textStyle}>{item.name}</Text>
-      <Text style={styles.textStyle}>{item.organization}</Text>
+      <Text style={styles.textStyle}>{name}</Text>
+      <Text style={styles.textStyle}>{organization}</Text>
       <Text style={styles.textStyle}>
-        {`Reward Points: ${item.rewardPointValue}`}
+        {`Reward Points: ${rewardPointValue}`}
       </Text>
       <Text style={styles.textStyle}>
-        {`Volunteers: ${item.volunteers ? item.volunteers.length : 0}/${
-          item.maxVolunteers
-        }`}
+        {`Volunteers: ${volunteers ? volunteers.length : 0}/${maxVolunteers}`}
       </Text>
       <Text style={styles.textStyle}>
-        {`Starts: ${new Date(item.startDate).toDateString()}`}
+        {`Starts: ${new Date(startDate).toDateString()}`}
       </Text>
       <Text style={styles.textStyle}>
-        {`Ends: ${new Date(item.endDate).toDateString()}`}
+        {`Ends: ${new Date(endDate).toDateString()}`}
       </Text>
     </TouchableOpacity>
   );
 };
 
 const VolunteerEventList = () => {
+  const [events, setEvents] = useState();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const loadEvents = () => {
+    if (!refreshing) {
+      setRefreshing(true);
+      API.graphql(graphqlOperation(query)).then(res => {
+        // console.log(res);
+        setEvents(res.data.listEvents.items);
+        setRefreshing(false);
+      });
+    }
+  };
+
+  useEffect(() => {
+    loadEvents();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
-      {EventList(renderItem, query)}
+      <FlatList
+        style={{ flex: 1 }}
+        data={events}
+        renderItem={({ item }) => (
+          <Item
+            id={item.id}
+            name={item.name}
+            organization={item.organization}
+            rewardPointValue={item.rewardPointValue}
+            maxVolunteers={item.maxVolunteers}
+            volunteers={item.volunteers}
+            startDate={item.startDate}
+            endDate={item.endDate}
+          />
+        )}
+        ItemSeparatorComponent={() => (
+          <View
+            style={{
+              height: 1,
+              width: '100%',
+              backgroundColor: '#CED0CE'
+            }}
+          />
+        )}
+        keyExtractor={item => item.id}
+        onRefresh={loadEvents}
+        refreshing={refreshing}
+      />
     </SafeAreaView>
   );
 };

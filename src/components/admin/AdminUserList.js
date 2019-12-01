@@ -1,8 +1,15 @@
-import React from 'react';
-import { StyleSheet, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Text,
+  SafeAreaView,
+  TouchableOpacity
+} from 'react-native';
 import { useNavigation } from 'react-navigation-hooks';
+import { API, graphqlOperation } from 'aws-amplify';
 import { Container } from 'native-base';
-import UserList from '../UserList';
 
 const styles = StyleSheet.create({
   container: {
@@ -45,33 +52,74 @@ const filter = {
   //   }
 };
 
-const renderItem = ({ item }) => {
+const Item = ({ id, accountType, adminApproved, name, email }) => {
+  const { navigate } = useNavigation();
+
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={() => {
-        const { navigate } = useNavigation();
-        const { id } = item.id;
         console.log(`pressed ${id}`);
         navigate('AdminUserDetailScreen', { id });
       }}
     >
-      <Text style={styles.textStyle}>{`Name: ${item.name}`}</Text>
-      <Text style={styles.textStyle}>{`Email: ${item.email}`}</Text>
+      <Text style={styles.textStyle}>{`Name: ${name}`}</Text>
+      <Text style={styles.textStyle}>{`Email: ${email}`}</Text>
+      <Text style={styles.textStyle}>{`Account Type: ${accountType}`}</Text>
       <Text style={styles.textStyle}>
-        {`Account Type: ${item.accountType}`}
-      </Text>
-      <Text style={styles.textStyle}>
-        {`Admin Approved: ${item.adminApproved ? 'Yes' : 'No'}`}
+        {`Admin Approved: ${adminApproved ? 'Yes' : 'No'}`}
       </Text>
     </TouchableOpacity>
   );
 };
 
 const AdminUserList = () => {
+  const [events, setEvents] = useState();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const loadUsers = () => {
+    if (!refreshing) {
+      setRefreshing(true);
+      API.graphql(graphqlOperation(query, filter)).then(res => {
+        setEvents(res.data.listUsers.items);
+        setRefreshing(false);
+      });
+    }
+  };
+
+  useEffect(() => {
+    loadUsers();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
-      <Container>{UserList(renderItem, query)}</Container>
+      <Container>
+        <FlatList
+          style={{ flex: 1 }}
+          data={events}
+          renderItem={({ item }) => (
+            <Item
+              id={item.id}
+              accountType={item.accountType}
+              adminApproved={item.adminApproved}
+              name={item.name}
+              email={item.email}
+            />
+          )}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                height: 1,
+                width: '100%',
+                backgroundColor: '#CED0CE'
+              }}
+            />
+          )}
+          keyExtractor={item => item.id}
+          onRefresh={loadUsers}
+          refreshing={refreshing}
+        />
+      </Container>
     </SafeAreaView>
   );
 };
