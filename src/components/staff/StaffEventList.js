@@ -8,7 +8,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { useNavigation } from 'react-navigation-hooks';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { Fab, Icon, Container } from 'native-base';
 
 const styles = StyleSheet.create({
@@ -39,17 +39,12 @@ const query = `query ListEvents(
             volunteers
             startDate
             endDate
+            creator
           }
           nextToken
         }
       }
       `;
-
-// const filter = {
-//   endDate: {
-//     ge: new Date()
-//   }
-// };
 
 const Item = ({
   id,
@@ -95,10 +90,19 @@ const StaffEventList = () => {
   const loadAdditionalEvents = () => {
     if (!refreshing) {
       setRefreshing(true);
-      API.graphql(graphqlOperation(query, { nextToken })).then(res => {
-        setNextToken(res.data.listEvents.nextToken);
-        setEvents([...events, ...res.data.listEvents.items]);
-        setRefreshing(false);
+      Auth.currentAuthenticatedUser().then(currUser => {
+        const filter = {
+          creator: {
+            eq: currUser.username
+          }
+        };
+        API.graphql(graphqlOperation(query, { filter, nextToken })).then(
+          res => {
+            setNextToken(res.data.listEvents.nextToken);
+            setEvents([...events, ...res.data.listEvents.items]);
+            setRefreshing(false);
+          }
+        );
       });
     }
   };
@@ -106,9 +110,16 @@ const StaffEventList = () => {
   const loadEvents = () => {
     if (!refreshing) {
       setRefreshing(true);
-      API.graphql(graphqlOperation(query)).then(res => {
-        setEvents(res.data.listEvents.items);
-        setRefreshing(false);
+      Auth.currentAuthenticatedUser().then(currUser => {
+        const filter = {
+          creator: {
+            eq: currUser.username
+          }
+        };
+        API.graphql(graphqlOperation(query, { filter })).then(res => {
+          setEvents(res.data.listEvents.items);
+          setRefreshing(false);
+        });
       });
     }
   };

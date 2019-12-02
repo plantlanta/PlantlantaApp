@@ -47,9 +47,6 @@ const filter = {
   adminApproved: {
     eq: false
   }
-  //   accountType: {
-  //     eq: 'admin'
-  //   }
 };
 
 const Item = ({ id, accountType, adminApproved, name, email }) => {
@@ -81,7 +78,7 @@ const AdminUserList = () => {
   const loadAdditionalUsers = () => {
     if (!refreshing) {
       setRefreshing(true);
-      API.graphql(graphqlOperation(query, { nextToken })).then(res => {
+      API.graphql(graphqlOperation(query, { filter, nextToken })).then(res => {
         setNextToken(res.data.listEvents.nextToken);
         setUsers([...users, ...res.data.listUsers.items]);
         setRefreshing(false);
@@ -92,7 +89,7 @@ const AdminUserList = () => {
   const loadUsers = () => {
     if (!refreshing) {
       setRefreshing(true);
-      API.graphql(graphqlOperation(query, filter)).then(res => {
+      API.graphql(graphqlOperation(query, { filter })).then(res => {
         setUsers(res.data.listUsers.items);
         setRefreshing(false);
       });

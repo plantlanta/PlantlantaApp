@@ -44,7 +44,7 @@ const query = `query ListEvents(
       }
       `;
 
-const unapprovedFilter = {
+const filter = {
   adminApproved: {
     eq: false
   }
@@ -91,7 +91,7 @@ const AdminEventList = () => {
   const loadAdditionalEvents = () => {
     if (!refreshing) {
       setRefreshing(true);
-      API.graphql(graphqlOperation(query, { nextToken })).then(res => {
+      API.graphql(graphqlOperation(query, { filter, nextToken })).then(res => {
         setNextToken(res.data.listEvents.nextToken);
         setEvents([...events, ...res.data.listEvents.items]);
         setRefreshing(false);
@@ -99,22 +99,13 @@ const AdminEventList = () => {
     }
   };
 
-  const loadEvents = filter => {
+  const loadEvents = () => {
     if (!refreshing) {
       setRefreshing(true);
-      if (filter) {
-        API.graphql(graphqlOperation(query, filter)).then(res => {
-          setEvents(res.data.listEvents.items);
-          setRefreshing(false);
-        });
-        console.log('Filtered list');
-      } else {
-        API.graphql(graphqlOperation(query)).then(res => {
-          setEvents(res.data.listEvents.items);
-          setRefreshing(false);
-        });
-        console.log('Unfiltered list');
-      }
+      API.graphql(graphqlOperation(query, { filter })).then(res => {
+        setEvents(res.data.listEvents.items);
+        setRefreshing(false);
+      });
     }
   };
 
