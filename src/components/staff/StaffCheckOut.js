@@ -64,8 +64,9 @@ const StaffCheckOut = () => {
   const checkout = item => {
     const input = item;
     var inEvent = false;
+    var checkedOut = true;
     input.eventHistory.forEach(entry => {
-      if (entry.id == eventId && entry.timeIn != null) {
+      if (entry.id == eventId && entry.timeIn != null && entry.timeOut == null) {
         const ind = input.eventHistory.indexOf(entry);
         inEvent = true;
         var currEvent = entry;
@@ -91,7 +92,7 @@ const StaffCheckOut = () => {
       
       Alert.alert(
         'Error!',
-        'This user is not checked in!',
+        'This user is not checked in, or has already been checked out',
         [
           {
             text: 'OK',
