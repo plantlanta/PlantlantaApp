@@ -1,79 +1,73 @@
 import React, { useState, useEffect } from 'react';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
-import {Container, Card, Body, Content, CardItem} from 'native-base';
-import {StyleSheet, Text, FlatList} from 'react-native';
+import { Container, Card, Body, Content, CardItem } from 'native-base';
+import { StyleSheet, Text, FlatList, View } from 'react-native';
 import * as queries from '../graphql/queries';
 
-
-
-const RewardItem = ({
-  id,
-  name,
-  link,
-  coupon
-}) => {
+const RewardItem = ({ id, name, link, coupon }) => {
   return (
-    <Card transparent style = {{padding: 20}}>
-    <CardItem>
+    <Card transparent style={{ padding: 20 }}>
+      <CardItem>
         <Text>Reward: {name}</Text>
-    </CardItem>
-    <CardItem>
+      </CardItem>
+      <CardItem>
         <Text>Link: {link}</Text>
-    </CardItem>
-    <CardItem>
+      </CardItem>
+      <CardItem>
         <Text>Coupon Code: {coupon}</Text>
-    </CardItem>
+      </CardItem>
     </Card>
   );
 };
 
-const EventItem = ({
-  id,
-  name,
-  timeIn,
-  timeOut
-}) => {
+const EventItem = ({ id, name, timeIn, timeOut }) => {
   return (
-    <Card transparent style = {{padding: 20}}>
-    <CardItem>
+    <Card transparent style={{ padding: 20 }}>
+      <CardItem>
         <Text>Event: {name}</Text>
-    </CardItem>
-    <CardItem>
+      </CardItem>
+      <CardItem>
         <Text>Check In: {new Date(timeIn).toString()}</Text>
-    </CardItem>
-    <CardItem>
+      </CardItem>
+      <CardItem>
         <Text>Check Out: {new Date(timeOut).toString()}</Text>
-    </CardItem>
+      </CardItem>
     </Card>
   );
 };
-
 
 const AccountScreen = () => {
   const [account, setAccount] = useState(
     Auth.currentAuthenticatedUser()
-      .then(user => API.graphql(graphqlOperation(queries.getUser, {id : user.username})))
-      .then(res => {setAccount(res.data.getUser)})
+      .then(user =>
+        API.graphql(graphqlOperation(queries.getUser, { id: user.username }))
+      )
+      .then(res => {
+        setAccount(res.data.getUser);
+      })
   );
-  
+
   return account ? (
     <Container>
-        <Content>
-          <Card transparent>
-            <CardItem header style={{allignItems:'center', justifyContent:'center'}}>
-                <Text style = {{fontWeight:'bold'}}>{account.name}</Text>
-            </CardItem>
-          </Card>      
-        
-          <Card transparent style = {{padding: 20}}>
+      <Content>
+        <Card transparent>
+          <CardItem
+            header
+            style={{ allignItems: 'center', justifyContent: 'center' }}
+          >
+            <Text style={{ fontWeight: 'bold' }}>{account.name}</Text>
+          </CardItem>
+        </Card>
+
+        <Card transparent style={{ padding: 20 }}>
           <CardItem>
-              <Text>Email:      {account.email}</Text>
+            <Text>Email: {account.email}</Text>
           </CardItem>
           <CardItem>
-              <Text>Reward Points:      {account.rewardPoints}</Text>
+            <Text>Reward Points: {account.rewardPoints}</Text>
           </CardItem>
           <CardItem>
-              <Text>Account Type:     {account.accountType}</Text>
+            <Text>Account Type: {account.accountType}</Text>
           </CardItem>
           <CardItem>
             <Text>Event History</Text>
@@ -128,10 +122,10 @@ const AccountScreen = () => {
               keyExtractor={item => item.id}
             />
           </CardItem>
-          </Card>
-        </Content>
-      </Container>
-  ) : null ;
+        </Card>
+      </Content>
+    </Container>
+  ) : null;
 };
 
 export default AccountScreen;

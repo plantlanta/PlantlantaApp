@@ -22,11 +22,9 @@ import {
   Icon
 } from 'native-base';
 import { API, graphqlOperation, Auth } from 'aws-amplify';
+import { useNavigationParam } from 'react-navigation-hooks';
 import * as mutations from '../graphql/mutations';
 import * as queries from '../graphql/queries';
-
-import { useNavigationParam } from 'react-navigation-hooks';
-
 
 const styles = StyleSheet.create({
   container: {
@@ -90,7 +88,6 @@ const requiredFields = {
   rewardPointValue: true
 };
 
-
 const EditRewardScreen = () => {
   const rewardId = useNavigationParam('id');
   const reward = useNavigationParam('reward');
@@ -98,8 +95,10 @@ const EditRewardScreen = () => {
   const [description, setDescription] = useState(reward.description);
   const [brand, setBrand] = useState(reward.brand);
   const [link, setLink] = useState(reward.link);
-  const [couponString, setCouponString] = useState(reward.coupon.join(", "));
-  const [rewardPointValue, setRewardPointValue] = useState(reward.rewardPointValue.toString());
+  const [couponString, setCouponString] = useState(reward.coupon.join(','));
+  const [rewardPointValue, setRewardPointValue] = useState(
+    reward.rewardPointValue.toString()
+  );
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [errors, setErrors] = useState(requiredFields);
@@ -118,7 +117,6 @@ const EditRewardScreen = () => {
   const fifthInput = useRef();
   const sixthInput = useRef();
 
-
   useEffect(() => {
     setErrors({
       name: name.length === 0,
@@ -126,12 +124,7 @@ const EditRewardScreen = () => {
       brand: brand.length === 0,
       rewardPointValue: rewardPointValue.length === 0
     });
-  }, [
-    name,
-    description,
-    brand,
-    rewardPointValue
-  ]);
+  }, [name, description, brand, rewardPointValue]);
 
   // const setFields = () => {
   //   API.graphql(
@@ -162,25 +155,24 @@ const EditRewardScreen = () => {
     return errors[field] && touched[field];
   };
 
-
   const updateReward = () => {
-    var coupon = couponString.split(", ");
+    const coupon = couponString.replace(/\s/g, '').split(',');
     const input = {
-        id: rewardId,
-        name: name,
-        description: description,
-        brand: brand,
-        link: link,
-        coupon: coupon,
-        rewardPointValue: rewardPointValue,
-        startDate: startDate,
-        endDate: endDate,
-        creator: creator
+      id: rewardId,
+      name,
+      description,
+      brand,
+      link,
+      coupon,
+      rewardPointValue,
+      startDate,
+      endDate,
+      creator
     };
-    console.log(input)
+    console.log(input);
     API.graphql(graphqlOperation(mutations.updateReward, { input })).then(
-      reward => {
-        console.log(reward);
+      res => {
+        console.log(res);
       }
     );
   };
@@ -265,9 +257,7 @@ const EditRewardScreen = () => {
                           : styles.labelStyle
                       }
                     >
-                      {shouldMarkError('brand')
-                        ? 'Brand is required'
-                        : 'Brand'}
+                      {shouldMarkError('brand') ? 'Brand is required' : 'Brand'}
                     </Label>
                     {shouldMarkError('brand') ? (
                       <Icon name="close-circle" />
@@ -301,9 +291,7 @@ const EditRewardScreen = () => {
                           : styles.labelStyle
                       }
                     >
-                      {shouldMarkError('link')
-                        ? 'Link is required'
-                        : 'Link'}
+                      {shouldMarkError('link') ? 'Link is required' : 'Link'}
                     </Label>
                     {shouldMarkError('link') ? (
                       <Icon name="close-circle" />

@@ -33,36 +33,27 @@ const VolunteerRewardDetail = () => {
       setReward(res.data.getReward);
       setRewardLoaded(true);
     });
-    Auth.currentAuthenticatedUser().then(user =>
-      API.graphql(
-        graphqlOperation(queries.getUser, {
-          id: user.username
-        })
-      ).then(res => {
-        console.log(res);
-        setUser(res.data.getUser);
-        setUserLoaded(true)
-      })
-    );
 
+    API.graphql(
+      graphqlOperation(queries.getUser, {
+        id: user.username
+      })
+    ).then(res => {
+      console.log(res);
+      setUser(res.data.getUser);
+      setUserLoaded(true);
+    });
   }, []);
 
-
-  const checkRewardNotAvailable = () => {
-    if (rewardLoaded) {
-      if (reward.coupon.length == 0) {
-        return true;
-      }
-      return false;
-    }
-  }
+  const checkRewardNotAvailable = () =>
+    rewardLoaded && reward.coupon.length === 0;
 
   // TODO add error catching and handling
   const buyReward = () => {
     if (userLoaded && rewardLoaded) {
       if (user.rewardPoints >= reward.rewardPointValue) {
         console.log(reward);
-        var newcoupon = reward.coupon.pop();
+        const newcoupon = reward.coupon.pop();
         if (newcoupon == null) {
           Alert.alert(
             'Error!',
@@ -75,23 +66,24 @@ const VolunteerRewardDetail = () => {
             ],
             { cancelable: false }
           );
-          console.log("No more coupons");
+          console.log('No more coupons');
           return;
         }
-        setReward(reward); 
+        setReward(reward);
         console.log(newcoupon);
 
-        var userReward = {
+        const userReward = {
           id: rewardId,
           name: reward.name,
           link: reward.link,
           coupon: newcoupon
-        }
+        };
         user.rewardHistory = [...user.rewardHistory, userReward];
+        user.rewardPoints -= reward.rewardPointValue;
         // console.log(user)
 
         // update user and reward data
-        var input = reward;
+        let input = reward;
         API.graphql(graphqlOperation(mutations.updateReward, { input })).then(
           res => {
             console.log(res);
@@ -114,7 +106,6 @@ const VolunteerRewardDetail = () => {
           ],
           { cancelable: false }
         );
-
       } else {
         Alert.alert(
           'Error!',
@@ -127,11 +118,9 @@ const VolunteerRewardDetail = () => {
           ],
           { cancelable: false }
         );
-        console.log("not enough points");
+        console.log('not enough points');
       }
-      
     }
-    
   };
 
   // TODO add an error message if event failed to load
@@ -171,7 +160,6 @@ const VolunteerRewardDetail = () => {
             </Body>
           </CardItem>
         </Card>
-
       </Content>
       <Fab
         position="bottomRight"
@@ -182,9 +170,7 @@ const VolunteerRewardDetail = () => {
             : { backgroundColor: '#64dd17' }
         }
       >
-        {(
-          <Icon name="md-add" />
-        )}
+        <Icon name="md-add" />
       </Fab>
     </Container>
   ) : null;

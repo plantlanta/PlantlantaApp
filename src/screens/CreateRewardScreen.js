@@ -86,7 +86,6 @@ const requiredFields = {
   rewardPointValue: true
 };
 
-
 const CreateRewardScreen = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -114,7 +113,6 @@ const CreateRewardScreen = () => {
   const fifthInput = useRef();
   const sixthInput = useRef();
 
-
   useEffect(() => {
     setErrors({
       name: name.length === 0,
@@ -122,12 +120,7 @@ const CreateRewardScreen = () => {
       brand: brand.length === 0,
       rewardPointValue: rewardPointValue.length === 0
     });
-  }, [
-    name,
-    description,
-    brand,
-    rewardPointValue
-  ]);
+  }, [name, description, brand, rewardPointValue]);
 
   const handleBlur = field => {
     setTouched({
@@ -140,21 +133,20 @@ const CreateRewardScreen = () => {
     return errors[field] && touched[field];
   };
 
-
   const createReward = () => {
-    var coupon = couponString.split(", ");
+    const coupon = couponString.replace(/\s/g, '').split(',');
     const input = {
-        name,
-        description,
-        brand,
-        link,
-        coupon,
-        rewardPointValue,
-        startDate,
-        endDate,
-        creator
+      name,
+      description,
+      brand,
+      link,
+      coupon,
+      rewardPointValue,
+      startDate,
+      endDate,
+      creator
     };
-    console.log(input)
+    console.log(input);
     API.graphql(graphqlOperation(mutations.createReward, { input })).then(
       reward => {
         console.log(reward);
@@ -242,9 +234,7 @@ const CreateRewardScreen = () => {
                           : styles.labelStyle
                       }
                     >
-                      {shouldMarkError('brand')
-                        ? 'Brand is required'
-                        : 'Brand'}
+                      {shouldMarkError('brand') ? 'Brand is required' : 'Brand'}
                     </Label>
                     {shouldMarkError('brand') ? (
                       <Icon name="close-circle" />
@@ -278,9 +268,7 @@ const CreateRewardScreen = () => {
                           : styles.labelStyle
                       }
                     >
-                      {shouldMarkError('link')
-                        ? 'Link is required'
-                        : 'Link'}
+                      {shouldMarkError('link') ? 'Link is required' : 'Link'}
                     </Label>
                     {shouldMarkError('link') ? (
                       <Icon name="close-circle" />
@@ -339,7 +327,9 @@ const CreateRewardScreen = () => {
                     />
                   </Item>
                   <Item style={styles.itemStyle} floatingLabel>
-                    <Label style={styles.labelStyle}>Coupon</Label>
+                    <Label style={styles.labelStyle}>
+                      Coupons (Seperate with commas)
+                    </Label>
                     <Input
                       style={styles.input}
                       keyboardType="default"
