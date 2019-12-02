@@ -12,13 +12,13 @@ Pre-requisites
 
 Clone repository to local machine
 	
-	Log into AWS account (either with the Plantlanta main account, or with a user)
+Log into AWS account (either with the Plantlanta main account, or with a user)
   
- 	 ** INSERT IMAGE **
+  ** INSERT IMAGE **
   
- 	 You will be brought to the main console screen.
- 	 From here go to CodeCommit under the services tab.
- 	 You will see the PlantlantaApp Repository. From which you will be able to clone onto your machine using git.
+ You will be brought to the main console screen.
+ From here go to CodeCommit under the services tab.
+ You will see the PlantlantaApp Repository. From which you will be able to clone onto your machine using git.
   
   ** INSERT IMAGE **
 
@@ -51,18 +51,22 @@ Develop and run code
 ### Local Deploy Only
 If you only want to run the code on your local machine and do not care about writing and developing the code.
 Pre-requisites
-  git (see https://git-scm.com/downloads)
-  node --version (see https://nodejs.org/en/download/)
+- git (see https://git-scm.com/downloads)
+- node --version (see https://nodejs.org/en/download/)
   v10.16.3
-  npm --version (see https://www.npmjs.com/get-npm)
+- npm --version (see https://www.npmjs.com/get-npm)
   6.9.0
 
 Clone repository to local machine
-  Log into AWS account (either with the Plantlanta main account, or with a user)
+	
+Log into AWS account (either with the Plantlanta main account, or with a user)
+  
   ** INSERT IMAGE **
-  You will be brought to the main console screen.
-  From here go to CodeCommit under the services tab.
-  You will see the PlantlantaApp Repository. From which you will be able to clone onto your machine using git.
+  
+ You will be brought to the main console screen.
+ From here go to CodeCommit under the services tab.
+ You will see the PlantlantaApp Repository. From which you will be able to clone onto your machine using git.
+  
   ** INSERT IMAGE **
 
 AWS Amplify Installed and Configured
@@ -215,16 +219,16 @@ General solution to errors:
 This is the first release of our application. In this section, we will describe completed software features that we promised early in the semester, also address some known bugs and defects that we are missing in this release.
 
 ### Completed software features for this release
-Multi-type account creation: the app supports 3 account types; staff, admin, and volunteer. 
-User creation and management: sign in, sign up, and password resetting. We used AWS Cognito to securely manage and synchronize app data across mobile devices. Users will be required email authentication once they create a new account.
-Volunteer Event Creation: create, delete, and edit events 
-Event Signup System: look for events, able to see the description of the event, sign up for the event, and check-in/check-out system.
-Reward System: exchange points for rewards, lookup for rewards, see available rewards, and redeem them after exchanging. 
-Reward Creation: staff accounts will be able to add, edit, and delete rewards in marketplace 
-Account detail information: users will be able to see how many points they have, lists of purchased rewards and past events.
+- Multi-type account creation: the app supports 3 account types; staff, admin, and volunteer.
+- User creation and management: sign in, sign up, and password resetting. We used AWS Cognito to securely manage and synchronize app data across mobile devices. Users will be required email authentication once they create a new account.
+- Volunteer Event Creation: create, delete, and edit events 
+- Event Signup System: look for events, able to see the description of the event, sign up for the event, and check-in/check-out system.
+- Reward System: exchange points for rewards, lookup for rewards, see available rewards, and redeem them after exchanging. 
+- Reward Creation: staff accounts will be able to add, edit, and delete rewards in marketplace 
+- Account detail information: users will be able to see how many points they have, lists of purchased rewards and past events.
 ### Known bugs or defects
-Images uploading: we were having some difficulties when implementing this feature. 
-Refer to our implementation schedule below, we have completed all features from the in-scope section. However, features from stretch goals and future goals remain incomplete.
+- Images uploading: we were having some difficulties when implementing this feature. 
+- Refer to our implementation schedule below, we have completed all features from the in-scope section. However, features from stretch goals and future goals remain incomplete.
 
 *** ADD IMAGE ***
 
