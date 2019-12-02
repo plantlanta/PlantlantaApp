@@ -38,17 +38,18 @@ const query = `query ListEvents(
             volunteers
             startDate
             endDate
+            adminApproved
           }
           nextToken
         }
       }
       `;
 
-// const filter = {
-//   endDate: {
-//     ge: new Date()
-//   }
-// };
+const filter = {
+  adminApproved: {
+    eq: true
+  }
+};
 
 const Item = ({
   id,
@@ -92,7 +93,7 @@ const VolunteerEventList = () => {
   const loadAdditionalEvents = () => {
     if (!refreshing) {
       setRefreshing(true);
-      API.graphql(graphqlOperation(query, { nextToken })).then(res => {
+      API.graphql(graphqlOperation(query, { filter, nextToken })).then(res => {
         setNextToken(res.data.listEvents.nextToken);
         setEvents([...events, ...res.data.listEvents.items]);
         setRefreshing(false);
@@ -103,7 +104,7 @@ const VolunteerEventList = () => {
   const loadEvents = () => {
     if (!refreshing) {
       setRefreshing(true);
-      API.graphql(graphqlOperation(query)).then(res => {
+      API.graphql(graphqlOperation(query, { filter })).then(res => {
         // console.log(res);
         setEvents(res.data.listEvents.items);
         setRefreshing(false);

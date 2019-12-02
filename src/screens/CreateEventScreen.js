@@ -117,7 +117,6 @@ const CreateEventScreen = () => {
   const seventhInput = useRef();
   const eigthInput = useRef();
   const ninthInput = useRef();
-  const tenthInput = useRef();
 
   useEffect(() => {
     setErrors({
@@ -154,7 +153,8 @@ const CreateEventScreen = () => {
       startDate,
       endDate,
       volunteers: [],
-      creator
+      creator,
+      adminApproved: false
     };
     API.graphql(graphqlOperation(mutations.createEvent, { input })).then(
       event => {
