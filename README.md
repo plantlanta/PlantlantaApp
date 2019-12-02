@@ -14,7 +14,8 @@ Clone repository to local machine
 	
 Log into AWS account (either with the Plantlanta main account, or with a user)
   
-  ** INSERT IMAGE **
+  ![Image of AWS Console]
+  (https://github.com/plantlanta/PlantlantaApp/blob/master/assets/aws-console.png)
   
  You will be brought to the main console screen.
  From here go to CodeCommit under the services tab.
