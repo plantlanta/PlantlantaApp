@@ -1,6 +1,24 @@
 # PlantlantaApp
 
-App description
+## Install Guide
+
+### Local Development and Deploy
+Pre-requisites
+  git (see https://git-scm.com/downloads)
+  node --version (see https://nodejs.org/en/download/)
+  v10.16.3
+  npm --version (see https://www.npmjs.com/get-npm)
+  6.9.0
+
+Clone repository to local machine
+  Log into AWS account (either with the Plantlanta main account, or with a user)
+  ** INSERT IMAGE **
+  You will be brought to the main console screen.
+  From here go to CodeCommit under the services tab.
+  You will see the PlantlantaApp Repository. From which you will be able to clone onto your machine using     git.
+
+
+
 
 ## Dev Requirements
 
