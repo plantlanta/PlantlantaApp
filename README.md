@@ -11,11 +11,15 @@ Pre-requisites
   6.9.0
 
 Clone repository to local machine
-  Log into AWS account (either with the Plantlanta main account, or with a user)
-  ** INSERT IMAGE **
-  You will be brought to the main console screen.
-  From here go to CodeCommit under the services tab.
-  You will see the PlantlantaApp Repository. From which you will be able to clone onto your machine using git.
+	
+	Log into AWS account (either with the Plantlanta main account, or with a user)
+  
+ 	 ** INSERT IMAGE **
+  
+ 	 You will be brought to the main console screen.
+ 	 From here go to CodeCommit under the services tab.
+ 	 You will see the PlantlantaApp Repository. From which you will be able to clone onto your machine using git.
+  
   ** INSERT IMAGE **
 
 AWS Amplify Installed and Configured
