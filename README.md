@@ -13,14 +13,15 @@ Pre-requisites
 Clone repository to local machine
 	
 Log into AWS account (either with the Plantlanta main account, or with a user)
-  
-  ![Image of AWS Console](/master/assets/aws-console.png)
-  
+
+<img width="255" alt="aws-login" src="https://user-images.githubusercontent.com/10980415/69931479-6bd49d00-1495-11ea-8a00-2cedca78c92d.png">
+
+
  You will be brought to the main console screen.
  From here go to CodeCommit under the services tab.
  You will see the PlantlantaApp Repository. From which you will be able to clone onto your machine using git.
   
-  ** INSERT IMAGE **
+ <img width="567" alt="aws-console" src="https://user-images.githubusercontent.com/10980415/69931676-219feb80-1496-11ea-8744-c48d5efb3f5f.png">
 
 AWS Amplify Installed and Configured
   From the root plantlanta directory in a console window
@@ -61,13 +62,13 @@ Clone repository to local machine
 	
 Log into AWS account (either with the Plantlanta main account, or with a user)
   
-  ** INSERT IMAGE **
+<img width="255" alt="aws-login" src="https://user-images.githubusercontent.com/10980415/69931479-6bd49d00-1495-11ea-8a00-2cedca78c92d.png">
   
  You will be brought to the main console screen.
  From here go to CodeCommit under the services tab.
  You will see the PlantlantaApp Repository. From which you will be able to clone onto your machine using git.
   
-  ** INSERT IMAGE **
+<img width="567" alt="aws-console" src="https://user-images.githubusercontent.com/10980415/69931676-219feb80-1496-11ea-8744-c48d5efb3f5f.png">
 
 AWS Amplify Installed and Configured
   From the root plantlanta directory in a console window
@@ -230,5 +231,5 @@ This is the first release of our application. In this section, we will describe 
 - Images uploading: we were having some difficulties when implementing this feature. 
 - Refer to our implementation schedule below, we have completed all features from the in-scope section. However, features from stretch goals and future goals remain incomplete.
 
-*** ADD IMAGE ***
+<img width="550" alt="mvp-map" src="https://user-images.githubusercontent.com/10980415/69931735-53b14d80-1496-11ea-8ad1-9e76ae59735f.png">
 
