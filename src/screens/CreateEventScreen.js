@@ -82,8 +82,7 @@ const requiredFields = {
   address: true,
   organization: true,
   coordinatorPhone: true,
-  coordinatorEmail: true,
-  rewardPointValue: true
+  coordinatorEmail: true
 };
 
 const CreateEventScreen = () => {
@@ -96,7 +95,6 @@ const CreateEventScreen = () => {
   const [coordinatorEmail, setCoordinatorEmail] = useState('');
   const [minVolunteers, setMinVolunteers] = useState('');
   const [maxVolunteers, setMaxVolunteers] = useState('');
-  const [rewardPointValue, setRewardPointValue] = useState('');
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [errors, setErrors] = useState(requiredFields);
@@ -127,17 +125,9 @@ const CreateEventScreen = () => {
       address: address.length === 0,
       organization: organization.length === 0,
       coordinatorPhone: coordinatorPhone.length === 0,
-      coordinatorEmail: coordinatorEmail.length === 0,
-      rewardPointValue: rewardPointValue.length === 0
+      coordinatorEmail: coordinatorEmail.length === 0
     });
-  }, [
-    name,
-    address,
-    organization,
-    coordinatorPhone,
-    coordinatorEmail,
-    rewardPointValue
-  ]);
+  }, [name, address, organization, coordinatorPhone, coordinatorEmail]);
 
   const handleBlur = field => {
     setTouched({
@@ -159,7 +149,6 @@ const CreateEventScreen = () => {
       coordinator,
       coordinatorPhone,
       coordinatorEmail,
-      rewardPointValue,
       minVolunteers,
       maxVolunteers,
       startDate,
@@ -403,42 +392,6 @@ const CreateEventScreen = () => {
                       }}
                     />
                   </Item>
-                  <Item
-                    style={styles.itemStyle}
-                    floatingLabel
-                    error={shouldMarkError('rewardPointValue')}
-                  >
-                    <Label
-                      style={
-                        shouldMarkError('rewardPointValue')
-                          ? styles.labelStyleError
-                          : styles.labelStyle
-                      }
-                    >
-                      {shouldMarkError('rewardPointValue')
-                        ? 'Reward Point Value required'
-                        : 'Reward Point Value'}
-                    </Label>
-                    {shouldMarkError('rewardPointValue') ? (
-                      <Icon name="close-circle" />
-                    ) : null}
-                    <Input
-                      style={styles.input}
-                      keyboardType="number-pad"
-                      returnKeyType="next"
-                      autoCapitalize="none"
-                      autoCorrect={false}
-                      ref={eigthInput}
-                      value={rewardPointValue}
-                      onChangeText={text => setRewardPointValue(text)}
-                      onBlur={() => {
-                        handleBlur('rewardPointValue');
-                      }}
-                      onSubmitEditing={() => {
-                        ninthInput.current._root.focus();
-                      }}
-                    />
-                  </Item>
                   <Item style={styles.itemStyle} floatingLabel>
                     <Label style={styles.labelStyle}>Minimum Volunteers</Label>
                     <Input
@@ -447,11 +400,11 @@ const CreateEventScreen = () => {
                       returnKeyType="next"
                       autoCapitalize="none"
                       autoCorrect={false}
-                      ref={ninthInput}
+                      ref={eigthInput}
                       value={minVolunteers}
                       onChangeText={text => setMinVolunteers(text)}
                       onSubmitEditing={() => {
-                        tenthInput.current._root.focus();
+                        ninthInput.current._root.focus();
                       }}
                     />
                   </Item>
@@ -463,7 +416,7 @@ const CreateEventScreen = () => {
                       returnKeyType="next"
                       autoCapitalize="none"
                       autoCorrect={false}
-                      ref={tenthInput}
+                      ref={ninthInput}
                       value={maxVolunteers}
                       onChangeText={text => setMaxVolunteers(text)}
                     />

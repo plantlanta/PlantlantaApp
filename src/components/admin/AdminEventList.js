@@ -133,7 +133,6 @@ const AdminEventList = () => {
               id={item.id}
               name={item.name}
               organization={item.organization}
-              rewardPointValue={item.rewardPointValue}
               maxVolunteers={item.maxVolunteers}
               volunteers={item.volunteers}
               startDate={item.startDate}

@@ -34,7 +34,6 @@ const query = `query ListEvents(
             id
             name
             organization
-            rewardPointValue
             maxVolunteers
             volunteers
             startDate
@@ -55,7 +54,6 @@ const Item = ({
   id,
   name,
   organization,
-  rewardPointValue,
   maxVolunteers,
   volunteers,
   startDate,
@@ -73,9 +71,6 @@ const Item = ({
     >
       <Text style={styles.textStyle}>{name}</Text>
       <Text style={styles.textStyle}>{organization}</Text>
-      <Text style={styles.textStyle}>
-        {`Reward Points: ${rewardPointValue}`}
-      </Text>
       <Text style={styles.textStyle}>
         {`Volunteers: ${volunteers ? volunteers.length : 0}/${maxVolunteers}`}
       </Text>
@@ -130,7 +125,6 @@ const VolunteerEventList = () => {
             id={item.id}
             name={item.name}
             organization={item.organization}
-            rewardPointValue={item.rewardPointValue}
             maxVolunteers={item.maxVolunteers}
             volunteers={item.volunteers}
             startDate={item.startDate}

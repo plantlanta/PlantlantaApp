@@ -11,7 +11,6 @@ export const createEvent = `mutation CreateEvent($input: CreateEventInput!) {
     coordinator
     coordinatorPhone
     coordinatorEmail
-    rewardPointValue
     minVolunteers
     maxVolunteers
     volunteers
@@ -32,7 +31,6 @@ export const updateEvent = `mutation UpdateEvent($input: UpdateEventInput!) {
     coordinator
     coordinatorPhone
     coordinatorEmail
-    rewardPointValue
     minVolunteers
     maxVolunteers
     volunteers
@@ -53,7 +51,6 @@ export const deleteEvent = `mutation DeleteEvent($input: DeleteEventInput!) {
     coordinator
     coordinatorPhone
     coordinatorEmail
-    rewardPointValue
     minVolunteers
     maxVolunteers
     volunteers

@@ -11,7 +11,6 @@ export const onCreateEvent = `subscription OnCreateEvent {
     coordinator
     coordinatorPhone
     coordinatorEmail
-    rewardPointValue
     minVolunteers
     maxVolunteers
     volunteers
@@ -32,7 +31,6 @@ export const onUpdateEvent = `subscription OnUpdateEvent {
     coordinator
     coordinatorPhone
     coordinatorEmail
-    rewardPointValue
     minVolunteers
     maxVolunteers
     volunteers
@@ -53,7 +51,6 @@ export const onDeleteEvent = `subscription OnDeleteEvent {
     coordinator
     coordinatorPhone
     coordinatorEmail
-    rewardPointValue
     minVolunteers
     maxVolunteers
     volunteers

@@ -11,7 +11,6 @@ export const getEvent = `query GetEvent($id: ID!) {
     coordinator
     coordinatorPhone
     coordinatorEmail
-    rewardPointValue
     minVolunteers
     maxVolunteers
     volunteers
@@ -37,7 +36,6 @@ export const listEvents = `query ListEvents(
       coordinator
       coordinatorPhone
       coordinatorEmail
-      rewardPointValue
       minVolunteers
       maxVolunteers
       volunteers

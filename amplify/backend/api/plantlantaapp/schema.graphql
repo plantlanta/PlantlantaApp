@@ -7,7 +7,6 @@ type Event @model {
   coordinator: String
   coordinatorPhone: AWSPhone
   coordinatorEmail: AWSEmail
-  rewardPointValue: Int
   minVolunteers: Int
   maxVolunteers: Int
   volunteers: [String]
