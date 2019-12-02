@@ -34,15 +34,17 @@ const VolunteerRewardDetail = () => {
       setRewardLoaded(true);
     });
 
-    API.graphql(
-      graphqlOperation(queries.getUser, {
-        id: user.username
+    Auth.currentAuthenticatedUser().then(currUser =>
+      API.graphql(
+        graphqlOperation(queries.getUser, {
+          id: currUser.username
+        })
+      ).then(res => {
+        console.log(res);
+        setUser(res.data.getUser);
+        setUserLoaded(true);
       })
-    ).then(res => {
-      console.log(res);
-      setUser(res.data.getUser);
-      setUserLoaded(true);
-    });
+    );
   }, []);
 
   const checkRewardNotAvailable = () =>
