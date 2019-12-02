@@ -4,10 +4,10 @@
 
 ### Local Development and Deploy
 Pre-requisites
-  git (see https://git-scm.com/downloads)
-  node --version (see https://nodejs.org/en/download/)
+- git (see https://git-scm.com/downloads)
+- node --version (see https://nodejs.org/en/download/)
   v10.16.3
-  npm --version (see https://www.npmjs.com/get-npm)
+- npm --version (see https://www.npmjs.com/get-npm)
   6.9.0
 
 Clone repository to local machine
